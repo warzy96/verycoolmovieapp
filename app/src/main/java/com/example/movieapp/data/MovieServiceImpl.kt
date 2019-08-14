@@ -1,18 +1,25 @@
 package com.example.movieapp.data
 
-import android.util.Log
-import com.example.movieapp.domain.Movie
-import com.squareup.moshi.JsonAdapter
-import com.squareup.moshi.Moshi
+import retrofit2.Call
+import retrofit2.Response
 
 class MovieServiceImpl : MovieService {
 
-    override fun getMovies() : List<Movie> {
-        val call = MovieAPIFactory.getAPI().getMovies(MovieAPIFactory.API_KEY)
+    override fun getMovies(movieObserver: MovieObserver) {
+        val call = MovieApiFactory.getAPI().getMovies(MovieApiFactory.API_KEY)
 
-        val movieResult = call.execute().body()
+        call.enqueue(object : retrofit2.Callback<MovieResults> {
+            override fun onResponse(call: Call<MovieResults>, response: Response<MovieResults>) {
+                if (response.isSuccessful) {
+                    if (response.body() != null) {
+                        movieObserver.moviesUpdated(ApiMapper.map(response.body()!!.results ?: listOf()))
+                    }
+                }
+            }
 
-        return ApiMapper.map(movieResult!!.results!!)
+            override fun onFailure(call: Call<MovieResults>, t: Throwable) {
+            }
+        })
     }
 
 }
