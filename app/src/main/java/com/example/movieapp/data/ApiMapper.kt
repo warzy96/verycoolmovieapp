@@ -2,16 +2,8 @@ package com.example.movieapp.data
 
 import com.example.movieapp.domain.Movie
 
-class ApiMapper {
+interface ApiMapper {
 
-    companion object {
-
-        fun map(apiMovie: ApiMovie): Movie {
-            return Movie(apiMovie.title ?: "")
-        }
-
-        fun map(apiMovies: List<ApiMovie>) = apiMovies.map { Movie(it.title ?: "") }
-
-    }
+    fun map(apiMovies: List<ApiMovie>) : List<Movie>
 
 }

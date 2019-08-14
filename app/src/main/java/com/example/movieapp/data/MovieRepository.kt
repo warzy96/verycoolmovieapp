@@ -2,6 +2,6 @@ package com.example.movieapp.data
 
 interface MovieRepository {
 
-    fun getMovies(movieObserver : MovieObserver)
+    fun getMovies(movieCallback: MovieCallback)
 
 }

@@ -7,7 +7,6 @@ import retrofit2.converter.gson.GsonConverterFactory
 class RetrofitFactory {
 
     companion object {
-
         fun getRetrofit(baseUrl: String) : Retrofit {
 
             val httpClient = OkHttpClient.Builder()
@@ -25,9 +24,7 @@ class RetrofitFactory {
                 .build()
 
             return retrofit
-
         }
-
     }
 
 }

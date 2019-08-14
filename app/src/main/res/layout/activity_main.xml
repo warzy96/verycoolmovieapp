@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
+<androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
         xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -8,13 +8,16 @@
         tools:context=".ui.MainActivity">
 
     <Button
-            android:id="@+id/get_movies_button"
+            android:id="@+id/getMoviesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:text="@string/get_movies_button"
-            android:layout_marginTop="@dimen/button_top_margin"/>
+            android:layout_marginTop="@dimen/button_top_margin"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"/>
 
     <ScrollView
             xmlns:android="http://schemas.android.com/apk/res/android"
@@ -22,13 +25,16 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="@dimen/list_top_margin"
-            android:layout_below="@+id/get_movies_button">
+            android:layout_below="@+id/getMoviesButton"
+            app:layout_constraintTop_toTopOf="@id/getMoviesButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
 
         <TextView
-                android:id="@+id/movies"
+                android:id="@+id/movieListText"
                 android:text=""
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"/>
     </ScrollView>
 
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
