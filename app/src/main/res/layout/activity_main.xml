@@ -5,15 +5,36 @@
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context=".MainActivity">
+        tools:context=".ui.MainActivity">
 
-    <TextView
+    <Button
+            android:id="@+id/getMoviesButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Hello World!"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:text="@string/get_movies_button"
+            android:layout_marginTop="@dimen/button_top_margin"
+            app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"/>
+            app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <ScrollView
+            xmlns:android="http://schemas.android.com/apk/res/android"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="@dimen/list_top_margin"
+            android:layout_below="@+id/getMoviesButton"
+            app:layout_constraintTop_toTopOf="@id/getMoviesButton"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent">
+
+        <TextView
+                android:id="@+id/movieListText"
+                android:text=""
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"/>
+    </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
