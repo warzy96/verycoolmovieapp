@@ -37,6 +37,7 @@ allprojects {
         appcompatVersion = "1.0.2"
         recycleViewVersion = "1.1.0-alpha06"
         swipeRefreshLayoutVersion = "1.0.0"
+        moshiConverterVersion = "2.0.0-beta3"
     }
 
     repositories {

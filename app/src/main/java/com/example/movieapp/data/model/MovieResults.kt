@@ -1,4 +1,4 @@
-package com.example.movieapp.data
+package com.example.movieapp.data.model
 
 import com.squareup.moshi.Json
 
@@ -15,5 +15,4 @@ class MovieResults {
 
     @Json(name = "results")
     val results: List<ApiMovie>? = null
-
 }

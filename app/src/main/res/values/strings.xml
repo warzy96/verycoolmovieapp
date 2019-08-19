@@ -1,4 +1,9 @@
 <resources>
     <string name="app_name">Movie App</string>
-    <string name="get_movies_button">Get movies!</string>
+    <string name="get_movies_button">Get movies</string>
+    <string name="score_text">Score:</string>
+    <string name="genre_text">Genre:</string>
+    <string name="release_date_text">Release date:</string>
+    <string name="adult_text">Adult</string>
+    <string name="overview_text">Overview:</string>
 </resources>

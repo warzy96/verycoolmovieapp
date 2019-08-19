@@ -2,7 +2,6 @@ package com.example.movieapp.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,17 +10,14 @@ import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.data.MovieCallback
-import com.example.movieapp.data.MovieRepository
-import com.example.movieapp.data.MovieRepositoryImpl
-import com.example.movieapp.data.MovieServiceImpl
+import com.example.movieapp.data.callback.MovieCallback
+import com.example.movieapp.data.repository.MovieRepositoryProvider
 import com.example.movieapp.domain.Movie
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
     var movieList: MutableList<Movie> = mutableListOf()
-    private var movieRepository: MovieRepository = MovieRepositoryImpl(MovieServiceImpl())
     private lateinit var movieCallback : MovieCallback
 
     private lateinit var viewAdapter: RecyclerView.Adapter<*>
@@ -54,8 +50,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         movieCallback = object : MovieCallback {
-            override fun moviesUpdated(movies: List<Movie>) {
-                Log.d("update", movies.size.toString())
+            override fun onMoviesFetched(movies: List<Movie>) {
                 movieList.clear()
                 movieList.addAll(movies)
                 viewAdapter.notifyDataSetChanged()
@@ -64,10 +59,10 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    class MovieListAdapter(private val myDataset: List<Movie>) :
+    inner class MovieListAdapter(private val myDataset: List<Movie>) :
         RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
 
-        class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+        inner class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
             var mTextView = view.findViewById<TextView>(R.id.movieTitle)
         }
 
@@ -81,13 +76,19 @@ class MainActivity : AppCompatActivity() {
 
         override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
             holder.mTextView.text = myDataset[position].title
+
+            holder.view.setOnClickListener {
+                val intent = android.content.Intent(
+                    this@MainActivity, MovieDetailsActivity::class.java)
+                intent.putExtra("movie", myDataset[position])
+                startActivity(intent)
+            }
         }
 
         override fun getItemCount() = myDataset.size
     }
 
     fun loadMovies() {
-        movieRepository.getMovies(movieCallback)
+        MovieRepositoryProvider.getRepository().getMovies(movieCallback)
     }
-
 }
