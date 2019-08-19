@@ -25,5 +25,4 @@ class MovieServiceImpl : MovieService {
     companion object {
         val mapper = ApiMapperImpl()
     }
-
 }

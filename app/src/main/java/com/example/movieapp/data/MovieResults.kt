@@ -15,5 +15,4 @@ class MovieResults {
 
     @Json(name = "results")
     val results: List<ApiMovie>? = null
-
 }

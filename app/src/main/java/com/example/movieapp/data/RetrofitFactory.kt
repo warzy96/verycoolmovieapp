@@ -26,5 +26,4 @@ class RetrofitFactory {
             return retrofit
         }
     }
-
 }

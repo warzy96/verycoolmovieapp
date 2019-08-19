@@ -41,5 +41,4 @@ class MainActivity : AppCompatActivity() {
     fun loadMovies() {
         movieRepository.getMovies(movieCallback)
     }
-
 }
