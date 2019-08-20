@@ -45,5 +45,4 @@ class ApiMovie {
 
     @Json(name = "release_date")
     private val releaseDate: String? = null
-
 }

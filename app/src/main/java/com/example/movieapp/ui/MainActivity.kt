@@ -20,19 +20,15 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity() {
 
-    var movieList: MutableList<Movie> = mutableListOf()
     private var movieRepository: MovieRepository = MovieRepositoryImpl(MovieServiceImpl())
     private lateinit var movieCallback : MovieCallback
-
-    private lateinit var viewAdapter: RecyclerView.Adapter<*>
-    private lateinit var viewManager: RecyclerView.LayoutManager
+    private val viewAdapter by lazy { MovieListAdapter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        viewManager = LinearLayoutManager(this)
-        viewAdapter = MovieListAdapter(movieList)
+        val viewManager = LinearLayoutManager(this)
 
         movieRecyclerView.apply {
             setHasFixedSize(false)
@@ -41,8 +37,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         movieRecyclerView.addItemDecoration(
-            DividerItemDecoration(movieRecyclerView.getContext(),
-                (viewManager as LinearLayoutManager).orientation)
+            DividerItemDecoration(movieRecyclerView.context, viewManager.orientation)
         )
 
         swipeMovieContainer.setOnRefreshListener {
@@ -55,39 +50,35 @@ class MainActivity : AppCompatActivity() {
 
         movieCallback = object : MovieCallback {
             override fun moviesUpdated(movies: List<Movie>) {
-                Log.d("update", movies.size.toString())
-                movieList.clear()
-                movieList.addAll(movies)
+                viewAdapter.setData(movies)
                 viewAdapter.notifyDataSetChanged()
                 swipeMovieContainer.isRefreshing = false
             }
         }
     }
 
-    class MovieListAdapter(private val myDataset: List<Movie>) :
-        RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
+    class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
+        private var movieList: List<Movie> = listOf()
 
         class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
             var mTextView = view.findViewById<TextView>(R.id.movieTitle)
         }
 
-        override fun onCreateViewHolder(parent: ViewGroup,
-                                        viewType: Int): MovieViewHolder {
-            val view = LayoutInflater.from(parent.context)
-                .inflate(R.layout.movie_item, parent, false)
-
-            return MovieViewHolder(view)
-        }
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
+                = MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false))
 
         override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-            holder.mTextView.text = myDataset[position].title
+            holder.mTextView.text = movieList[position].title
         }
 
-        override fun getItemCount() = myDataset.size
+        override fun getItemCount() = movieList.size
+
+        fun setData(movieList : List<Movie>) {
+            this.movieList = movieList
+        }
     }
 
     fun loadMovies() {
         movieRepository.getMovies(movieCallback)
     }
-
 }

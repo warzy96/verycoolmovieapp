@@ -8,5 +8,4 @@ interface MovieApi {
 
     @GET("discover/movie")
     fun getMovies(@Query("api_key") api_key : String): Call<MovieResults>
-
 }

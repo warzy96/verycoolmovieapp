@@ -10,5 +10,4 @@ class MovieApiFactory {
             return RetrofitFactory.getRetrofit(API_BASE_URL).create(MovieApi::class.java)
         }
     }
-
 }
