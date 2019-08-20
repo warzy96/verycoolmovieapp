@@ -12,4 +12,5 @@
     <dimen name="details_horizontal_gap">20dp</dimen>
     <dimen name="details_vertical_gap_big">20dp</dimen>
     <dimen name="details_vertical_gap_small">4dp</dimen>
+    <dimen name="movie_item_padding">10dp</dimen>
 </resources>

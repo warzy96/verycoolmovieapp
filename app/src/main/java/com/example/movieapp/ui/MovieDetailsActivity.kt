@@ -47,16 +47,17 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         GenreProvider.getGenres(object: GenresCallback {
             override fun onGenresFetched(genres: List<Genre>) {
-                var first = true
+                val genreList = mutableListOf<String>()
 
                 for(id in movie.genreIds) {
-                    if (first) {
-                        first = false
-                    } else {
-                        movieDetailsGenre.text = movieDetailsGenre.text.toString() + ", "
+                    val genre = genres.filter { g -> g.id?.equals(id) ?: false }.single().name
+
+                    if (genre != null) {
+                        genreList.add(genre)
                     }
-                    movieDetailsGenre.text = movieDetailsGenre.text.toString() + genres.filter { g -> g.id?.equals(id) ?: false }.single().name
                 }
+
+                movieDetailsGenre.text = genreList.joinToString(", ")
             }
         })
 
