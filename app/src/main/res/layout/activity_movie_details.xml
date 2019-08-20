@@ -10,7 +10,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="@dimen/details_top_margin"
         android:layout_marginStart="@dimen/details_start_margin"
         android:layout_marginEnd="@dimen/details_end_margin">
 

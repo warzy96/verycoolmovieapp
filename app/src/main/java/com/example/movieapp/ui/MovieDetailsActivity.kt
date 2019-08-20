@@ -12,6 +12,7 @@ import com.example.movieapp.data.callback.PosterCallback
 import com.example.movieapp.data.model.Genre
 import com.example.movieapp.data.model.GenreProvider
 import com.example.movieapp.data.repository.MovieRepositoryProvider
+import java.text.SimpleDateFormat
 
 class MovieDetailsActivity : AppCompatActivity() {
 
@@ -39,7 +40,9 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieDetailsVote.text = movie.voteAverage.toString() + "/10 (" + movie.voteCount + ")"
         movieDetailsOverview.text = movie.overview
 
-        movieDetailsReleaseDate.text = movie.releaseDate
+        val date = SimpleDateFormat("yyyy-MM-dd").parse(movie.releaseDate)
+        val format = SimpleDateFormat("dd/MM/yyy")
+        movieDetailsReleaseDate.text = format.format(date)
 
         if(movie.isAdult) {
             movieDetailsAdult.visibility = View.VISIBLE
