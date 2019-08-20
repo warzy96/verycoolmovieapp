@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity() {
         movieCallback = object : MovieCallback {
             override fun moviesUpdated(movies: List<Movie>) {
                 viewAdapter.setData(movies)
-                viewAdapter.notifyDataSetChanged()
                 swipeMovieContainer.isRefreshing = false
             }
         }
@@ -75,6 +74,7 @@ class MainActivity : AppCompatActivity() {
 
         fun setData(movieList : List<Movie>) {
             this.movieList = movieList
+            notifyDataSetChanged()
         }
     }
 
