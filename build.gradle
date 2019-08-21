@@ -35,12 +35,15 @@ allprojects {
         testRunnerVersion = "1.2.0"
         ktxVersion = "1.0.2"
         appcompatVersion = "1.0.2"
-        recycleViewVersion = "1.1.0-alpha06"
+        recyclerViewVersion = "1.1.0-alpha06"
         swipeRefreshLayoutVersion = "1.0.0"
         moshiConverterVersion = "2.0.0-beta3"
+
+        glideVersion = "4.9.0"
     }
 
     repositories {
+        mavenCentral()
         google()
         jcenter()
         

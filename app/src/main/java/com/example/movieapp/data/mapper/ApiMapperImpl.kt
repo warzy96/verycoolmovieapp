@@ -5,12 +5,12 @@ import com.example.movieapp.domain.Movie
 
 class ApiMapperImpl : ApiMapper {
 
-    override fun map(apiMovies: List<ApiMovie>) = apiMovies.map {
-        map(it)
+    override fun mapApiMoviesToMovies(apiMovies: List<ApiMovie>) = apiMovies.map {
+        mapApiMovieToMovie(it)
     }
 
     companion object {
-        fun map(apiMovie: ApiMovie) = Movie(
+        private fun mapApiMovieToMovie(apiMovie: ApiMovie) = Movie(
             title = apiMovie.title ?: "",
             voteAverage = apiMovie.voteAverage ?: 0.0,
             voteCount = apiMovie.voteCount ?: 0,
@@ -22,6 +22,6 @@ class ApiMapperImpl : ApiMapper {
             isAdult = apiMovie.isAdult ?: false,
             overview = apiMovie.overview ?: "",
             releaseDate = apiMovie.releaseDate ?: ""
-            )
+        )
     }
 }
