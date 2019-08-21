@@ -1,41 +1,42 @@
-package com.example.movieapp.ui
+package com.example.movieapp.ui.activities
 
 import android.os.Bundle
 import android.view.LayoutInflater
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.example.movieapp.R
-import com.example.movieapp.data.callback.MovieCallback
-import com.example.movieapp.data.repository.MovieRepositoryProvider
-import com.example.movieapp.domain.Movie
+import com.example.movieapp.data.contract.MovieListContract
+import com.example.movieapp.data.presenter.MovieListPresenter
+import com.example.movieapp.data.view.model.ViewMovie
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MovieListContract.View {
 
-    private lateinit var movieCallback: MovieCallback
     private val viewAdapter by lazy {
         MoviesAdapter(
             object : MovieClickListener {
-                override fun onMovieClicked(movie: Movie) {
-                    startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie))
+                override fun onMovieClicked(movie: ViewMovie) {
+                    startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie.id))
                 }
             },
-            resources.getDimension(R.dimen.poster_list_width).toInt(),
-            resources.getDimension(R.dimen.poster_list_height).toInt(),
             LayoutInflater.from(this),
             Glide.with(this)
         )
     }
+    private val presenter by lazy { MovieListPresenter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
         val viewManager = LinearLayoutManager(this)
+
+        presenter.setView(this)
 
         movieRecyclerView.apply {
             layoutManager = viewManager
@@ -50,20 +51,26 @@ class MainActivity : AppCompatActivity() {
             loadMovies()
         }
 
-        movieCallback = object : MovieCallback {
-            override fun onMoviesFetched(movies: List<Movie>) {
-                viewAdapter.setData(movies)
-                swipeMovieContainer.isRefreshing = false
-            }
-
-            override fun onError() {
-            }
-        }
-
         loadMovies()
     }
 
+    override fun showMovies(movies: List<ViewMovie>) {
+        moviesErrorMessage.apply {
+            visibility = View.GONE
+        }
+        viewAdapter.setData(movies)
+        swipeMovieContainer.isRefreshing = false
+    }
+
+    override fun showErrorMessage() {
+        moviesErrorMessage.apply {
+            visibility = View.VISIBLE
+        }
+        viewAdapter.setData(listOf())
+        swipeMovieContainer.isRefreshing = false
+    }
+
     private fun loadMovies() {
-        MovieRepositoryProvider.getRepository().getMovies(movieCallback)
+        presenter.getMovies()
     }
 }

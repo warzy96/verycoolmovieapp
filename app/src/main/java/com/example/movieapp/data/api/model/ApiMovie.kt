@@ -1,4 +1,4 @@
-package com.example.movieapp.data.model
+package com.example.movieapp.data.api.model
 
 import com.squareup.moshi.Json
 
@@ -8,7 +8,7 @@ class ApiMovie {
     val voteCount: Int? = null
 
     @Json(name = "id")
-    private val id: Int? = null
+    val id: Int? = null
 
     @field:Json(name = "video")
     private val isVideo: Boolean? = null

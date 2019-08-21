@@ -1,6 +1,6 @@
 package com.example.movieapp.data.callback
 
-import com.example.movieapp.data.model.Genre
+import com.example.movieapp.data.api.model.Genre
 
 interface GenresCallback {
 

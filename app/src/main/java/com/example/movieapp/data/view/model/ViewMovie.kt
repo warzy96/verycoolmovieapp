@@ -1,18 +1,16 @@
-package com.example.movieapp.domain
+package com.example.movieapp.data.view.model
 
 import java.io.Serializable
 
-data class Movie(
+class ViewMovie(
 
     val id: Int,
     val title: String,
     val tagline: String?,
     val voteCount: Int,
     val voteAverage: Double,
-    val popularity: Double,
     val posterPath: String,
     val originalTitle: String,
-    val originalLanguage: String,
     val genreIds: List<Int>,
     val isAdult: Boolean,
     val overview: String,

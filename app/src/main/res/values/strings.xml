@@ -4,6 +4,9 @@
     <string name="score_text">Score:</string>
     <string name="genre_text">Genre:</string>
     <string name="release_date_text">Release date:</string>
+    <string name="runtime_text">Runtime:</string>
     <string name="adult_text">Adult</string>
     <string name="overview_text">Overview:</string>
+    <string name="network_error">Network error. Please try again later &#8230;</string>
+    <string name="read_more_button">Read More</string>
 </resources>
