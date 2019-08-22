@@ -6,7 +6,6 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.bumptech.glide.Glide
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.presenter.MovieListPresenter
@@ -15,19 +14,9 @@ import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity(), MovieListContract.View {
+class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickListener {
 
-    private val viewAdapter by lazy {
-        MoviesAdapter(
-            object : MovieClickListener {
-                override fun onMovieClicked(movie: ViewMovie) {
-                    startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie.id))
-                }
-            },
-            LayoutInflater.from(this),
-            Glide.with(this)
-        )
-    }
+    private val viewAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
     private val presenter by lazy { MovieListPresenter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -54,18 +43,18 @@ class MainActivity : AppCompatActivity(), MovieListContract.View {
         loadMovies()
     }
 
+    override fun onMovieClicked(movie: ViewMovie) {
+        startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie.id))
+    }
+
     override fun showMovies(movies: List<ViewMovie>) {
-        moviesErrorMessage.apply {
-            visibility = View.GONE
-        }
+        moviesErrorMessage.visibility = View.GONE
         viewAdapter.setData(movies)
         swipeMovieContainer.isRefreshing = false
     }
 
     override fun showErrorMessage() {
-        moviesErrorMessage.apply {
-            visibility = View.VISIBLE
-        }
+        moviesErrorMessage.visibility = View.VISIBLE
         viewAdapter.setData(listOf())
         swipeMovieContainer.isRefreshing = false
     }

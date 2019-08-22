@@ -2,6 +2,7 @@ package com.example.movieapp.data.api.model
 
 import com.example.movieapp.data.DependencyInjector
 import com.example.movieapp.data.callback.GenresCallback
+import com.example.movieapp.ui.MovieApplication
 
 class GenreProvider {
 
@@ -14,13 +15,13 @@ class GenreProvider {
                 return
             }
 
-            DependencyInjector.getRepository().getGenres(object : GenresCallback {
+            MovieApplication.dependencyInjector.getRepository().getGenres(object : GenresCallback {
                 override fun onGenresFetched(genres: List<ApiGenre>) {
                     genreList = genres
                     genresCallback.onGenresFetched(genres)
                 }
 
-                override fun onError() {
+                override fun onError(t: Throwable) {
                 }
             })
         }

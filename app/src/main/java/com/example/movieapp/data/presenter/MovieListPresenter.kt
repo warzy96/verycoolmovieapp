@@ -1,9 +1,9 @@
 package com.example.movieapp.data.presenter
 
-import com.example.movieapp.data.DependencyInjector
 import com.example.movieapp.data.callback.MovieCallback
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 
 class MovieListPresenter : MovieListContract.Presenter {
 
@@ -14,12 +14,12 @@ class MovieListPresenter : MovieListContract.Presenter {
     }
 
     override fun getMovies() {
-        DependencyInjector.getRepository().getMovies(object : MovieCallback {
+        dependencyInjector.getRepository().getMovies(object : MovieCallback {
             override fun onMoviesFetched(movies: List<Movie>) {
-                view?.showMovies(DependencyInjector.getViewMapper().mapMoviesToViewMovies(movies))
+                view?.showMovies(dependencyInjector.getViewMapper().mapMoviesToViewMovies(movies))
             }
 
-            override fun onError() {
+            override fun onError(t: Throwable) {
                 view?.showErrorMessage()
             }
         })

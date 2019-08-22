@@ -6,5 +6,5 @@ interface MovieCallback {
 
     fun onMoviesFetched(movies: List<Movie>)
 
-    fun onError()
+    fun onError(t: Throwable)
 }

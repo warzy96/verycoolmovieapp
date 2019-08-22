@@ -1,6 +1,5 @@
 package com.example.movieapp.data.service
 
-import com.example.movieapp.data.DependencyInjector
 import com.example.movieapp.data.api.MovieApiFactory
 import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.GenreResults
@@ -8,6 +7,7 @@ import com.example.movieapp.data.api.model.MovieResults
 import com.example.movieapp.data.callback.GenresCallback
 import com.example.movieapp.data.callback.MovieCallback
 import com.example.movieapp.data.callback.MovieDetailsCallback
+import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import retrofit2.Call
 import retrofit2.Response
 
@@ -20,16 +20,15 @@ class MovieServiceImpl : MovieService {
 
             override fun onResponse(call: Call<MovieResults>, response: Response<MovieResults>) {
                 if (response.isSuccessful) {
-                    movieCallback.onMoviesFetched(DependencyInjector.getApiMapper().mapApiMoviesToMovies(response.body()?.results ?: listOf()))
+                    movieCallback.onMoviesFetched(dependencyInjector.getApiMapper().mapApiMoviesToMovies(response.body()?.results ?: listOf()))
                 } else {
-                    movieCallback.onError()
+                    movieCallback.onError(RuntimeException("Unable to fetch movies."))
                 }
             }
 
             override fun onFailure(call: Call<MovieResults>, t: Throwable) {
-                movieCallback.onError()
+                movieCallback.onError(t)
             }
-
         })
     }
 
@@ -41,16 +40,15 @@ class MovieServiceImpl : MovieService {
             override fun onResponse(call: Call<ApiMovieDetails>, response: Response<ApiMovieDetails>) {
                 if (response.isSuccessful) {
                     movieDetailsCallback
-                        .onMovieDetailsFetched(DependencyInjector.getApiMapper().mapApiMovieDetailsToMovie(response.body() ?: ApiMovieDetails()))
+                        .onMovieDetailsFetched(dependencyInjector.getApiMapper().mapApiMovieDetailsToMovie(response.body() ?: ApiMovieDetails()))
                 } else {
-                    movieDetailsCallback.onError()
+                    movieDetailsCallback.onError(RuntimeException("Unable to fetch movie details."))
                 }
             }
 
             override fun onFailure(call: Call<ApiMovieDetails>, t: Throwable) {
-                movieDetailsCallback.onError()
+                movieDetailsCallback.onError(t)
             }
-
         })
     }
 
@@ -63,14 +61,13 @@ class MovieServiceImpl : MovieService {
                 if (response.isSuccessful) {
                     genresCallback.onGenresFetched(response.body()?.genres ?: listOf())
                 } else {
-                    genresCallback.onError()
+                    genresCallback.onError(RuntimeException("Unable to fetch genres."))
                 }
             }
 
             override fun onFailure(call: Call<GenreResults>, t: Throwable) {
-                genresCallback.onError()
+                genresCallback.onError(t)
             }
-
         })
     }
 }

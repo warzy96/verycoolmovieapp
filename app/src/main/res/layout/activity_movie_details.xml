@@ -173,23 +173,12 @@
                 app:constraint_referenced_ids="movieDetailsAdult,moviePoster" />
 
             <TextView
-                android:id="@+id/movieDetailsOverviewTxt"
-                android:layout_height="wrap_content"
-                android:layout_width="0dp"
-                app:layout_constraintStart_toStartOf="@+id/moviePoster"
-                app:layout_constraintEnd_toEndOf="@id/moviePoster"
-                app:layout_constraintTop_toBottomOf="@+id/labelBarrier"
-                android:layout_marginTop="@dimen/details_vertical_gap_big"
-                android:text="@string/overview_text"
-                android:textSize="@dimen/movie_text_size_big"/>
-
-            <TextView
                 android:id="@+id/movieDetailsOverview"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                app:layout_constraintTop_toBottomOf="@id/movieDetailsOverviewTxt"
+                app:layout_constraintTop_toBottomOf="@id/labelBarrier"
                 app:layout_constraintStart_toStartOf="parent"
-                android:layout_marginTop="@dimen/details_vertical_gap_small"
+                android:layout_marginTop="@dimen/details_vertical_gap_big"
                 android:textSize="@dimen/movie_text_size_small"
                 android:layout_marginBottom="@dimen/details_bottom_margin"/>
 

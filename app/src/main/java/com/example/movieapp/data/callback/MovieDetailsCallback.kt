@@ -6,5 +6,5 @@ interface MovieDetailsCallback {
 
     fun onMovieDetailsFetched(movie: Movie)
 
-    fun onError()
+    fun onError(t: Throwable)
 }

@@ -6,11 +6,11 @@ import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
 
@@ -41,16 +41,14 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     }
 
     override fun showMovieDetails(movie: ViewMovie) {
-        MovieUtils.loadPoster(Glide.with(this), movie.posterPath.substring(1), moviePoster)
+        dependencyInjector.getImageLoader().loadPoster(movie.posterPath.substring(1), moviePoster)
 
         movieDetailsTitle.text = movie.title
 
         if (movie.tagline != null && movie.tagline != "") {
             movieDetailsTagline.text = QUOTE + movie.tagline + QUOTE
         } else {
-            movieDetailsTagline.apply {
-                visibility = View.GONE
-            }
+            movieDetailsTagline.visibility = View.GONE
         }
 
         if (movie.title != (movie.originalTitle)) {
@@ -66,12 +64,8 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         if (movie.runtime != null) {
             movieDetailsRuntime.text = movie.runtime.toString() + " " + RUNTIME_UNIT
         } else {
-            movieDetailsRuntimeTxt.apply {
-                visibility = View.GONE
-            }
-            movieDetailsRuntime.apply {
-                visibility = View.GONE
-            }
+            movieDetailsRuntimeTxt.visibility = View.GONE
+            movieDetailsRuntime.visibility = View.GONE
         }
 
         if (movie.homepage != null) {
@@ -81,15 +75,11 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
                 startActivity(openURL)
             }
         } else {
-            readMoreButton.apply {
-                visibility = View.GONE
-            }
+            readMoreButton.visibility = View.GONE
         }
 
         if (movie.isAdult) {
-            movieDetailsAdult.apply {
-                visibility = View.VISIBLE
-            }
+            movieDetailsAdult.visibility = View.VISIBLE
         }
 
         presenter.getGenres(movie)
@@ -103,12 +93,8 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     }
 
     override fun showErrorMessage() {
-        moviesDetailsErrorMessage.apply {
-            visibility = View.VISIBLE
-        }
-        moviesDetails.apply {
-            visibility = View.GONE
-        }
+        moviesDetailsErrorMessage.visibility = View.VISIBLE
+        moviesDetails.visibility = View.GONE
     }
 
 }
