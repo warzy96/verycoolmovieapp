@@ -10,9 +10,11 @@ class ApiMapperImpl : ApiMapper {
     }
 
     companion object {
+        private const val SCORE_DIVIDER = 2
+
         private fun mapApiMovieToMovie(apiMovie: ApiMovie) = Movie(
             title = apiMovie.title ?: "",
-            voteAverage = apiMovie.voteAverage ?: 0.0,
+            voteAverage = apiMovie.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
             voteCount = apiMovie.voteCount ?: 0,
             popularity = apiMovie.popularity ?: 0.0,
             posterPath = apiMovie.posterPath ?: "",

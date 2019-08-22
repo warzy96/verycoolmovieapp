@@ -46,8 +46,8 @@ class MoviesAdapter(
         fun updateValues(movie: Movie) {
             with(view) {
                 movieTitle.text = movie.title
-                imageLoader.loadPoster(movie.posterPath.substring(1), movieListPoster)
-                movieRating.rating = movie.voteAverage.toFloat() / 2
+                imageLoader.loadPoster(movie.posterPath, movieListPoster)
+                movieRating.rating = movie.voteAverage.toFloat()
                 movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
                 movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
             }

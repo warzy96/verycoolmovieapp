@@ -6,7 +6,7 @@ class MovieUtils {
 
     companion object {
         private const val ORIGINAL_TITLE_FORMAT = "(%s)"
-        private const val VOTE_FORMAT = "%.1f/10"
+        private const val VOTE_FORMAT = "%.1f/5"
         private const val VOTE_COUNT_FORMAT = "(%d)"
 
         private const val API_DATE_FORMAT = "yyyy-MM-dd"
