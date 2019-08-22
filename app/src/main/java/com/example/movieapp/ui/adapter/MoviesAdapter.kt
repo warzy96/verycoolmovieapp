@@ -42,31 +42,15 @@ class MoviesAdapter(
     }
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        private var title: TextView
-        private var poster: ImageView
-        private var rating: RatingBar
-        private var ratingCount: TextView
-        private var releaseDate: TextView
-
-        init {
-            with(view) {
-                title = movieTitle
-                poster = movieListPoster
-                rating = movieRating
-                ratingCount = movieRatingCount
-                releaseDate = movieReleaseDate
-            }
-        }
 
         fun updateValues(movie: Movie) {
-            title.text = movie.title
-
-            imageLoader.loadPoster(movie.posterPath.substring(1), poster)
-
-            rating.rating = movie.voteAverage.toFloat() / 2
-            ratingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-
-            releaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+            with(view) {
+                movieTitle.text = movie.title
+                imageLoader.loadPoster(movie.posterPath.substring(1), movieListPoster)
+                movieRating.rating = movie.voteAverage.toFloat() / 2
+                movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
+                movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+            }
         }
     }
 }
