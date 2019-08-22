@@ -15,7 +15,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="@dimen/poster_list_width"
-        android:layout_height="wrap_content"
+        android:layout_height="@dimen/poster_list_height"
         android:minHeight="@dimen/poster_list_width"
         android:layout_marginTop="@dimen/list_item_top_margin"
         android:layout_marginBottom="@dimen/list_item_bottom_margin"

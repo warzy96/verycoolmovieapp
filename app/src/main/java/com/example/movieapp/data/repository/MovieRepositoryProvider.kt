@@ -7,7 +7,7 @@ class MovieRepositoryProvider {
     companion object {
         private val movieRepository = MovieRepositoryImpl(MovieServiceProvider.getService())
 
-        fun getRepository() : MovieRepository {
+        fun getRepository(): MovieRepository {
             return movieRepository
         }
     }

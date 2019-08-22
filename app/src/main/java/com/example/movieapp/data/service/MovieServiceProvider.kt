@@ -5,7 +5,7 @@ class MovieServiceProvider {
     companion object {
         private val movieService = MovieServiceImpl()
 
-        fun getService() : MovieService {
+        fun getService(): MovieService {
             return movieService
         }
     }

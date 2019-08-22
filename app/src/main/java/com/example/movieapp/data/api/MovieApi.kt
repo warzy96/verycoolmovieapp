@@ -9,8 +9,8 @@ import retrofit2.http.Query
 interface MovieApi {
 
     @GET("discover/movie")
-    fun getMovies(@Query("api_key") api_key : String): Call<MovieResults>
+    fun getMovies(@Query("api_key") api_key: String): Call<MovieResults>
 
     @GET("genre/movie/list")
-    fun getGenres(@Query("api_key") api_key : String): Call<GenreResults>
+    fun getGenres(@Query("api_key") api_key: String): Call<GenreResults>
 }
