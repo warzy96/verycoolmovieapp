@@ -3,7 +3,7 @@ package com.example.movieapp.ui.utils
 import java.text.SimpleDateFormat
 
 class MovieUtils {
-    
+
     companion object {
         private const val ORIGINAL_TITLE_FORMAT = "(%s)"
         private const val VOTE_FORMAT = "%.1f/10"

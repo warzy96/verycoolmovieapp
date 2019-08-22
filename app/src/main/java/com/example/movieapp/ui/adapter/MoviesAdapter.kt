@@ -3,6 +3,9 @@ package com.example.movieapp.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.ImageView
+import android.widget.RatingBar
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.movieapp.R
@@ -11,6 +14,7 @@ import com.example.movieapp.ui.MovieApplication.Companion.imageLoader
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.movie_item.view.*
+import org.w3c.dom.Text
 
 class MoviesAdapter(
     private val movieClickListener: MovieClickListener,
@@ -38,11 +42,21 @@ class MoviesAdapter(
     }
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        var title = view.movieTitle
-        var poster = view.movieListPoster
-        var rating = view.movieRating
-        var ratingCount = view.movieRatingCount
-        var releaseDate = view.movieReleaseDate
+        private var title: TextView
+        private var poster: ImageView
+        private var rating: RatingBar
+        private var ratingCount: TextView
+        private var releaseDate: TextView
+
+        init {
+            with(view) {
+                title = movieTitle
+                poster = movieListPoster
+                rating = movieRating
+                ratingCount = movieRatingCount
+                releaseDate = movieReleaseDate
+            }
+        }
 
         fun updateValues(movie: Movie) {
             title.text = movie.title
