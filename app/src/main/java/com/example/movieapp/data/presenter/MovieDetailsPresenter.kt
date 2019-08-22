@@ -2,7 +2,7 @@ package com.example.movieapp.data.presenter
 
 import android.util.Log
 import com.example.movieapp.data.DependencyInjector
-import com.example.movieapp.data.api.model.Genre
+import com.example.movieapp.data.api.model.ApiGenre
 import com.example.movieapp.data.api.model.GenreProvider
 import com.example.movieapp.data.callback.GenresCallback
 import com.example.movieapp.data.callback.MovieDetailsCallback
@@ -33,7 +33,7 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter {
 
     override fun getGenres(movie: ViewMovie) {
         GenreProvider.getGenres(object : GenresCallback {
-            override fun onGenresFetched(genres: List<Genre>) {
+            override fun onGenresFetched(genres: List<ApiGenre>) {
                 val genreList = mutableListOf<String>()
 
                 for (id in movie.genreIds) {

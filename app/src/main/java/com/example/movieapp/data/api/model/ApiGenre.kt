@@ -2,7 +2,7 @@ package com.example.movieapp.data.api.model
 
 import com.squareup.moshi.Json
 
-class Genre {
+class ApiGenre {
 
     @Json(name = "id")
     val id: Int? = null

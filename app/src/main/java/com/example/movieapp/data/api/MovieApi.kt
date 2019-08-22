@@ -1,6 +1,5 @@
 package com.example.movieapp.data.api
 
-import com.example.movieapp.data.api.model.ApiMovie
 import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.GenreResults
 import com.example.movieapp.data.api.model.MovieResults

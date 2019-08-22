@@ -5,5 +5,5 @@ import com.squareup.moshi.Json
 class GenreResults {
 
     @Json(name = "genres")
-    val genres: List<Genre>? = null
+    val genres: List<ApiGenre>? = null
 }

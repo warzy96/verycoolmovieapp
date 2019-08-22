@@ -6,7 +6,7 @@ import com.example.movieapp.data.callback.GenresCallback
 class GenreProvider {
 
     companion object {
-        var genreList: List<Genre>? = null
+        var genreList: List<ApiGenre>? = null
 
         fun getGenres(genresCallback: GenresCallback) {
             if (genreList != null) {
@@ -15,7 +15,7 @@ class GenreProvider {
             }
 
             DependencyInjector.getRepository().getGenres(object : GenresCallback {
-                override fun onGenresFetched(genres: List<Genre>) {
+                override fun onGenresFetched(genres: List<ApiGenre>) {
                     genreList = genres
                     genresCallback.onGenresFetched(genres)
                 }

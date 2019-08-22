@@ -5,9 +5,7 @@ import com.example.movieapp.domain.Movie
 
 class ViewMapperImpl : ViewMapper {
 
-    override fun mapMoviesToViewMovies(movies: List<Movie>) = movies.map {
-        mapMovieToViewMovie(it)
-    }
+    override fun mapMoviesToViewMovies(movies: List<Movie>) = movies.map { mapMovieToViewMovie(it) }
 
     override fun mapMovieToViewMovie(movie: Movie) = ViewMapperImpl.mapMovieToViewMovie(movie)
 

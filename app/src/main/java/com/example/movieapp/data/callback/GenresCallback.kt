@@ -1,10 +1,10 @@
 package com.example.movieapp.data.callback
 
-import com.example.movieapp.data.api.model.Genre
+import com.example.movieapp.data.api.model.ApiGenre
 
 interface GenresCallback {
 
-    fun onGenresFetched(genres: List<Genre>)
+    fun onGenresFetched(genres: List<ApiGenre>)
 
     fun onError()
 }

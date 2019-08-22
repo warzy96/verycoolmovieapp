@@ -58,6 +58,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         }
 
         movieDetailsVote.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
+        movieDetailsRating.rating = movie.voteAverage.toFloat() / 2
         movieDetailsOverview.text = movie.overview
 
         movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
@@ -99,9 +100,6 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     }
 
     override fun onGenresError() {
-        movieDetailsGenreTxt.apply {
-            visibility = View.GONE
-        }
     }
 
     override fun showErrorMessage() {

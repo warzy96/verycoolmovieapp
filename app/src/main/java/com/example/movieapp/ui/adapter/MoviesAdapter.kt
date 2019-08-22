@@ -13,9 +13,10 @@ import kotlinx.android.synthetic.main.movie_item.view.*
 
 class MoviesAdapter(
     private val movieClickListener: MovieClickListener,
-    val layoutInflater: LayoutInflater,
-    val requestManager: RequestManager
+    private val layoutInflater: LayoutInflater,
+    private val requestManager: RequestManager
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
+
     private var movies: MutableList<ViewMovie> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))

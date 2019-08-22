@@ -6,9 +6,7 @@ import com.example.movieapp.domain.Movie
 
 class ApiMapperImpl : ApiMapper {
 
-    override fun mapApiMoviesToMovies(apiMovies: List<ApiMovie>) = apiMovies.map {
-        mapApiMovieToMovie(it)
-    }
+    override fun mapApiMoviesToMovies(apiMovies: List<ApiMovie>) = apiMovies.map { mapApiMovieToMovie(it) }
 
     override fun mapApiMovieDetailsToMovie(apiMovie: ApiMovieDetails) = ApiMapperImpl.mapApiMovieDetailsToMovie(apiMovie)
 
@@ -40,7 +38,7 @@ class ApiMapperImpl : ApiMapper {
             posterPath = apiMovie.posterPath ?: "",
             originalLanguage = apiMovie.originalLanguage ?: "",
             originalTitle = apiMovie.originalTitle ?: "",
-            genreIds = apiMovie.genres?.map { it.id?:-1 } ?: listOf() ,
+            genreIds = apiMovie.genres?.map { it.id ?: -1 } ?: listOf(),
             isAdult = apiMovie.isAdult ?: false,
             overview = apiMovie.overview ?: "",
             releaseDate = apiMovie.releaseDate ?: "",
