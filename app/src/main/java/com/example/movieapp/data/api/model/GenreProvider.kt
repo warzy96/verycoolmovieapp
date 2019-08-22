@@ -1,6 +1,5 @@
 package com.example.movieapp.data.api.model
 
-import com.example.movieapp.data.DependencyInjector
 import com.example.movieapp.data.callback.GenresCallback
 import com.example.movieapp.ui.MovieApplication
 

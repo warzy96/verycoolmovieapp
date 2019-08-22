@@ -4,7 +4,7 @@ import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 
-class GlideImageLoader(val context: Context): ImageLoader{
+class GlideImageLoader(private val context: Context): ImageLoader{
 
     override fun loadPoster(path: String, imageView: ImageView) {
         loadImage(ImageLoader.POSTER_API_URL + path, imageView)
