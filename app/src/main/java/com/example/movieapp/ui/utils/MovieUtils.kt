@@ -1,11 +1,9 @@
 package com.example.movieapp.ui.utils
 
-import android.widget.ImageView
-import com.bumptech.glide.RequestManager
-import com.example.movieapp.data.api.PosterLoader
 import java.text.SimpleDateFormat
 
 class MovieUtils {
+    
     companion object {
         private const val ORIGINAL_TITLE_FORMAT = "(%s)"
         private const val VOTE_FORMAT = "%.1f/10"
@@ -23,8 +21,5 @@ class MovieUtils {
 
         @JvmStatic
         fun formatOriginalTitle(originalTitle: String): String = String.format(ORIGINAL_TITLE_FORMAT, originalTitle)
-
-        @JvmStatic
-        fun loadPoster(requestManager: RequestManager, path: String, imageView: ImageView) = PosterLoader.loadImage(requestManager, path, imageView)
     }
 }

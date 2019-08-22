@@ -14,22 +14,10 @@ import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MovieClickListener {
 
     private lateinit var movieCallback: MovieCallback
-    private val viewAdapter by lazy {
-        MoviesAdapter(
-            object : MovieClickListener {
-                override fun onMovieClicked(movie: Movie) {
-                    startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie))
-                }
-            },
-            resources.getDimension(R.dimen.poster_list_width).toInt(),
-            resources.getDimension(R.dimen.poster_list_height).toInt(),
-            LayoutInflater.from(this),
-            Glide.with(this)
-        )
-    }
+    private val viewAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -56,11 +44,15 @@ class MainActivity : AppCompatActivity() {
                 swipeMovieContainer.isRefreshing = false
             }
 
-            override fun onError() {
+            override fun onError(t: Throwable) {
             }
         }
 
         loadMovies()
+    }
+
+    override fun onMovieClicked(movie: Movie) {
+        startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie))
     }
 
     private fun loadMovies() {

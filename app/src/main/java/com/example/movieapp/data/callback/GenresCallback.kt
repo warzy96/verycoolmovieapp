@@ -6,5 +6,5 @@ interface GenresCallback {
 
     fun onGenresFetched(genres: List<Genre>)
 
-    fun onError()
+    fun onError(t: Throwable)
 }

@@ -11,6 +11,7 @@ import com.example.movieapp.data.callback.GenresCallback
 import com.example.movieapp.data.model.Genre
 import com.example.movieapp.data.model.GenreProvider
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.ui.MovieApplication.Companion.imageLoader
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
 
@@ -29,9 +30,9 @@ class MovieDetailsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
 
-        val movie: Movie = intent.getSerializableExtra("movie") as Movie
+        val movie: Movie = intent.getSerializableExtra(MOVIE_ID_EXTRA) as Movie
 
-        MovieUtils.loadPoster(Glide.with(this), movie.posterPath.substring(1), moviePoster)
+        imageLoader.loadPoster(movie.posterPath.substring(1), moviePoster)
 
         movieDetailsTitle.text = movie.title
 
@@ -45,33 +46,27 @@ class MovieDetailsActivity : AppCompatActivity() {
         movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
 
         if (movie.isAdult) {
-            movieDetailsAdult.apply {
-                visibility = View.VISIBLE
-            }
+            movieDetailsAdult.visibility = View.VISIBLE
         }
 
         GenreProvider.getGenres(object : GenresCallback {
             override fun onGenresFetched(genres: List<Genre>) {
-                val genreList = mutableListOf<String>()
+                val genreStrings = mutableListOf<String>()
 
                 for (id in movie.genreIds) {
                     val genre = genres.filter { g -> g.id?.equals(id) ?: false }.single().name
 
                     if (genre != null) {
-                        genreList.add(genre)
+                        genreStrings.add(genre)
                     }
                 }
 
-                movieDetailsGenre.text = genreList.joinToString(", ")
+                movieDetailsGenre.text = genreStrings.joinToString(", ")
             }
 
-            override fun onError() {
-                movieDetailsGenreTxt.apply {
-                    visibility = View.GONE
-                }
+            override fun onError(t: Throwable) {
+                movieDetailsGenreTxt.visibility = View.GONE
             }
         })
-
     }
-
 }

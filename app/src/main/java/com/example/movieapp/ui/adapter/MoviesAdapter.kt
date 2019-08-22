@@ -7,18 +7,17 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.RequestManager
 import com.example.movieapp.R
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.ui.MovieApplication.Companion.imageLoader
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.movie_item.view.*
 
 class MoviesAdapter(
     private val movieClickListener: MovieClickListener,
-    val posterWidth: Int,
-    val posterHeight: Int,
-    val layoutInflater: LayoutInflater,
-    val requestManager: RequestManager
+    private val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
-    private var movies: MutableList<Movie> = mutableListOf()
+
+    private val movies: MutableList<Movie> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
@@ -27,17 +26,16 @@ class MoviesAdapter(
             movieClickListener.onMovieClicked(movies[position])
         }
 
-        holder.title.text = movies[position].title
-
-        MovieUtils.loadPoster(requestManager, movies[position].posterPath.substring(1), holder.poster)
-
-        holder.rating.rating = movies[position].voteAverage.toFloat() / 2
-        holder.ratingCount.text = MovieUtils.formatVotes(movies[position].voteAverage, movies[position].voteCount)
-
-        holder.releaseDate.text = MovieUtils.formatDate(movies[position].releaseDate)
+        holder.updateValues(movies[position])
     }
 
     override fun getItemCount() = movies.size
+
+    fun setData(movies: List<Movie>) {
+        this.movies.clear()
+        this.movies.addAll(movies)
+        notifyDataSetChanged()
+    }
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
         var title = view.movieTitle
@@ -45,10 +43,16 @@ class MoviesAdapter(
         var rating = view.movieRating
         var ratingCount = view.movieRatingCount
         var releaseDate = view.movieReleaseDate
-    }
 
-    fun setData(movieList: List<Movie>) {
-        this.movies = movieList.toMutableList()
-        notifyDataSetChanged()
+        fun updateValues(movie: Movie) {
+            title.text = movie.title
+
+            imageLoader.loadPoster(movie.posterPath.substring(1), poster)
+
+            rating.rating = movie.voteAverage.toFloat() / 2
+            ratingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
+
+            releaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        }
     }
 }

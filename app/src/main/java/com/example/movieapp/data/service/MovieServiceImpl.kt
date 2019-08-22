@@ -20,12 +20,12 @@ class MovieServiceImpl : MovieService {
                 if (response.isSuccessful) {
                     movieCallback.onMoviesFetched(mapper.mapApiMoviesToMovies(response.body()?.results ?: listOf()))
                 } else {
-                    movieCallback.onError()
+                    movieCallback.onError(RuntimeException("Unable to fetch movies."))
                 }
             }
 
             override fun onFailure(call: Call<MovieResults>, t: Throwable) {
-                movieCallback.onError()
+                movieCallback.onError(t)
             }
 
         })
@@ -40,12 +40,12 @@ class MovieServiceImpl : MovieService {
                 if (response.isSuccessful) {
                     genresCallback.onGenresFetched(response.body()?.genres ?: listOf())
                 } else {
-                    genresCallback.onError()
+                    genresCallback.onError(RuntimeException(RuntimeException("Unable to fetch genres.")))
                 }
             }
 
             override fun onFailure(call: Call<GenreResults>, t: Throwable) {
-                genresCallback.onError()
+                genresCallback.onError(t)
             }
 
         })
