@@ -19,6 +19,7 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val DEFAULT_MOVIES_ERROR = "Error occured while fetching movies..."
     }
 
     private lateinit var movieCallback: MovieCallback
@@ -50,7 +51,7 @@ class MainActivity : AppCompatActivity(), MovieClickListener {
             }
 
             override fun onError(t: Throwable) {
-                Log.e(TAG, t.localizedMessage ?: "")
+                Log.e(TAG, t.localizedMessage ?: DEFAULT_MOVIES_ERROR)
                 AlertDialog.Builder(this@MainActivity)
                     .setTitle(R.string.network_error_title)
                     .setMessage(R.string.movies_error_message)
