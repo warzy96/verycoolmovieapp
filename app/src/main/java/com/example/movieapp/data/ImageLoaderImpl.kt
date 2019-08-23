@@ -1,11 +1,11 @@
 package com.example.movieapp.data
 
 import android.widget.ImageView
-import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestManager
 
-class ImageLoaderImpl(private val glide: Glide) : ImageLoader {
+class ImageLoaderImpl(private val requestManager: RequestManager) : ImageLoader {
 
     override fun loadImage(path: String, imageView: ImageView) {
-        Glide.with(glide.context).load(path).into(imageView)
+        requestManager.load(path).into(imageView)
     }
 }

@@ -12,6 +12,6 @@ class MovieApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        imageLoader = ImageLoaderImpl(Glide.get(this))
+        imageLoader = ImageLoaderImpl(Glide.with(this))
     }
 }
