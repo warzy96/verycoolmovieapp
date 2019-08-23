@@ -40,7 +40,7 @@ class MovieServiceImpl : MovieService {
                 if (response.isSuccessful) {
                     genresCallback.onGenresFetched(response.body()?.genres ?: listOf())
                 } else {
-                    genresCallback.onError(RuntimeException(RuntimeException("Unable to fetch genres.")))
+                    genresCallback.onError(RuntimeException("Unable to fetch genres."))
                 }
             }
 

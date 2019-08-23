@@ -5,7 +5,6 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.bumptech.glide.Glide
 import com.example.movieapp.R
 import com.example.movieapp.data.callback.GenresCallback
 import com.example.movieapp.data.model.Genre
@@ -32,7 +31,7 @@ class MovieDetailsActivity : AppCompatActivity() {
 
         val movie: Movie = intent.getSerializableExtra(MOVIE_ID_EXTRA) as Movie
 
-        imageLoader.loadPoster(movie.posterPath.substring(1), moviePoster)
+        imageLoader.loadImage(movie.posterPath, moviePoster)
 
         movieDetailsTitle.text = movie.title
 

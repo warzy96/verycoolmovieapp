@@ -21,6 +21,7 @@ class GenreProvider {
                 }
 
                 override fun onError(t: Throwable) {
+                    genresCallback.onError(t)
                 }
             })
         }
