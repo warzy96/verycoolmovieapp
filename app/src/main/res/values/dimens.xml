@@ -1,7 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="movie_text_size">20sp</dimen>
-    <dimen name="button_top_margin">20dp</dimen>
-    <dimen name="list_top_margin">50dp</dimen>
+    <dimen name="movie_text_size_big">20sp</dimen>
+    <dimen name="movie_text_size_small">16sp</dimen>
+    <dimen name="button_top_margin">4dp</dimen>
+    <dimen name="list_top_margin">4dp</dimen>
+    <dimen name="poster_width">150dp</dimen>
+    <dimen name="poster_height">225dp</dimen>
+    <dimen name="poster_list_width">100dp</dimen>
+    <dimen name="poster_list_height">150dp</dimen>
+    <dimen name="details_top_margin">20dp</dimen>
+    <dimen name="details_start_margin">20dp</dimen>
+    <dimen name="details_end_margin">20dp</dimen>
+    <dimen name="details_bottom_margin">20dp</dimen>
+    <dimen name="details_horizontal_gap">20dp</dimen>
+    <dimen name="details_vertical_gap_big">20dp</dimen>
+    <dimen name="details_vertical_gap_small">4dp</dimen>
     <dimen name="movie_item_padding">10dp</dimen>
+    <dimen name="list_item_top_margin">10dp</dimen>
+    <dimen name="list_item_start_margin">15dp</dimen>
+    <dimen name="list_item_end_margin">15dp</dimen>
+    <dimen name="list_item_bottom_margin">10dp</dimen>
 </resources>

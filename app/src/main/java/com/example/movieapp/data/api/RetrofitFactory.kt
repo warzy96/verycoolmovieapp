@@ -1,20 +1,20 @@
-package com.example.movieapp.data
+package com.example.movieapp.data.api
 
 import okhttp3.OkHttpClient
+import retrofit2.MoshiConverterFactory
 import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
 
 class RetrofitFactory {
 
     companion object {
-        fun getRetrofit(baseUrl: String) : Retrofit {
+        fun getRetrofit(baseUrl: String): Retrofit {
 
             val httpClient = OkHttpClient.Builder()
 
             val builder: Retrofit.Builder = Retrofit.Builder()
                 .baseUrl(baseUrl)
                 .addConverterFactory(
-                    GsonConverterFactory.create()
+                    MoshiConverterFactory.create()
                 )
 
             val retrofit = builder

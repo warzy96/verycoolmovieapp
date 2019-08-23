@@ -1,18 +1,69 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-              android:orientation="horizontal"
-              android:layout_width="match_parent"
-              android:layout_height="wrap_content"
-              android:padding="@dimen/movie_item_padding"
-              android:focusable="true"
-              android:clickable="true"
-              android:foreground="?android:attr/selectableItemBackground">
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:padding="@dimen/movie_item_padding"
+    android:focusable="true"
+    android:clickable="true"
+    android:foreground="?android:attr/selectableItemBackground">
+
+    <ImageView
+        android:id="@+id/movieListPoster"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:layout_width="@dimen/poster_list_width"
+        android:layout_height="@dimen/poster_list_height"
+        android:minHeight="@dimen/poster_list_width"
+        android:layout_marginTop="@dimen/list_item_top_margin"
+        android:layout_marginBottom="@dimen/list_item_bottom_margin"
+        android:layout_marginStart="@dimen/list_item_start_margin"
+        android:layout_marginEnd="@dimen/list_item_end_margin"/>
 
     <TextView
             android:id="@+id/movieTitle"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/movieListPoster"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/movieListPoster"
+            android:layout_marginBottom="@dimen/list_item_bottom_margin"
+            android:layout_marginStart="@dimen/list_item_start_margin"
+            android:layout_marginEnd="@dimen/list_item_end_margin"
             android:textStyle="bold"
-            android:textSize="@dimen/movie_text_size"/>
+            android:textSize="@dimen/movie_text_size_big"/>
 
-</LinearLayout>
+    <TextView
+        android:id="@+id/movieReleaseDate"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"
+        app:layout_constraintTop_toBottomOf="@id/movieTitle"
+        android:layout_marginTop="@dimen/list_item_top_margin"
+        android:layout_marginStart="@dimen/list_item_start_margin"
+        android:textSize="@dimen/movie_text_size_small"/>
+
+    <RatingBar
+        android:id="@+id/movieRating"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"
+        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
+        android:layout_marginStart="@dimen/list_item_start_margin"
+        style="?android:attr/ratingBarStyleSmall"
+        android:numStars="5"
+        android:stepSize="0.1"
+        android:isIndicator="true" />
+
+    <TextView
+        android:id="@+id/movieRatingCount"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toEndOf="@id/movieRating"
+        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
+        android:layout_marginStart="@dimen/list_item_start_margin"
+        android:textSize="@dimen/movie_text_size_small"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

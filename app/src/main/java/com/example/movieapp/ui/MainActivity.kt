@@ -1,28 +1,29 @@
 package com.example.movieapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.data.MovieCallback
-import com.example.movieapp.data.MovieRepository
-import com.example.movieapp.data.MovieRepositoryImpl
-import com.example.movieapp.data.MovieServiceImpl
+import com.example.movieapp.data.callback.MovieCallback
+import com.example.movieapp.data.repository.MovieRepositoryProvider
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.ui.adapter.MoviesAdapter
+import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MovieClickListener {
 
-    private var movieRepository: MovieRepository = MovieRepositoryImpl(MovieServiceImpl())
-    private lateinit var movieCallback : MovieCallback
-    private val viewAdapter by lazy { MovieListAdapter() }
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val DEFAULT_MOVIES_ERROR = "Error occured while fetching movies..."
+    }
+
+    private lateinit var movieCallback: MovieCallback
+    private val viewAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -31,7 +32,6 @@ class MainActivity : AppCompatActivity() {
         val viewManager = LinearLayoutManager(this)
 
         movieRecyclerView.apply {
-            setHasFixedSize(false)
             layoutManager = viewManager
             adapter = viewAdapter
         }
@@ -44,41 +44,30 @@ class MainActivity : AppCompatActivity() {
             loadMovies()
         }
 
-        getMoviesButton.setOnClickListener {
-            loadMovies()
-        }
-
         movieCallback = object : MovieCallback {
-            override fun moviesUpdated(movies: List<Movie>) {
+            override fun onMoviesFetched(movies: List<Movie>) {
                 viewAdapter.setData(movies)
                 swipeMovieContainer.isRefreshing = false
             }
+
+            override fun onError(t: Throwable) {
+                Log.e(TAG, t.localizedMessage ?: DEFAULT_MOVIES_ERROR)
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle(R.string.network_error_title)
+                    .setMessage(R.string.movies_error_message)
+                    .setNeutralButton(R.string.neutral_button_text, { _, _ -> finish() })
+                    .show()
+            }
         }
+
+        loadMovies()
     }
 
-    class MovieListAdapter : RecyclerView.Adapter<MovieListAdapter.MovieViewHolder>() {
-        private var movieList: List<Movie> = listOf()
-
-        class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-            var mTextView = view.findViewById<TextView>(R.id.movieTitle)
-        }
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int)
-                = MovieViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.movie_item, parent, false))
-
-        override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-            holder.mTextView.text = movieList[position].title
-        }
-
-        override fun getItemCount() = movieList.size
-
-        fun setData(movieList : List<Movie>) {
-            this.movieList = movieList
-            notifyDataSetChanged()
-        }
+    override fun onMovieClicked(movie: Movie) {
+        startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie))
     }
 
-    fun loadMovies() {
-        movieRepository.getMovies(movieCallback)
+    private fun loadMovies() {
+        MovieRepositoryProvider.getRepository().getMovies(movieCallback)
     }
 }
