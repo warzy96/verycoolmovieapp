@@ -41,7 +41,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     }
 
     override fun showMovieDetails(movie: ViewMovie) {
-        dependencyInjector.getImageLoader().loadPoster(movie.posterPath.substring(1), moviePoster)
+        dependencyInjector.getImageLoader().loadImage(movie.posterPath, moviePoster)
 
         movieDetailsTitle.text = movie.title
 
@@ -89,10 +89,10 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         movieDetailsGenre.text = genres.joinToString(", ")
     }
 
-    override fun onGenresError() {
+    override fun onGenresError(t: Throwable) {
     }
 
-    override fun showErrorMessage() {
+    override fun showErrorMessage(t: Throwable) {
         moviesDetailsErrorMessage.visibility = View.VISIBLE
         moviesDetails.visibility = View.GONE
     }

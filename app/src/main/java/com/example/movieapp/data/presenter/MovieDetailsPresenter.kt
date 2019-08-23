@@ -24,7 +24,7 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter {
             }
 
             override fun onError(t: Throwable) {
-                view?.showErrorMessage()
+                view?.showErrorMessage(t)
             }
         })
     }
@@ -46,7 +46,7 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter {
             }
 
             override fun onError(t: Throwable) {
-                view?.onGenresError()
+                view?.onGenresError(t)
             }
         })
     }

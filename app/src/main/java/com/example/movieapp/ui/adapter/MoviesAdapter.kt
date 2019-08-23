@@ -21,11 +21,8 @@ class MoviesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.view.setOnClickListener {
-            movieClickListener.onMovieClicked(movies[position])
-        }
 
-        holder.updateValues(movies[position])
+        holder.updateValues(movies[position], movieClickListener)
     }
 
     override fun getItemCount() = movies.size
@@ -37,21 +34,18 @@ class MoviesAdapter(
     }
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        private var title = view.movieTitle
-        private var poster = view.movieListPoster
-        private var rating = view.movieRating
-        private var ratingCount = view.movieRatingCount
-        private var releaseDate = view.movieReleaseDate
 
-        fun updateValues(movie: ViewMovie) {
-            title.text = movie.title
-
-            dependencyInjector.getImageLoader().loadPoster(movie.posterPath.substring(1), poster)
-
-            rating.rating = movie.voteAverage.toFloat() / 2
-            ratingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-
-            releaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        fun updateValues(movie: ViewMovie, movieClickListener: MovieClickListener) {
+            with(view) {
+                movieTitle.text = movie.title
+                dependencyInjector.getImageLoader().loadImage(movie.posterPath, movieListPoster)
+                movieRating.rating = movie.voteAverage.toFloat()
+                movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
+                movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+                setOnClickListener {
+                    movieClickListener.onMovieClicked(movie)
+                }
+            }
         }
     }
 }

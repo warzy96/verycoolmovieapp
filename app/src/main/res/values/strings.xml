@@ -9,4 +9,7 @@
     <string name="overview_text">Overview:</string>
     <string name="network_error">Network error. Please try again later &#8230;</string>
     <string name="read_more_button">Read More</string>
+    <string name="neutral_button_text">OK</string>
+    <string name="network_error_title">Network Error</string>
+    <string name="movies_error_message">Unable to fetch data. Please try again later&#8230;</string>
 </resources>

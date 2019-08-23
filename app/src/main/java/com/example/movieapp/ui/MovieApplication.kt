@@ -13,5 +13,4 @@ class MovieApplication : Application() {
     companion object {
         lateinit var dependencyInjector: DependencyInjector
     }
-
 }

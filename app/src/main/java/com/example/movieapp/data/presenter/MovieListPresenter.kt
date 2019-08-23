@@ -20,7 +20,7 @@ class MovieListPresenter : MovieListContract.Presenter {
             }
 
             override fun onError(t: Throwable) {
-                view?.showErrorMessage()
+                view?.showErrorMessage(t)
             }
         })
     }

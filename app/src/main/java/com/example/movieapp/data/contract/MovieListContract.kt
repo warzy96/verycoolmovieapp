@@ -15,6 +15,6 @@ interface MovieListContract {
 
         fun showMovies(movies: List<ViewMovie>)
 
-        fun showErrorMessage()
+        fun showErrorMessage(t: Throwable)
     }
 }
