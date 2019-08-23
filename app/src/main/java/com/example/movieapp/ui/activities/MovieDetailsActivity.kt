@@ -4,7 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieDetailsContract
@@ -23,6 +25,9 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
 
         private const val RUNTIME_UNIT = "min"
         private const val QUOTE = "\""
+
+        private const val TAG = "MainActivity"
+        private const val DEFAULT_MOVIES_ERROR = "Error occured while fetching movies..."
 
         @JvmStatic
         fun createIntent(context: Context, movieId: Int) = Intent(context, MovieDetailsActivity::class.java).apply {
@@ -95,6 +100,13 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     override fun showErrorMessage(t: Throwable) {
         moviesDetailsErrorMessage.visibility = View.VISIBLE
         moviesDetails.visibility = View.GONE
+
+        Log.e(TAG, t.localizedMessage ?: DEFAULT_MOVIES_ERROR)
+        AlertDialog.Builder(this)
+            .setTitle(R.string.network_error_title)
+            .setMessage(R.string.movies_error_message)
+            .setNeutralButton(R.string.neutral_button_text, { _, _ -> finish() })
+            .show()
     }
 
 }

@@ -71,7 +71,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         AlertDialog.Builder(this@MainActivity)
             .setTitle(R.string.network_error_title)
             .setMessage(R.string.movies_error_message)
-            .setNeutralButton(R.string.neutral_button_text, { _, _ -> finish() })
+            .setNeutralButton(R.string.neutral_button_text, { _, _ -> Unit })
             .show()
     }
 
