@@ -7,7 +7,7 @@ import retrofit2.Retrofit
 class RetrofitFactory {
 
     companion object {
-        fun getRetrofit(baseUrl: String) : Retrofit {
+        fun getRetrofit(baseUrl: String): Retrofit {
 
             val httpClient = OkHttpClient.Builder()
 

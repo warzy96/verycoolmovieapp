@@ -10,16 +10,6 @@
         android:focusable="true"
         android:clickable="true">
 
-    <Button
-            android:id="@+id/getMoviesButton"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="@string/get_movies_button"
-            android:layout_marginTop="@dimen/button_top_margin"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"/>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/swipeMovieContainer"
@@ -27,8 +17,7 @@
             android:layout_height="wrap_content"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/getMoviesButton"
-            android:layout_marginTop="@dimen/list_top_margin">
+            app:layout_constraintTop_toTopOf="parent">
 
         <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/movieRecyclerView"

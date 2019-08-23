@@ -19,6 +19,10 @@ class GenreProvider {
                     genreList = genres
                     genresCallback.onGenresFetched(genres)
                 }
+
+                override fun onError(t: Throwable) {
+                    genresCallback.onError(t)
+                }
             })
         }
     }
