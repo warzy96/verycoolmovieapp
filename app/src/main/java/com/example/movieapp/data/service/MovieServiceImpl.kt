@@ -7,11 +7,15 @@ import com.example.movieapp.data.api.model.MovieResults
 import com.example.movieapp.data.callback.GenresCallback
 import com.example.movieapp.data.callback.MovieCallback
 import com.example.movieapp.data.callback.MovieDetailsCallback
-import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
+import com.example.movieapp.data.mapper.ApiMapper
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import retrofit2.Call
 import retrofit2.Response
 
-class MovieServiceImpl : MovieService {
+class MovieServiceImpl : MovieService, KoinComponent {
+
+    private val apiMapper: ApiMapper by inject()
 
     override fun getMovies(movieCallback: MovieCallback) {
         val call = MovieApiFactory.getApi().getMovies(MovieApiFactory.API_KEY)
@@ -20,7 +24,7 @@ class MovieServiceImpl : MovieService {
 
             override fun onResponse(call: Call<MovieResults>, response: Response<MovieResults>) {
                 if (response.isSuccessful) {
-                    movieCallback.onMoviesFetched(dependencyInjector.getApiMapper().mapApiMoviesToMovies(response.body()?.results ?: listOf()))
+                    movieCallback.onMoviesFetched(apiMapper.mapApiMoviesToMovies(response.body()?.results ?: listOf()))
                 } else {
                     movieCallback.onError(RuntimeException("Unable to fetch movies."))
                 }
@@ -40,7 +44,7 @@ class MovieServiceImpl : MovieService {
             override fun onResponse(call: Call<ApiMovieDetails>, response: Response<ApiMovieDetails>) {
                 if (response.isSuccessful) {
                     movieDetailsCallback
-                        .onMovieDetailsFetched(dependencyInjector.getApiMapper().mapApiMovieDetailsToMovie(response.body() ?: ApiMovieDetails()))
+                        .onMovieDetailsFetched(apiMapper.mapApiMovieDetailsToMovie(response.body() ?: ApiMovieDetails()))
                 } else {
                     movieDetailsCallback.onError(RuntimeException("Unable to fetch movie details."))
                 }

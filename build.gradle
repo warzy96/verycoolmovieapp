@@ -38,7 +38,7 @@ allprojects {
         swipeRefreshLayoutVersion = "1.0.0"
         moshiConverterVersion = "2.0.0-beta3"
         glideVersion = "4.9.0"
-        koinVersion = "1.0.2"
+        koinVersion = "2.0.1"
     }
 
     repositories {

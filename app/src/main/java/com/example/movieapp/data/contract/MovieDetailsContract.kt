@@ -19,8 +19,8 @@ interface MovieDetailsContract {
 
         fun showGenres(genres: List<String>)
 
-        fun showErrorMessage()
+        fun showErrorMessage(t: Throwable)
 
-        fun onGenresError()
+        fun onGenresError(t: Throwable)
     }
 }

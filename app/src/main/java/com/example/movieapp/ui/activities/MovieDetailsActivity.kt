@@ -7,16 +7,19 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
+import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.view.model.ViewMovie
-import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
+class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, KoinComponent {
 
     private val presenter by lazy { MovieDetailsPresenter() }
+    private val imageLoader: ImageLoader by inject()
 
     companion object {
         private const val MOVIE_ID_EXTRA = "movie_id"
@@ -41,7 +44,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     }
 
     override fun showMovieDetails(movie: ViewMovie) {
-        dependencyInjector.getImageLoader().loadPoster(movie.posterPath.substring(1), moviePoster)
+        imageLoader.loadImage(movie.posterPath, moviePoster)
 
         movieDetailsTitle.text = movie.title
 
@@ -89,10 +92,10 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         movieDetailsGenre.text = genres.joinToString(", ")
     }
 
-    override fun onGenresError() {
+    override fun onGenresError(t: Throwable) {
     }
 
-    override fun showErrorMessage() {
+    override fun showErrorMessage(t: Throwable) {
         moviesDetailsErrorMessage.visibility = View.VISIBLE
         moviesDetails.visibility = View.GONE
     }

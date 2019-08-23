@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
+import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.view.model.ViewMovie
-import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.movie_item.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class MoviesAdapter(
     private val movieClickListener: MovieClickListener,
@@ -21,11 +23,8 @@ class MoviesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.view.setOnClickListener {
-            movieClickListener.onMovieClicked(movies[position])
-        }
 
-        holder.updateValues(movies[position])
+        holder.updateValues(movies[position], movieClickListener)
     }
 
     override fun getItemCount() = movies.size
@@ -36,22 +35,21 @@ class MoviesAdapter(
         notifyDataSetChanged()
     }
 
-    class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
-        private var title = view.movieTitle
-        private var poster = view.movieListPoster
-        private var rating = view.movieRating
-        private var ratingCount = view.movieRatingCount
-        private var releaseDate = view.movieReleaseDate
+    class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view), KoinComponent {
 
-        fun updateValues(movie: ViewMovie) {
-            title.text = movie.title
+        private val imageLoader: ImageLoader by inject()
 
-            dependencyInjector.getImageLoader().loadPoster(movie.posterPath.substring(1), poster)
-
-            rating.rating = movie.voteAverage.toFloat() / 2
-            ratingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-
-            releaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        fun updateValues(movie: ViewMovie, movieClickListener: MovieClickListener) {
+            with(view) {
+                movieTitle.text = movie.title
+                imageLoader.loadImage(movie.posterPath, movieListPoster)
+                movieRating.rating = movie.voteAverage.toFloat()
+                movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
+                movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+                setOnClickListener {
+                    movieClickListener.onMovieClicked(movie)
+                }
+            }
         }
     }
 }

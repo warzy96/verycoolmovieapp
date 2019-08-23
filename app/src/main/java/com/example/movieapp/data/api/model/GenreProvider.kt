@@ -1,28 +1,30 @@
 package com.example.movieapp.data.api.model
 
 import com.example.movieapp.data.callback.GenresCallback
-import com.example.movieapp.ui.MovieApplication
+import com.example.movieapp.data.repository.MovieRepository
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class GenreProvider {
+class GenreProvider: KoinComponent {
 
-    companion object {
-        var genreList: List<ApiGenre>? = null
+    private val repository: MovieRepository by inject()
+    var genreList: List<ApiGenre>? = null
 
-        fun getGenres(genresCallback: GenresCallback) {
-            if (genreList != null) {
-                genresCallback.onGenresFetched(genreList ?: listOf())
-                return
+    fun getGenres(genresCallback: GenresCallback) {
+        if (genreList != null) {
+            genresCallback.onGenresFetched(genreList ?: listOf())
+            return
+        }
+
+        repository.getGenres(object : GenresCallback {
+            override fun onGenresFetched(genres: List<ApiGenre>) {
+                genreList = genres
+                genresCallback.onGenresFetched(genres)
             }
 
-            MovieApplication.dependencyInjector.getRepository().getGenres(object : GenresCallback {
-                override fun onGenresFetched(genres: List<ApiGenre>) {
-                    genreList = genres
-                    genresCallback.onGenresFetched(genres)
-                }
-
-                override fun onError(t: Throwable) {
-                }
-            })
-        }
+            override fun onError(t: Throwable) {
+                genresCallback.onError(t)
+            }
+        })
     }
 }
