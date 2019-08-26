@@ -1,44 +1,73 @@
 package com.example.movieapp.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.util.Log
+import android.view.LayoutInflater
+import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.DividerItemDecoration
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movieapp.R
-import com.example.movieapp.data.MovieCallback
-import com.example.movieapp.data.MovieRepository
-import com.example.movieapp.data.MovieRepositoryImpl
-import com.example.movieapp.data.MovieServiceImpl
+import com.example.movieapp.data.callback.MovieCallback
+import com.example.movieapp.data.repository.MovieRepositoryProvider
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.ui.adapter.MoviesAdapter
+import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), MovieClickListener {
 
-    var movieList: MutableList<Movie> = mutableListOf()
-    private var movieRepository: MovieRepository = MovieRepositoryImpl(MovieServiceImpl())
+    companion object {
+        private const val TAG = "MainActivity"
+        private const val DEFAULT_MOVIES_ERROR = "Error occured while fetching movies..."
+    }
 
-    private lateinit var movieCallback : MovieCallback
+    private lateinit var movieCallback: MovieCallback
+    private val viewAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        getMoviesButton.setOnClickListener {
+        val viewManager = LinearLayoutManager(this)
+
+        movieRecyclerView.apply {
+            layoutManager = viewManager
+            adapter = viewAdapter
+        }
+
+        movieRecyclerView.addItemDecoration(
+            DividerItemDecoration(movieRecyclerView.context, viewManager.orientation)
+        )
+
+        swipeMovieContainer.setOnRefreshListener {
             loadMovies()
         }
 
         movieCallback = object : MovieCallback {
-            override fun moviesUpdated(movies: List<Movie>) {
-                movieList.clear()
-                movieList.addAll(movies)
+            override fun onMoviesFetched(movies: List<Movie>) {
+                viewAdapter.setData(movies)
+                swipeMovieContainer.isRefreshing = false
+            }
 
-                movieListText.text = ("")
-                for (movie in movieList) {
-                    movieListText.setText(movieListText.text.toString() + movie.title + "\n")
-                }
+            override fun onError(t: Throwable) {
+                Log.e(TAG, t.localizedMessage ?: DEFAULT_MOVIES_ERROR)
+                AlertDialog.Builder(this@MainActivity)
+                    .setTitle(R.string.network_error_title)
+                    .setMessage(R.string.movies_error_message)
+                    .setNeutralButton(R.string.neutral_button_text, { _, _ -> finish() })
+                    .show()
             }
         }
+
+        loadMovies()
     }
 
-    fun loadMovies() {
-        movieRepository.getMovies(movieCallback)
+    override fun onMovieClicked(movie: Movie) {
+        startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie))
+    }
+
+    private fun loadMovies() {
+        MovieRepositoryProvider.getRepository().getMovies(movieCallback)
     }
 }

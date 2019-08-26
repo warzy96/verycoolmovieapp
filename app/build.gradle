@@ -25,7 +25,7 @@ android {
 
 dependencies {
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    implementation"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.appcompat:appcompat:$project.ext.appcompatVersion"
     implementation "androidx.core:core-ktx:$project.ext.ktxVersion"
     implementation "androidx.constraintlayout:constraintlayout:$project.ext.constraintLayoutVersion"
@@ -33,7 +33,13 @@ dependencies {
     androidTestImplementation "androidx.test:runner:$project.ext.testRunnerVersion"
     androidTestImplementation "androidx.test.espresso:espresso-core:$project.ext.espressoVersion"
 
+    implementation "androidx.recyclerview:recyclerview:$project.ext.recyclerViewVersion"
+    implementation "androidx.swiperefreshlayout:swiperefreshlayout:$project.ext.swipeRefreshLayoutVersion"
     implementation "com.squareup.retrofit2:retrofit:$project.ext.retrofitVersion"
     implementation "com.squareup.retrofit2:converter-gson:$project.ext.gsonVersion"
     implementation "com.squareup.moshi:moshi:$project.ext.moshiVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$project.ext.moshiConverterVersion"
+
+    implementation "com.github.bumptech.glide:glide:$project.ext.glideVersion"
+    annotationProcessor "com.github.bumptech.glide:compiler:$project.ext.glideVersion"
 }
