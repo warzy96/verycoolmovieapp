@@ -1,7 +1,7 @@
 package com.example.movieapp.data.presenter
 
-import com.example.movieapp.data.service.callback.MovieCallback
 import com.example.movieapp.data.contract.MovieListContract
+import com.example.movieapp.data.service.callback.MovieCallback
 import com.example.movieapp.domain.Movie
 import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 

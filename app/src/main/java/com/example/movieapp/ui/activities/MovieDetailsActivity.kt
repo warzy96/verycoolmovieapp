@@ -12,7 +12,6 @@ import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
-import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
