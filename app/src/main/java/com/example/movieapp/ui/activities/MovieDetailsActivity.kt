@@ -19,15 +19,12 @@ import kotlinx.android.synthetic.main.activity_movie_details.*
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
 
     private val presenter by lazy { MovieDetailsPresenter() }
+    private val imageLoader by lazy { dependencyInjector.getImageLoader() }
 
     companion object {
         private const val MOVIE_ID_EXTRA = "movie_id"
-
-        private const val RUNTIME_UNIT = "min"
-        private const val QUOTE = "\""
-
-        private const val TAG = "MainActivity"
-        private const val DEFAULT_MOVIES_ERROR = "Error occured while fetching movies..."
+        private const val TAG = "MovieDetailsActivity"
+        private const val GENRE_SEPARATOR = ", "
 
         @JvmStatic
         fun createIntent(context: Context, movieId: Int) = Intent(context, MovieDetailsActivity::class.java).apply {
@@ -46,38 +43,35 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
     }
 
     override fun showMovieDetails(movie: ViewMovie) {
-        dependencyInjector.getImageLoader().loadImage(movie.posterPath, moviePoster)
+        imageLoader.loadImage(movie.backdropPath, moviePoster)
 
         movieDetailsTitle.text = movie.title
 
-        if (movie.tagline != null && movie.tagline != "") {
-            movieDetailsTagline.text = QUOTE + movie.tagline + QUOTE
+        if (!movie.tagline.isNullOrBlank()) {
+            movieDetailsTagline.text = MovieUtils.formatTagline(movie.tagline)
         } else {
             movieDetailsTagline.visibility = View.GONE
         }
 
-        if (movie.title != (movie.originalTitle)) {
-            movieDetailsTitle.text = movieDetailsTitle.text.toString() + " " + MovieUtils.formatOriginalTitle(movie.originalTitle)
+        if (movie.title != movie.originalTitle) {
+            movieDetailsTitle.text = MovieUtils.formatFullTitle(movie.title, movie.originalTitle)
         }
 
         movieDetailsVote.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-        movieDetailsRating.rating = movie.voteAverage.toFloat() / 2
+        movieDetailsRating.rating = movie.voteAverage.toFloat()
         movieDetailsOverview.text = movie.overview
 
         movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
 
         if (movie.runtime != null) {
-            movieDetailsRuntime.text = movie.runtime.toString() + " " + RUNTIME_UNIT
+            movieDetailsRuntime.text = MovieUtils.formatRuntime(movie.runtime)
         } else {
-            movieDetailsRuntimeTxt.visibility = View.GONE
             movieDetailsRuntime.visibility = View.GONE
         }
 
         if (movie.homepage != null) {
             readMoreButton.setOnClickListener {
-                val openURL = Intent(Intent.ACTION_VIEW)
-                openURL.data = Uri.parse(movie.homepage)
-                startActivity(openURL)
+                openHomepage(movie.homepage)
             }
         } else {
             readMoreButton.visibility = View.GONE
@@ -90,23 +84,23 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         presenter.getGenres(movie)
     }
 
-    override fun showGenres(genres: List<String>) {
-        movieDetailsGenre.text = genres.joinToString(", ")
+    fun openHomepage(homepage: String) {
+        val openURL = Intent(Intent.ACTION_VIEW)
+        openURL.data = Uri.parse(homepage)
+        startActivity(openURL)
     }
 
-    override fun onGenresError(t: Throwable) {
+    override fun showGenres(genres: List<String>) {
+        movieDetailsGenre.text = genres.joinToString(GENRE_SEPARATOR)
     }
 
     override fun showErrorMessage(t: Throwable) {
-        moviesDetailsErrorMessage.visibility = View.VISIBLE
-        moviesDetails.visibility = View.GONE
-
-        Log.e(TAG, t.localizedMessage ?: DEFAULT_MOVIES_ERROR)
+        movieDetails.visibility = View.GONE
+        Log.e(TAG, t.localizedMessage ?: R.string.default_network_error.toString())
         AlertDialog.Builder(this)
             .setTitle(R.string.network_error_title)
             .setMessage(R.string.movies_error_message)
             .setNeutralButton(R.string.neutral_button_text, { _, _ -> finish() })
             .show()
     }
-
 }

@@ -11,6 +11,7 @@ data class Movie(
     val voteAverage: Double,
     val popularity: Double,
     val posterPath: String,
+    val backdropPath: String,
     val originalTitle: String,
     val originalLanguage: String,
     val genreIds: List<Int>,

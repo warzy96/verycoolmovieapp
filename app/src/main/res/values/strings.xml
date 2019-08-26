@@ -8,6 +8,7 @@
     <string name="adult_text">Adult movie</string>
     <string name="overview_text">Overview:</string>
     <string name="network_error">Network error. Please try again later &#8230;</string>
+    <string name="default_network_error">Error occured while fetching data&#8230;</string>
     <string name="read_more_button">Read More</string>
     <string name="neutral_button_text">OK</string>
     <string name="network_error_title">Network Error</string>

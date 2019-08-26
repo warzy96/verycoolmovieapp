@@ -35,10 +35,12 @@ class MoviesAdapter(
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
+        private val imageLoader by lazy { dependencyInjector.getImageLoader() }
+
         fun updateValues(movie: ViewMovie, movieClickListener: MovieClickListener) {
             with(view) {
                 movieTitle.text = movie.title
-                dependencyInjector.getImageLoader().loadImage(movie.posterPath, movieListPoster)
+                imageLoader.loadImage(movie.posterPath, movieListPoster)
                 movieRating.rating = movie.voteAverage.toFloat()
                 movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
                 movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)

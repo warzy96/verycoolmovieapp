@@ -1,6 +1,7 @@
-package com.example.movieapp.data.api.model
+package com.example.movieapp.data.service
 
-import com.example.movieapp.data.callback.GenresCallback
+import com.example.movieapp.data.api.model.ApiGenre
+import com.example.movieapp.data.service.callback.GenresCallback
 import com.example.movieapp.ui.MovieApplication
 
 class GenreProvider {

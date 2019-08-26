@@ -10,6 +10,7 @@ class ViewMovie(
     val voteCount: Int,
     val voteAverage: Double,
     val posterPath: String,
+    val backdropPath: String,
     val originalTitle: String,
     val genreIds: List<Int>,
     val isAdult: Boolean,

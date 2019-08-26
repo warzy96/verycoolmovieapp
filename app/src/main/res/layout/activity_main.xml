@@ -10,19 +10,6 @@
         android:focusable="true"
         android:clickable="true">
 
-    <TextView
-        android:id="@+id/moviesErrorMessage"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        android:textSize="@dimen/movie_text_size_big"
-        android:visibility="gone"
-        android:text="@string/network_error"
-        android:gravity="center"
-        android:layout_marginTop="@dimen/details_top_margin"/>
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
             xmlns:android="http://schemas.android.com/apk/res/android"
             android:id="@+id/swipeMovieContainer"

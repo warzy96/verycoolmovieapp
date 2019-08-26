@@ -1,9 +1,9 @@
 package com.example.movieapp.data.presenter
 
 import com.example.movieapp.data.api.model.ApiGenre
-import com.example.movieapp.data.api.model.GenreProvider
-import com.example.movieapp.data.callback.GenresCallback
-import com.example.movieapp.data.callback.MovieDetailsCallback
+import com.example.movieapp.data.service.GenreProvider
+import com.example.movieapp.data.service.callback.GenresCallback
+import com.example.movieapp.data.service.callback.MovieDetailsCallback
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.view.model.ViewMovie
 import com.example.movieapp.domain.Movie
@@ -12,15 +12,17 @@ import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 class MovieDetailsPresenter : MovieDetailsContract.Presenter {
 
     private var view: MovieDetailsContract.View? = null
+    private val repository by lazy { dependencyInjector.getRepository() }
+    private val viewMapper by lazy { dependencyInjector.getViewMapper() }
 
     override fun setView(view: MovieDetailsContract.View) {
         this.view = view
     }
 
     override fun getMovieDetails(movieId: Int) {
-        dependencyInjector.getRepository().getMovie(movieId, object : MovieDetailsCallback {
+        repository.getMovie(movieId, object : MovieDetailsCallback {
             override fun onMovieDetailsFetched(movie: Movie) {
-                view?.showMovieDetails(dependencyInjector.getViewMapper().mapMovieToViewMovie(movie))
+                view?.showMovieDetails(viewMapper.mapMovieToViewMovie(movie))
             }
 
             override fun onError(t: Throwable) {
@@ -46,7 +48,7 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter {
             }
 
             override fun onError(t: Throwable) {
-                view?.onGenresError(t)
+                view?.showErrorMessage(t)
             }
         })
     }

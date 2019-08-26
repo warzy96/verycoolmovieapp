@@ -19,6 +19,7 @@ class ApiMapperImpl : ApiMapper {
         voteCount = apiMovie.voteCount ?: 0,
         popularity = apiMovie.popularity ?: 0.0,
         posterPath = POSTER_API_URL + apiMovie.posterPath,
+        backdropPath = POSTER_API_URL + apiMovie.backdropPath,
         originalLanguage = apiMovie.originalLanguage ?: "",
         originalTitle = apiMovie.originalTitle ?: "",
         genreIds = apiMovie.genreIds ?: apiMovie.genreIds ?: listOf(),
@@ -34,10 +35,11 @@ class ApiMapperImpl : ApiMapper {
     override fun mapApiMovieDetailsToMovie(apiMovie: ApiMovieDetails) = Movie(
         id = apiMovie.id ?: -1,
         title = apiMovie.title ?: "",
-        voteAverage = apiMovie.voteAverage ?: 0.0,
+        voteAverage = apiMovie.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
         voteCount = apiMovie.voteCount ?: 0,
         popularity = apiMovie.popularity ?: 0.0,
         posterPath = POSTER_API_URL + apiMovie.posterPath,
+        backdropPath = POSTER_API_URL + apiMovie.backdropPath,
         originalLanguage = apiMovie.originalLanguage ?: "",
         originalTitle = apiMovie.originalTitle ?: "",
         genreIds = apiMovie.genres?.map { it.id ?: -1 } ?: listOf(),

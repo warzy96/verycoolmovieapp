@@ -3,11 +3,11 @@ package com.example.movieapp.data.mapper
 import com.example.movieapp.data.view.model.ViewMovie
 import com.example.movieapp.domain.Movie
 
-class ViewMapperImpl : ViewMapper {
+class ViewModelMapperImpl : ViewModelMapper {
 
     override fun mapMoviesToViewMovies(movies: List<Movie>) = movies.map { mapMovieToViewMovie(it) }
 
-    override fun mapMovieToViewMovie(movie: Movie) = ViewMapperImpl.mapMovieToViewMovie(movie)
+    override fun mapMovieToViewMovie(movie: Movie) = ViewModelMapperImpl.mapMovieToViewMovie(movie)
 
     companion object {
         private fun mapMovieToViewMovie(movie: Movie) = ViewMovie(
@@ -16,6 +16,7 @@ class ViewMapperImpl : ViewMapper {
             voteAverage = movie.voteAverage,
             voteCount = movie.voteCount,
             posterPath = movie.posterPath,
+            backdropPath = movie.backdropPath,
             originalTitle = movie.originalTitle,
             genreIds = movie.genreIds,
             isAdult = movie.isAdult,

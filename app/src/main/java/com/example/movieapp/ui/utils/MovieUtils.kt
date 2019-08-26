@@ -6,9 +6,13 @@ class MovieUtils {
 
     companion object {
         private const val ORIGINAL_TITLE_FORMAT = "(%s)"
+        private const val FULL_TITLE_FORMAT = "%s %s"
         private const val VOTE_FORMAT = "%.1f/5"
         private const val VOTE_COUNT_FORMAT = "(%d)"
         private const val VOTE_FULL_FORMAT = "$VOTE_FORMAT $VOTE_COUNT_FORMAT"
+        private const val QUOTE_FORMAT = "\"%s\""
+        private const val RUNTIME_UNIT = "min"
+        private const val RUNTIME_FORMAT = "%d $RUNTIME_UNIT"
 
         private const val API_DATE_FORMAT = "yyyy-MM-dd"
         private const val MOVIE_DATE_FORMAT = "dd/MM/yyyy"
@@ -21,5 +25,14 @@ class MovieUtils {
 
         @JvmStatic
         fun formatOriginalTitle(originalTitle: String): String = String.format(ORIGINAL_TITLE_FORMAT, originalTitle)
+
+        @JvmStatic
+        fun formatFullTitle(title: String, originalTitle: String): String = String.format(FULL_TITLE_FORMAT, title, formatOriginalTitle(originalTitle))
+
+        @JvmStatic
+        fun formatTagline(tagline: String): String = String.format(QUOTE_FORMAT, tagline)
+
+        @JvmStatic
+        fun formatRuntime(runtime: Int): String = String.format(RUNTIME_FORMAT, runtime)
     }
 }

@@ -10,9 +10,6 @@ class ApiMovieDetails {
     @Json(name = "id")
     val id: Int? = null
 
-    @field:Json(name = "video")
-    private val isVideo: Boolean? = null
-
     @field:Json(name = "vote_average")
     val voteAverage: Double? = null
 
@@ -38,7 +35,7 @@ class ApiMovieDetails {
     val genres: List<ApiGenre>? = null
 
     @field:Json(name = "backdrop_path")
-    private val backdropPath: String? = null
+    val backdropPath: String? = null
 
     @Json(name = "adult")
     val isAdult: Boolean? = null
