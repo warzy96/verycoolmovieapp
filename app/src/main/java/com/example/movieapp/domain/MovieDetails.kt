@@ -1,9 +1,6 @@
 package com.example.movieapp.domain
 
-import java.io.Serializable
-
 data class MovieDetails(
-
     val id: Int,
     val title: String,
     val tagline: String?,
@@ -21,4 +18,4 @@ data class MovieDetails(
     val releaseDate: String,
     val runtime: Int?,
     val homepage: String?
-) : Serializable
+)

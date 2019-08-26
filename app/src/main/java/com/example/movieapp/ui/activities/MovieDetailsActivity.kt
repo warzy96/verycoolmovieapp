@@ -20,9 +20,6 @@ import org.koin.core.inject
 
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, KoinComponent {
 
-    private val presenter by lazy { MovieDetailsPresenter() }
-    private val imageLoader: ImageLoader by inject()
-
     companion object {
         private const val MOVIE_ID_EXTRA = "movie_id"
         private const val TAG = "MovieDetailsActivity"
@@ -33,6 +30,9 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
             putExtra(MOVIE_ID_EXTRA, movieId)
         }
     }
+
+    private val presenter: MovieDetailsPresenter by inject()
+    private val imageLoader: ImageLoader by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -50,6 +50,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         movieDetailsTitle.text = movie.title
 
         if (!movie.tagline.isNullOrBlank()) {
+            movieDetailsTagline.visibility = View.VISIBLE
             movieDetailsTagline.text = MovieUtils.formatTagline(movie.tagline)
         } else {
             movieDetailsTagline.visibility = View.GONE

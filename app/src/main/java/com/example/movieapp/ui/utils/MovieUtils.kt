@@ -27,7 +27,8 @@ class MovieUtils {
         fun formatOriginalTitle(originalTitle: String): String = String.format(ORIGINAL_TITLE_FORMAT, originalTitle)
 
         @JvmStatic
-        fun formatFullTitle(title: String, originalTitle: String): String = String.format(FULL_TITLE_FORMAT, title, formatOriginalTitle(originalTitle))
+        fun formatFullTitle(title: String, originalTitle: String): String =
+            String.format(FULL_TITLE_FORMAT, title, formatOriginalTitle(originalTitle))
 
         @JvmStatic
         fun formatTagline(tagline: String): String = String.format(QUOTE_FORMAT, tagline)

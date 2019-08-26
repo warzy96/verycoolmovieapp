@@ -1,7 +1,7 @@
 package com.example.movieapp.data.api
 
-import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.ApiGenreResults
+import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.ApiMovieResults
 import retrofit2.Call
 import retrofit2.http.GET

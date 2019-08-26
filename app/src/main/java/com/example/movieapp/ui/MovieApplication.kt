@@ -8,9 +8,9 @@ import com.example.movieapp.data.mapper.ApiMapper
 import com.example.movieapp.data.mapper.ApiMapperImpl
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.mapper.ViewModelMapperImpl
+import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
-import com.example.movieapp.data.service.GenreProvider
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
 import org.koin.android.ext.koin.androidContext
@@ -33,6 +33,6 @@ class MovieApplication : Application() {
         single { ImageLoaderImpl(Glide.with(this@MovieApplication)) as ImageLoader }
         single { ApiMapperImpl() as ApiMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }
-        single { GenreProvider() }
+        single { MovieDetailsPresenter() }
     }
 }
