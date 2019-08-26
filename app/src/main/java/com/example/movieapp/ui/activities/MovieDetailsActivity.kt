@@ -4,13 +4,15 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import org.koin.core.KoinComponent
@@ -23,9 +25,8 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
 
     companion object {
         private const val MOVIE_ID_EXTRA = "movie_id"
-
-        private const val RUNTIME_UNIT = "min"
-        private const val QUOTE = "\""
+        private const val TAG = "MovieDetailsActivity"
+        private const val GENRE_SEPARATOR = ", "
 
         @JvmStatic
         fun createIntent(context: Context, movieId: Int) = Intent(context, MovieDetailsActivity::class.java).apply {
@@ -43,39 +44,36 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         presenter.getMovieDetails(movieId)
     }
 
-    override fun showMovieDetails(movie: ViewMovie) {
-        imageLoader.loadImage(movie.posterPath, moviePoster)
+    override fun showMovieDetails(movie: MovieDetailsViewModel) {
+        imageLoader.loadImage(movie.backdropPath, moviePoster)
 
         movieDetailsTitle.text = movie.title
 
-        if (movie.tagline != null && movie.tagline != "") {
-            movieDetailsTagline.text = QUOTE + movie.tagline + QUOTE
+        if (!movie.tagline.isNullOrBlank()) {
+            movieDetailsTagline.text = MovieUtils.formatTagline(movie.tagline)
         } else {
             movieDetailsTagline.visibility = View.GONE
         }
 
-        if (movie.title != (movie.originalTitle)) {
-            movieDetailsTitle.text = movieDetailsTitle.text.toString() + " " + MovieUtils.formatOriginalTitle(movie.originalTitle)
+        if (movie.title != movie.originalTitle) {
+            movieDetailsTitle.text = MovieUtils.formatFullTitle(movie.title, movie.originalTitle)
         }
 
         movieDetailsVote.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-        movieDetailsRating.rating = movie.voteAverage.toFloat() / 2
+        movieDetailsRating.rating = movie.voteAverage.toFloat()
         movieDetailsOverview.text = movie.overview
 
         movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
 
         if (movie.runtime != null) {
-            movieDetailsRuntime.text = movie.runtime.toString() + " " + RUNTIME_UNIT
+            movieDetailsRuntime.text = MovieUtils.formatRuntime(movie.runtime)
         } else {
-            movieDetailsRuntimeTxt.visibility = View.GONE
             movieDetailsRuntime.visibility = View.GONE
         }
 
         if (movie.homepage != null) {
             readMoreButton.setOnClickListener {
-                val openURL = Intent(Intent.ACTION_VIEW)
-                openURL.data = Uri.parse(movie.homepage)
-                startActivity(openURL)
+                openHomepage(movie.homepage)
             }
         } else {
             readMoreButton.visibility = View.GONE
@@ -85,19 +83,23 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
             movieDetailsAdult.visibility = View.VISIBLE
         }
 
-        presenter.getGenres(movie)
+        movieDetailsGenre.text = movie.genres.map { it.name }.joinToString(GENRE_SEPARATOR)
+        movieDetailsCountries.text = movie.countries.map { it.name }.joinToString(GENRE_SEPARATOR)
     }
 
-    override fun showGenres(genres: List<String>) {
-        movieDetailsGenre.text = genres.joinToString(", ")
-    }
-
-    override fun onGenresError(t: Throwable) {
+    fun openHomepage(homepage: String) {
+        val openURL = Intent(Intent.ACTION_VIEW)
+        openURL.data = Uri.parse(homepage)
+        startActivity(openURL)
     }
 
     override fun showErrorMessage(t: Throwable) {
-        moviesDetailsErrorMessage.visibility = View.VISIBLE
-        moviesDetails.visibility = View.GONE
+        movieDetails.visibility = View.GONE
+        Log.e(TAG, t.localizedMessage ?: R.string.default_network_error.toString())
+        AlertDialog.Builder(this)
+            .setTitle(R.string.network_error_title)
+            .setMessage(R.string.movies_error_message)
+            .setNeutralButton(R.string.neutral_button_text, { _, _ -> finish() })
+            .show()
     }
-
 }

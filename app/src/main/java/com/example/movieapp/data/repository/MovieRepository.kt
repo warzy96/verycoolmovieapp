@@ -1,8 +1,8 @@
 package com.example.movieapp.data.repository
 
-import com.example.movieapp.data.callback.GenresCallback
-import com.example.movieapp.data.callback.MovieCallback
-import com.example.movieapp.data.callback.MovieDetailsCallback
+import com.example.movieapp.data.service.callback.GenresCallback
+import com.example.movieapp.data.service.callback.MovieCallback
+import com.example.movieapp.data.service.callback.MovieDetailsCallback
 
 interface MovieRepository {
 

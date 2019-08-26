@@ -1,14 +1,10 @@
 package com.example.movieapp.data.presenter
 
-import com.example.movieapp.data.api.model.ApiGenre
-import com.example.movieapp.data.api.model.GenreProvider
-import com.example.movieapp.data.callback.GenresCallback
-import com.example.movieapp.data.callback.MovieDetailsCallback
 import com.example.movieapp.data.contract.MovieDetailsContract
-import com.example.movieapp.data.mapper.ViewMapper
+import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.data.view.model.ViewMovie
-import com.example.movieapp.domain.Movie
+import com.example.movieapp.data.service.callback.MovieDetailsCallback
+import com.example.movieapp.domain.MovieDetails
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -16,8 +12,7 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
 
     private var view: MovieDetailsContract.View? = null
     private val repository: MovieRepository by inject()
-    private val viewMapper: ViewMapper by inject()
-    private val genreProvider: GenreProvider by inject()
+    private val viewModelMapper: ViewModelMapper by inject()
 
     override fun setView(view: MovieDetailsContract.View) {
         this.view = view
@@ -25,34 +20,13 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
 
     override fun getMovieDetails(movieId: Int) {
         repository.getMovie(movieId, object : MovieDetailsCallback {
-            override fun onMovieDetailsFetched(movie: Movie) {
-                view?.showMovieDetails(viewMapper.mapMovieToViewMovie(movie))
+
+            override fun onMovieDetailsFetched(movieDetails: MovieDetails) {
+                view?.showMovieDetails(viewModelMapper.mapMovieDetailsToMovieDetailsViewModel(movieDetails))
             }
 
             override fun onError(t: Throwable) {
                 view?.showErrorMessage(t)
-            }
-        })
-    }
-
-    override fun getGenres(movie: ViewMovie) {
-        genreProvider.getGenres(object : GenresCallback {
-            override fun onGenresFetched(genres: List<ApiGenre>) {
-                val genreStrings = mutableListOf<String>()
-
-                for (id in movie.genreIds) {
-                    val genre = genres.filter { g -> g.id?.equals(id) ?: false }.single().name
-
-                    if (genre != null) {
-                        genreStrings.add(genre)
-                    }
-                }
-
-                view?.showGenres(genreStrings)
-            }
-
-            override fun onError(t: Throwable) {
-                view?.onGenresError(t)
             }
         })
     }

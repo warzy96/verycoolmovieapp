@@ -1,8 +1,8 @@
-package com.example.movieapp.domain
+package com.example.movieapp.data.view.model
 
 import java.io.Serializable
 
-data class Movie(
+class MovieViewModel(
 
     val id: Int,
     val title: String,
