@@ -4,6 +4,11 @@ import com.example.movieapp.data.api.model.ApiGenre
 import com.example.movieapp.data.api.model.ApiMovie
 import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.ApiProductionCountry
+import com.example.movieapp.data.mapper.MapperConstants.Companion.DEFAULT_BOOLEAN
+import com.example.movieapp.data.mapper.MapperConstants.Companion.DEFAULT_FLOAT
+import com.example.movieapp.data.mapper.MapperConstants.Companion.DEFAULT_ID
+import com.example.movieapp.data.mapper.MapperConstants.Companion.DEFAULT_INT
+import com.example.movieapp.data.mapper.MapperConstants.Companion.DEFAULT_STRING
 import com.example.movieapp.domain.Genre
 import com.example.movieapp.domain.Movie
 import com.example.movieapp.domain.MovieDetails
@@ -19,39 +24,39 @@ class ApiMapperImpl : ApiMapper {
     }
 
     private fun mapApiMovieToMovie(apiMovie: ApiMovie) = Movie(
-        title = apiMovie.title ?: "",
-        voteAverage = apiMovie.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
-        voteCount = apiMovie.voteCount ?: 0,
+        title = apiMovie.title ?: DEFAULT_STRING,
+        voteAverage = apiMovie.voteAverage?.div(SCORE_DIVIDER) ?: DEFAULT_FLOAT, // mapping 10-point score to 5-star rating
+        voteCount = apiMovie.voteCount ?: DEFAULT_INT,
         posterPath = POSTER_API_URL + apiMovie.posterPath,
-        id = apiMovie.id ?: -1,
-        releaseDate = apiMovie.releaseDate ?: ""
+        id = apiMovie.id ?: DEFAULT_ID,
+        releaseDate = apiMovie.releaseDate ?: DEFAULT_STRING
     )
 
     private fun mapApiGenreToGenre(apiGenre: ApiGenre) = Genre(
-        id = apiGenre.id ?: -1,
-        name = apiGenre.name ?: ""
+        id = apiGenre.id ?: DEFAULT_ID,
+        name = apiGenre.name ?: DEFAULT_STRING
     )
 
     private fun mapApiProductionCountryToProductionCountry(apiProductionCountry: ApiProductionCountry) = ProductionCountry(
-        isoCode = apiProductionCountry.isoCode ?: "",
-        name = apiProductionCountry.name ?: ""
+        isoCode = apiProductionCountry.isoCode ?: DEFAULT_STRING,
+        name = apiProductionCountry.name ?: DEFAULT_STRING
     )
 
     override fun mapApiMovieDetailsToMovieDetails(apiMovieDetails: ApiMovieDetails) = MovieDetails(
-        id = apiMovieDetails.id ?: -1,
-        title = apiMovieDetails.title ?: "",
-        voteAverage = apiMovieDetails.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
-        voteCount = apiMovieDetails.voteCount ?: 0,
-        popularity = apiMovieDetails.popularity ?: 0.0,
+        id = apiMovieDetails.id ?: DEFAULT_ID,
+        title = apiMovieDetails.title ?: DEFAULT_STRING,
+        voteAverage = apiMovieDetails.voteAverage?.div(SCORE_DIVIDER) ?: DEFAULT_FLOAT, // mapping 10-point score to 5-star rating
+        voteCount = apiMovieDetails.voteCount ?: DEFAULT_INT,
+        popularity = apiMovieDetails.popularity ?: DEFAULT_FLOAT,
         posterPath = POSTER_API_URL + apiMovieDetails.posterPath,
         backdropPath = POSTER_API_URL + apiMovieDetails.backdropPath,
-        originalLanguage = apiMovieDetails.originalLanguage ?: "",
-        originalTitle = apiMovieDetails.originalTitle ?: "",
+        originalLanguage = apiMovieDetails.originalLanguage ?: DEFAULT_STRING,
+        originalTitle = apiMovieDetails.originalTitle ?: DEFAULT_STRING,
         genres = mapApiGenresToGenres(apiMovieDetails.genres ?: listOf()),
         countries = mapApiProductionCountriesToProductionCountries(apiMovieDetails.countries ?: listOf()),
-        isAdult = apiMovieDetails.isAdult ?: false,
-        overview = apiMovieDetails.overview ?: "",
-        releaseDate = apiMovieDetails.releaseDate ?: "",
+        isAdult = apiMovieDetails.isAdult ?: DEFAULT_BOOLEAN,
+        overview = apiMovieDetails.overview ?: DEFAULT_STRING,
+        releaseDate = apiMovieDetails.releaseDate ?: DEFAULT_STRING,
         runtime = apiMovieDetails.runtime,
         homepage = apiMovieDetails.homepage,
         tagline = apiMovieDetails.tagline

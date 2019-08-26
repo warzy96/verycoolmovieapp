@@ -35,7 +35,7 @@ class MoviesAdapter(
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        private val imageLoader by lazy { dependencyInjector.getImageLoader() }
+        private val imageLoader by lazy { dependencyInjector.provideImageLoader() }
 
         fun updateValues(movie: MovieViewModel, movieClickListener: MovieClickListener) {
             with(view) {

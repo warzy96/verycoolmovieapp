@@ -13,7 +13,7 @@ import retrofit2.Response
 
 class MovieServiceImpl : MovieService {
 
-    private val apiMapper by lazy { MovieApplication.dependencyInjector.getApiMapper() }
+    private val apiMapper by lazy { MovieApplication.dependencyInjector.provideApiMapper() }
 
     override fun getMovies(movieCallback: MovieCallback) {
         val call = MovieApiFactory.getApi().getMovies(MovieApiFactory.API_KEY)

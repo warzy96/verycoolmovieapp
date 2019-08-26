@@ -10,16 +10,12 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieDetailsContract
-import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
 
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
-
-    private val presenter by lazy { MovieDetailsPresenter() }
-    private val imageLoader by lazy { dependencyInjector.getImageLoader() }
 
     companion object {
         private const val MOVIE_ID_EXTRA = "movie_id"
@@ -31,6 +27,9 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
             putExtra(MOVIE_ID_EXTRA, movieId)
         }
     }
+
+    private val presenter by lazy { dependencyInjector.provideMovieDetailsPresenter() }
+    private val imageLoader by lazy { dependencyInjector.provideImageLoader() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -48,6 +47,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         movieDetailsTitle.text = movie.title
 
         if (!movie.tagline.isNullOrBlank()) {
+            movieDetailsTagline.visibility = View.VISIBLE
             movieDetailsTagline.text = MovieUtils.formatTagline(movie.tagline)
         } else {
             movieDetailsTagline.visibility = View.GONE

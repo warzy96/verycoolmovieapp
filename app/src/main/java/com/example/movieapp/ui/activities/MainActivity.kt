@@ -28,24 +28,24 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        val viewManager = LinearLayoutManager(this)
-
         presenter.setView(this)
 
-        movieRecyclerView.apply {
-            layoutManager = viewManager
-            adapter = moviesAdapter
-        }
-
-        movieRecyclerView.addItemDecoration(
-            DividerItemDecoration(movieRecyclerView.context, viewManager.orientation)
-        )
+        initMoviesRecyclerView()
 
         swipeMovieContainer.setOnRefreshListener {
             loadMovies()
         }
 
         loadMovies()
+    }
+
+    fun initMoviesRecyclerView() {
+        movieRecyclerView.apply {
+            layoutManager = LinearLayoutManager(this@MainActivity)
+            adapter = moviesAdapter
+
+            addItemDecoration(DividerItemDecoration(context, (layoutManager as LinearLayoutManager).orientation))
+        }
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {

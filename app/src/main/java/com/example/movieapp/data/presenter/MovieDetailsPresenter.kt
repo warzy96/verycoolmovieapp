@@ -8,8 +8,8 @@ import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 class MovieDetailsPresenter : MovieDetailsContract.Presenter {
 
     private var view: MovieDetailsContract.View? = null
-    private val repository by lazy { dependencyInjector.getRepository() }
-    private val viewMapper by lazy { dependencyInjector.getViewMapper() }
+    private val repository by lazy { dependencyInjector.provideRepository() }
+    private val viewMapper by lazy { dependencyInjector.provideViewMapper() }
 
     override fun setView(view: MovieDetailsContract.View) {
         this.view = view

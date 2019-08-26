@@ -4,6 +4,7 @@ import android.content.Context
 import com.bumptech.glide.Glide
 import com.example.movieapp.data.mapper.ApiMapperImpl
 import com.example.movieapp.data.mapper.ViewModelMapperImpl
+import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
@@ -12,22 +13,25 @@ import com.example.movieapp.data.service.MovieServiceImpl
 class DependencyInjector(private val context: Context) {
 
     private val movieService: MovieService = MovieServiceImpl()
-    private var movieRepository: MovieRepository
+    private val movieRepository: MovieRepository
     private val apiMapper = ApiMapperImpl()
     private val viewMapper = ViewModelMapperImpl()
-    private var imageLoader = ImageLoaderImpl(Glide.with(context))
+    private val imageLoader = ImageLoaderImpl(Glide.with(context))
+    private val movieDetailsPresenter = MovieDetailsPresenter()
 
     init {
         movieRepository = MovieRepositoryImpl(movieService)
     }
 
-    fun getRepository(): MovieRepository = movieRepository
+    fun provideRepository(): MovieRepository = movieRepository
 
-    fun getService(): MovieService = movieService
+    fun provideService(): MovieService = movieService
 
-    fun getApiMapper() = apiMapper
+    fun provideApiMapper() = apiMapper
 
-    fun getViewMapper() = viewMapper
+    fun provideViewMapper() = viewMapper
 
-    fun getImageLoader() = imageLoader
+    fun provideImageLoader() = imageLoader
+
+    fun provideMovieDetailsPresenter() = movieDetailsPresenter
 }
