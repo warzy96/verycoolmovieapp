@@ -5,8 +5,9 @@ import com.example.movieapp.data.service.GenreProvider
 import com.example.movieapp.data.service.callback.GenresCallback
 import com.example.movieapp.data.service.callback.MovieDetailsCallback
 import com.example.movieapp.data.contract.MovieDetailsContract
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 
 class MovieDetailsPresenter : MovieDetailsContract.Presenter {
@@ -21,30 +22,8 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter {
 
     override fun getMovieDetails(movieId: Int) {
         repository.getMovie(movieId, object : MovieDetailsCallback {
-            override fun onMovieDetailsFetched(movie: Movie) {
-                view?.showMovieDetails(viewMapper.mapMovieToViewMovie(movie))
-            }
-
-            override fun onError(t: Throwable) {
-                view?.showErrorMessage(t)
-            }
-        })
-    }
-
-    override fun getGenres(movie: ViewMovie) {
-        GenreProvider.getGenres(object : GenresCallback {
-            override fun onGenresFetched(genres: List<ApiGenre>) {
-                val genreStrings = mutableListOf<String>()
-
-                for (id in movie.genreIds) {
-                    val genre = genres.filter { g -> g.id?.equals(id) ?: false }.single().name
-
-                    if (genre != null) {
-                        genreStrings.add(genre)
-                    }
-                }
-
-                view?.showGenres(genreStrings)
+            override fun onMovieDetailsFetched(movieDetails: MovieDetails) {
+                view?.showMovieDetails(viewMapper.mapMovieDetailsToMovieDetailsViewModel(movieDetails))
             }
 
             override fun onError(t: Throwable) {

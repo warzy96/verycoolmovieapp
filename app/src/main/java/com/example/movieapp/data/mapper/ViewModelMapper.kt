@@ -1,11 +1,13 @@
 package com.example.movieapp.data.mapper
 
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieDetailsViewModel
+import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 
 interface ViewModelMapper {
 
-    fun mapMoviesToViewMovies(movies: List<Movie>): List<ViewMovie>
+    fun mapMoviesToMovieViewModels(movies: List<Movie>): List<MovieViewModel>
 
-    fun mapMovieToViewMovie(movie: Movie): ViewMovie
+    fun mapMovieDetailsToMovieDetailsViewModel(movieDetails: MovieDetails): MovieDetailsViewModel
 }

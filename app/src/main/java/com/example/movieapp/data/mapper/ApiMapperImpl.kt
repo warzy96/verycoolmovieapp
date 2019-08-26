@@ -1,8 +1,11 @@
 package com.example.movieapp.data.mapper
 
+import com.example.movieapp.data.api.model.ApiGenre
 import com.example.movieapp.data.api.model.ApiMovie
 import com.example.movieapp.data.api.model.ApiMovieDetails
+import com.example.movieapp.domain.Genre
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 
 class ApiMapperImpl : ApiMapper {
 
@@ -17,37 +20,35 @@ class ApiMapperImpl : ApiMapper {
         title = apiMovie.title ?: "",
         voteAverage = apiMovie.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
         voteCount = apiMovie.voteCount ?: 0,
-        popularity = apiMovie.popularity ?: 0.0,
         posterPath = POSTER_API_URL + apiMovie.posterPath,
-        backdropPath = POSTER_API_URL + apiMovie.backdropPath,
-        originalLanguage = apiMovie.originalLanguage ?: "",
-        originalTitle = apiMovie.originalTitle ?: "",
-        genreIds = apiMovie.genreIds ?: apiMovie.genreIds ?: listOf(),
-        isAdult = apiMovie.isAdult ?: false,
-        overview = apiMovie.overview ?: "",
-        releaseDate = apiMovie.releaseDate ?: "",
         id = apiMovie.id ?: -1,
-        homepage = null,
-        tagline = null,
-        runtime = null
+        releaseDate = apiMovie.releaseDate ?: ""
     )
 
-    override fun mapApiMovieDetailsToMovie(apiMovie: ApiMovieDetails) = Movie(
-        id = apiMovie.id ?: -1,
-        title = apiMovie.title ?: "",
-        voteAverage = apiMovie.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
-        voteCount = apiMovie.voteCount ?: 0,
-        popularity = apiMovie.popularity ?: 0.0,
-        posterPath = POSTER_API_URL + apiMovie.posterPath,
-        backdropPath = POSTER_API_URL + apiMovie.backdropPath,
-        originalLanguage = apiMovie.originalLanguage ?: "",
-        originalTitle = apiMovie.originalTitle ?: "",
-        genreIds = apiMovie.genres?.map { it.id ?: -1 } ?: listOf(),
-        isAdult = apiMovie.isAdult ?: false,
-        overview = apiMovie.overview ?: "",
-        releaseDate = apiMovie.releaseDate ?: "",
-        runtime = apiMovie.runtime,
-        homepage = apiMovie.homepage,
-        tagline = apiMovie.tagline
+    private fun mapApiGenreToGenre(apiGenre: ApiGenre) = Genre(
+        id = apiGenre.id ?: -1,
+        name = apiGenre.name ?: ""
     )
+
+    override fun mapApiMovieDetailsToMovieDetails(apiMovieDetails: ApiMovieDetails) = MovieDetails(
+        id = apiMovieDetails.id ?: -1,
+        title = apiMovieDetails.title ?: "",
+        voteAverage = apiMovieDetails.voteAverage?.div(SCORE_DIVIDER) ?: 0.0, // mapping 10-point score to 5-star rating
+        voteCount = apiMovieDetails.voteCount ?: 0,
+        popularity = apiMovieDetails.popularity ?: 0.0,
+        posterPath = POSTER_API_URL + apiMovieDetails.posterPath,
+        backdropPath = POSTER_API_URL + apiMovieDetails.backdropPath,
+        originalLanguage = apiMovieDetails.originalLanguage ?: "",
+        originalTitle = apiMovieDetails.originalTitle ?: "",
+        genres = mapApiGenresToGenres(apiMovieDetails.genres ?: listOf()),
+        isAdult = apiMovieDetails.isAdult ?: false,
+        overview = apiMovieDetails.overview ?: "",
+        releaseDate = apiMovieDetails.releaseDate ?: "",
+        runtime = apiMovieDetails.runtime,
+        homepage = apiMovieDetails.homepage,
+        tagline = apiMovieDetails.tagline
+    )
+
+    override fun mapApiGenresToGenres(apiGenres: List<ApiGenre>) = apiGenres.map { mapApiGenreToGenre(it) }
+
 }

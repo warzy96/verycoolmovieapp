@@ -11,7 +11,8 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieDetailsViewModel
+import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
@@ -42,7 +43,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         presenter.getMovieDetails(movieId)
     }
 
-    override fun showMovieDetails(movie: ViewMovie) {
+    override fun showMovieDetails(movie: MovieDetailsViewModel) {
         imageLoader.loadImage(movie.backdropPath, moviePoster)
 
         movieDetailsTitle.text = movie.title
@@ -81,17 +82,13 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
             movieDetailsAdult.visibility = View.VISIBLE
         }
 
-        presenter.getGenres(movie)
+        movieDetailsGenre.text = movie.genres.map { it.name }.joinToString(GENRE_SEPARATOR)
     }
 
     fun openHomepage(homepage: String) {
         val openURL = Intent(Intent.ACTION_VIEW)
         openURL.data = Uri.parse(homepage)
         startActivity(openURL)
-    }
-
-    override fun showGenres(genres: List<String>) {
-        movieDetailsGenre.text = genres.joinToString(GENRE_SEPARATOR)
     }
 
     override fun showErrorMessage(t: Throwable) {

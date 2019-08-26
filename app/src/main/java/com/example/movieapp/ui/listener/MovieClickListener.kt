@@ -1,8 +1,8 @@
 package com.example.movieapp.ui.listener
 
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieViewModel
 
 interface MovieClickListener {
 
-    fun onMovieClicked(movie: ViewMovie)
+    fun onMovieClicked(movie: MovieViewModel)
 }

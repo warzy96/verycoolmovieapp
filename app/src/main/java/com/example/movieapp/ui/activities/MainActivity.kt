@@ -10,7 +10,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.presenter.MovieListPresenter
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -48,11 +48,11 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         loadMovies()
     }
 
-    override fun onMovieClicked(movie: ViewMovie) {
+    override fun onMovieClicked(movie: MovieViewModel) {
         startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie.id))
     }
 
-    override fun showMovies(movies: List<ViewMovie>) {
+    override fun showMovies(movies: List<MovieViewModel>) {
         moviesAdapter.setData(movies)
         swipeMovieContainer.isRefreshing = false
     }

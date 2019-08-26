@@ -18,7 +18,7 @@ class MovieListPresenter : MovieListContract.Presenter {
     override fun getMovies() {
         repository.getMovies(object : MovieCallback {
             override fun onMoviesFetched(movies: List<Movie>) {
-                view?.showMovies(viewMapper.mapMoviesToViewMovies(movies))
+                view?.showMovies(viewMapper.mapMoviesToMovieViewModels(movies))
             }
 
             override fun onError(t: Throwable) {

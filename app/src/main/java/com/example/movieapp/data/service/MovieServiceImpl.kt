@@ -3,7 +3,7 @@ package com.example.movieapp.data.service
 import com.example.movieapp.data.api.MovieApiFactory
 import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.ApiGenreResults
-import com.example.movieapp.data.api.model.MovieResults
+import com.example.movieapp.data.api.model.ApiMovieResults
 import com.example.movieapp.data.service.callback.GenresCallback
 import com.example.movieapp.data.service.callback.MovieCallback
 import com.example.movieapp.data.service.callback.MovieDetailsCallback
@@ -18,9 +18,9 @@ class MovieServiceImpl : MovieService {
     override fun getMovies(movieCallback: MovieCallback) {
         val call = MovieApiFactory.getApi().getMovies(MovieApiFactory.API_KEY)
 
-        call.enqueue(object : retrofit2.Callback<MovieResults> {
+        call.enqueue(object : retrofit2.Callback<ApiMovieResults> {
 
-            override fun onResponse(call: Call<MovieResults>, response: Response<MovieResults>) {
+            override fun onResponse(call: Call<ApiMovieResults>, response: Response<ApiMovieResults>) {
                 if (response.isSuccessful) {
                     movieCallback.onMoviesFetched(apiMapper.mapApiMoviesToMovies(response.body()?.results ?: listOf()))
                 } else {
@@ -28,7 +28,7 @@ class MovieServiceImpl : MovieService {
                 }
             }
 
-            override fun onFailure(call: Call<MovieResults>, t: Throwable) {
+            override fun onFailure(call: Call<ApiMovieResults>, t: Throwable) {
                 movieCallback.onError(t)
             }
         })
@@ -42,7 +42,7 @@ class MovieServiceImpl : MovieService {
             override fun onResponse(call: Call<ApiMovieDetails>, response: Response<ApiMovieDetails>) {
                 if (response.isSuccessful) {
                     movieDetailsCallback
-                        .onMovieDetailsFetched(apiMapper.mapApiMovieDetailsToMovie(response.body() ?: ApiMovieDetails()))
+                        .onMovieDetailsFetched(apiMapper.mapApiMovieDetailsToMovieDetails(response.body() ?: ApiMovieDetails()))
                 } else {
                     movieDetailsCallback.onError(RuntimeException("Unable to fetch movie details."))
                 }

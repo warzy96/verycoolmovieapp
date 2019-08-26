@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
@@ -16,7 +16,7 @@ class MoviesAdapter(
     private val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
-    private val movies: MutableList<ViewMovie> = mutableListOf()
+    private val movies: MutableList<MovieViewModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
@@ -27,7 +27,7 @@ class MoviesAdapter(
 
     override fun getItemCount() = movies.size
 
-    fun setData(movies: List<ViewMovie>) {
+    fun setData(movies: List<MovieViewModel>) {
         this.movies.clear()
         this.movies.addAll(movies)
         notifyDataSetChanged()
@@ -37,7 +37,7 @@ class MoviesAdapter(
 
         private val imageLoader by lazy { dependencyInjector.getImageLoader() }
 
-        fun updateValues(movie: ViewMovie, movieClickListener: MovieClickListener) {
+        fun updateValues(movie: MovieViewModel, movieClickListener: MovieClickListener) {
             with(view) {
                 movieTitle.text = movie.title
                 imageLoader.loadImage(movie.posterPath, movieListPoster)

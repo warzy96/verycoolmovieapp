@@ -1,30 +1,37 @@
 package com.example.movieapp.data.mapper
 
-import com.example.movieapp.data.view.model.ViewMovie
+import com.example.movieapp.data.view.model.MovieDetailsViewModel
+import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.domain.Genre
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 
 class ViewModelMapperImpl : ViewModelMapper {
 
-    override fun mapMoviesToViewMovies(movies: List<Movie>) = movies.map { mapMovieToViewMovie(it) }
+    override fun mapMoviesToMovieViewModels(movies: List<Movie>) = movies.map { mapMovieToViewMovie(it) }
 
-    override fun mapMovieToViewMovie(movie: Movie) = ViewModelMapperImpl.mapMovieToViewMovie(movie)
+    override fun mapMovieDetailsToMovieDetailsViewModel(movieDetails: MovieDetails) = MovieDetailsViewModel(
+        id = movieDetails.id,
+        title = movieDetails.title,
+        tagline = movieDetails.tagline,
+        voteCount = movieDetails.voteCount,
+        voteAverage = movieDetails.voteAverage,
+        backdropPath = movieDetails.backdropPath,
+        originalTitle = movieDetails.originalTitle,
+        genres = movieDetails.genres,
+        isAdult = movieDetails.isAdult,
+        overview = movieDetails.overview,
+        releaseDate = movieDetails.releaseDate,
+        runtime = movieDetails.runtime,
+        homepage = movieDetails.homepage
+    )
 
-    companion object {
-        private fun mapMovieToViewMovie(movie: Movie) = ViewMovie(
-            id = movie.id,
-            title = movie.title,
-            voteAverage = movie.voteAverage,
-            voteCount = movie.voteCount,
-            posterPath = movie.posterPath,
-            backdropPath = movie.backdropPath,
-            originalTitle = movie.originalTitle,
-            genreIds = movie.genreIds,
-            isAdult = movie.isAdult,
-            overview = movie.overview,
-            releaseDate = movie.releaseDate,
-            runtime = movie.runtime,
-            homepage = movie.homepage,
-            tagline = movie.tagline
-        )
-    }
+    private fun mapMovieToViewMovie(movie: Movie) = MovieViewModel(
+        id = movie.id,
+        title = movie.title,
+        voteAverage = movie.voteAverage,
+        voteCount = movie.voteCount,
+        posterPath = movie.posterPath,
+        releaseDate = movie.releaseDate
+    )
 }
