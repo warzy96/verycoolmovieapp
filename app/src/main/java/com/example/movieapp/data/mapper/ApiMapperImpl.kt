@@ -3,9 +3,11 @@ package com.example.movieapp.data.mapper
 import com.example.movieapp.data.api.model.ApiGenre
 import com.example.movieapp.data.api.model.ApiMovie
 import com.example.movieapp.data.api.model.ApiMovieDetails
+import com.example.movieapp.data.api.model.ApiProductionCountry
 import com.example.movieapp.domain.Genre
 import com.example.movieapp.domain.Movie
 import com.example.movieapp.domain.MovieDetails
+import com.example.movieapp.domain.ProductionCountry
 
 class ApiMapperImpl : ApiMapper {
 
@@ -30,6 +32,11 @@ class ApiMapperImpl : ApiMapper {
         name = apiGenre.name ?: ""
     )
 
+    private fun mapApiProductionCountryToProductionCountry(apiProductionCountry: ApiProductionCountry) = ProductionCountry(
+        isoCode = apiProductionCountry.isoCode ?: "",
+        name = apiProductionCountry.name ?: ""
+    )
+
     override fun mapApiMovieDetailsToMovieDetails(apiMovieDetails: ApiMovieDetails) = MovieDetails(
         id = apiMovieDetails.id ?: -1,
         title = apiMovieDetails.title ?: "",
@@ -41,6 +48,7 @@ class ApiMapperImpl : ApiMapper {
         originalLanguage = apiMovieDetails.originalLanguage ?: "",
         originalTitle = apiMovieDetails.originalTitle ?: "",
         genres = mapApiGenresToGenres(apiMovieDetails.genres ?: listOf()),
+        countries = mapApiProductionCountriesToProductionCountries(apiMovieDetails.countries ?: listOf()),
         isAdult = apiMovieDetails.isAdult ?: false,
         overview = apiMovieDetails.overview ?: "",
         releaseDate = apiMovieDetails.releaseDate ?: "",
@@ -51,4 +59,7 @@ class ApiMapperImpl : ApiMapper {
 
     override fun mapApiGenresToGenres(apiGenres: List<ApiGenre>) = apiGenres.map { mapApiGenreToGenre(it) }
 
+    override fun mapApiProductionCountriesToProductionCountries(apiProductionCountries: List<ApiProductionCountry>) = apiProductionCountries.map {
+        mapApiProductionCountryToProductionCountry(it)
+    }
 }

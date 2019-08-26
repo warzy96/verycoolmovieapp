@@ -83,6 +83,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         }
 
         movieDetailsGenre.text = movie.genres.map { it.name }.joinToString(GENRE_SEPARATOR)
+        movieDetailsCountries.text = movie.countries.map { it.name }.joinToString(GENRE_SEPARATOR)
     }
 
     fun openHomepage(homepage: String) {

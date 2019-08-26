@@ -15,6 +15,7 @@ data class MovieDetails(
     val originalTitle: String,
     val originalLanguage: String,
     val genres: List<Genre>,
+    val countries: List<ProductionCountry>,
     val isAdult: Boolean,
     val overview: String,
     val releaseDate: String,

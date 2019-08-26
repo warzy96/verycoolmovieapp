@@ -95,27 +95,36 @@
                         android:textSize="@dimen/movie_genre_size_small"
                         android:gravity="center"
                         android:layout_weight="@dimen/details_weight_third"
-                        android:paddingEnd="@dimen/details_horizontal_gap"
-                        android:paddingBottom="10dp"/>
+                        android:paddingEnd="@dimen/details_horizontal_gap"/>
 
                     <TextView
                         android:id="@+id/movieDetailsReleaseDate"
                         android:layout_height="wrap_content"
                         android:layout_width="0dp"
-                        android:textSize="@dimen/movie_info_size_small"
-                        android:paddingStart="@dimen/details_horizontal_gap"
+                        android:textSize="@dimen/movie_info_text_size_small"
                         android:gravity="center"
+                        android:paddingStart="@dimen/details_horizontal_gap"
                         android:paddingEnd="@dimen/details_horizontal_gap"
-                        android:layout_weight="@dimen/details_weight_third"/>
+                        android:layout_weight="@dimen/details_weight_sixth"/>
 
                     <TextView
                         android:id="@+id/movieDetailsRuntime"
                         android:layout_height="wrap_content"
                         android:layout_width="0dp"
                         android:gravity="center"
-                        android:textSize="@dimen/movie_info_size_small"
+                        android:textSize="@dimen/movie_info_text_size_small"
                         android:paddingStart="@dimen/details_horizontal_gap"
-                        android:layout_weight="@dimen/details_weight_third"/>
+                        android:paddingEnd="@dimen/details_horizontal_gap"
+                        android:layout_weight="@dimen/details_weight_sixth"/>
+
+                    <TextView
+                        android:id="@+id/movieDetailsCountries"
+                        android:layout_height="wrap_content"
+                        android:layout_width="0dp"
+                        android:textSize="@dimen/movie_genre_size_small"
+                        android:gravity="center"
+                        android:layout_weight="@dimen/details_weight_third"
+                        android:paddingStart="@dimen/details_horizontal_gap"/>
 
             </LinearLayout>
 
@@ -130,7 +139,7 @@
                 android:layout_marginTop="@dimen/details_vertical_gap_big"
                 android:text="@string/adult_text"
                 android:visibility="gone"
-                android:textSize="@dimen/movie_text_size_small"/>
+                android:textSize="@dimen/movie_info_text_size_small"/>
 
             <TextView
                 android:id="@+id/movieDetailsOverview"

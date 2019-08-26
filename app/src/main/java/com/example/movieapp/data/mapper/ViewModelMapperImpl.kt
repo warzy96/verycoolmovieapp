@@ -19,6 +19,7 @@ class ViewModelMapperImpl : ViewModelMapper {
         backdropPath = movieDetails.backdropPath,
         originalTitle = movieDetails.originalTitle,
         genres = movieDetails.genres,
+        countries = movieDetails.countries,
         isAdult = movieDetails.isAdult,
         overview = movieDetails.overview,
         releaseDate = movieDetails.releaseDate,

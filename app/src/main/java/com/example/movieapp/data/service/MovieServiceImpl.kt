@@ -1,5 +1,6 @@
 package com.example.movieapp.data.service
 
+import android.util.Log
 import com.example.movieapp.data.api.MovieApiFactory
 import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.ApiGenreResults
@@ -37,9 +38,13 @@ class MovieServiceImpl : MovieService {
     override fun getMovie(movieId: Int, movieDetailsCallback: MovieDetailsCallback) {
         val call = MovieApiFactory.getApi().getMovie(movieId, MovieApiFactory.API_KEY)
 
+        Log.e("moviemateo", call.request().url().toString())
+
         call.enqueue(object : retrofit2.Callback<ApiMovieDetails> {
 
             override fun onResponse(call: Call<ApiMovieDetails>, response: Response<ApiMovieDetails>) {
+                Log.e("moviemateo", "resoponse")
+
                 if (response.isSuccessful) {
                     movieDetailsCallback
                         .onMovieDetailsFetched(apiMapper.mapApiMovieDetailsToMovieDetails(response.body() ?: ApiMovieDetails()))
@@ -49,6 +54,8 @@ class MovieServiceImpl : MovieService {
             }
 
             override fun onFailure(call: Call<ApiMovieDetails>, t: Throwable) {
+                Log.e("moviemateo", "failure " + t.localizedMessage)
+
                 movieDetailsCallback.onError(t)
             }
         })

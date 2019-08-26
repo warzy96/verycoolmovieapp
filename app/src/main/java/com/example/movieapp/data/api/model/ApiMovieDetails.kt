@@ -34,6 +34,9 @@ class ApiMovieDetails {
     @field:Json(name = "genres")
     val genres: List<ApiGenre>? = null
 
+    @field:Json(name = "production_countries")
+    val countries: List<ApiProductionCountry>? = null
+
     @field:Json(name = "backdrop_path")
     val backdropPath: String? = null
 

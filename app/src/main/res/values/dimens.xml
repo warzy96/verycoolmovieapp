@@ -2,7 +2,7 @@
 <resources>
     <dimen name="movie_text_size_big">20sp</dimen>
     <dimen name="movie_text_size_small">16sp</dimen>
-    <dimen name="movie_info_size_small">12sp</dimen>
+    <dimen name="movie_info_text_size_small">12sp</dimen>
     <dimen name="movie_genre_size_small">12sp</dimen>
     <dimen name="button_top_margin">4dp</dimen>
     <dimen name="list_top_margin">4dp</dimen>
@@ -22,6 +22,7 @@
     <dimen name="list_item_start_margin">15dp</dimen>
     <dimen name="list_item_end_margin">15dp</dimen>
     <dimen name="list_item_bottom_margin">10dp</dimen>
-    <dimen name="details_weight_sum">9</dimen>
-    <dimen name="details_weight_third">3</dimen>
+    <dimen name="details_weight_sum">18</dimen>
+    <dimen name="details_weight_third">6</dimen>
+    <dimen name="details_weight_sixth">3</dimen>
 </resources>
