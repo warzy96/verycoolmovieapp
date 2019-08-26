@@ -84,6 +84,8 @@
                 app:layout_constraintTop_toBottomOf="@+id/moviePoster"
                 android:weightSum="@dimen/details_weight_sum"
                 android:layout_gravity="center_horizontal"
+                android:divider="?android:dividerHorizontal"
+                android:showDividers="middle"
                 android:paddingTop="@dimen/details_vertical_gap_big">
 
                     <TextView
