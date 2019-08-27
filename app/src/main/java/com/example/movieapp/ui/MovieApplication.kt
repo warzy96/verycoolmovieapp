@@ -9,12 +9,16 @@ import com.example.movieapp.data.mapper.ApiMapperImpl
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.mapper.ViewModelMapperImpl
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
+import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
+import com.example.movieapp.ui.activities.MainActivity
+import com.example.movieapp.ui.activities.MovieDetailsActivity
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
+import org.koin.core.qualifier.named
 import org.koin.dsl.module
 
 class MovieApplication : Application() {
@@ -27,12 +31,18 @@ class MovieApplication : Application() {
         }
     }
 
-    private val applicationModule = module(override = true) {
+    private val applicationModule = module() {
         single { MovieServiceImpl() as MovieService }
-        single { MovieRepositoryImpl(get()) as MovieRepository}
+        single { MovieRepositoryImpl(get()) as MovieRepository }
         single { ImageLoaderImpl(Glide.with(this@MovieApplication)) as ImageLoader }
         single { ApiMapperImpl() as ApiMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }
-        single { MovieDetailsPresenter() }
+
+        scope(named<MainActivity>()) {
+            scoped { MovieListPresenter() }
+        }
+        scope(named<MovieDetailsActivity>()) {
+            scoped { MovieDetailsPresenter() }
+        }
     }
 }

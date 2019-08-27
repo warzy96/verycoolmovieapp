@@ -14,15 +14,19 @@ import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
+import org.koin.android.ext.android.getKoin
+import org.koin.core.qualifier.named
 
 class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickListener {
 
     companion object {
         private const val TAG = "MainActivity"
+        private const val SESSION_ID = "MainSession"
     }
 
     private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
-    private val presenter by lazy { MovieListPresenter() }
+    private val session = getKoin().createScope(SESSION_ID, named<MainActivity>())
+    private val presenter: MovieListPresenter by session.inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -46,6 +50,11 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
 
             addItemDecoration(DividerItemDecoration(context, (layoutManager as LinearLayoutManager).orientation))
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        session.close()
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {

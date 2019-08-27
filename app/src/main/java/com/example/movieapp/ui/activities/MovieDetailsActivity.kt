@@ -17,6 +17,7 @@ import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import org.koin.core.qualifier.named
 
 class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, KoinComponent {
 
@@ -24,6 +25,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         private const val MOVIE_ID_EXTRA = "movie_id"
         private const val TAG = "MovieDetailsActivity"
         private const val GENRE_SEPARATOR = ", "
+        private const val SESSION_ID = "MovieDetailsSession"
 
         @JvmStatic
         fun createIntent(context: Context, movieId: Int) = Intent(context, MovieDetailsActivity::class.java).apply {
@@ -31,7 +33,8 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         }
     }
 
-    private val presenter: MovieDetailsPresenter by inject()
+    private val session = getKoin().createScope(SESSION_ID, named<MovieDetailsActivity>())
+    private val presenter: MovieDetailsPresenter by session.inject()
     private val imageLoader: ImageLoader by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -42,6 +45,11 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
 
         presenter.setView(this)
         presenter.getMovieDetails(movieId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        session.close()
     }
 
     override fun showMovieDetails(movie: MovieDetailsViewModel) {
