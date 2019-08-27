@@ -11,6 +11,7 @@ import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
 import kotlinx.android.synthetic.main.activity_main.*
@@ -22,7 +23,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
-    private val presenter by lazy { MovieListPresenter() }
+    private val presenter by lazy { dependencyInjector.provideMovieListPresenter() }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
