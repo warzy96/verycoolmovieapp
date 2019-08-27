@@ -1,23 +1,23 @@
-package com.example.movieapp.data.model
+package com.example.movieapp.data.api.model
 
 import com.squareup.moshi.Json
 
-class ApiMovie {
+class ApiMovieDetails {
 
     @field:Json(name = "vote_count")
     val voteCount: Int? = null
 
     @Json(name = "id")
-    private val id: Int? = null
-
-    @field:Json(name = "video")
-    private val isVideo: Boolean? = null
+    val id: Int? = null
 
     @field:Json(name = "vote_average")
     val voteAverage: Double? = null
 
     @Json(name = "title")
     val title: String? = null
+
+    @Json(name = "tagline")
+    val tagline: String? = null
 
     @Json(name = "popularity")
     val popularity: Double? = null
@@ -31,11 +31,14 @@ class ApiMovie {
     @field:Json(name = "original_title")
     val originalTitle: String? = null
 
-    @field:Json(name = "genre_ids")
-    val genreIds: List<Int>? = null
+    @field:Json(name = "genres")
+    val genres: List<ApiGenre>? = null
+
+    @field:Json(name = "production_countries")
+    val countries: List<ApiProductionCountry>? = null
 
     @field:Json(name = "backdrop_path")
-    private val backdropPath: String? = null
+    val backdropPath: String? = null
 
     @Json(name = "adult")
     val isAdult: Boolean? = null
@@ -45,4 +48,10 @@ class ApiMovie {
 
     @field:Json(name = "release_date")
     val releaseDate: String? = null
+
+    @field:Json(name = "runtime")
+    val runtime: Int? = null
+
+    @field:Json(name = "homepage")
+    val homepage: String? = null
 }

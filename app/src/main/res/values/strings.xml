@@ -4,8 +4,12 @@
     <string name="score_text">Score:</string>
     <string name="genre_text">Genre:</string>
     <string name="release_date_text">Release date:</string>
-    <string name="adult_text">Adult</string>
+    <string name="runtime_text">Runtime:</string>
+    <string name="adult_text">*Not suitable for children</string>
     <string name="overview_text">Overview:</string>
+    <string name="network_error">Network error. Please try again later &#8230;</string>
+    <string name="default_network_error">Error occured while fetching data&#8230;</string>
+    <string name="read_more_button">Read More</string>
     <string name="neutral_button_text">OK</string>
     <string name="network_error_title">Network Error</string>
     <string name="movies_error_message">Unable to fetch data. Please try again later&#8230;</string>

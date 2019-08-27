@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.domain.Movie
-import com.example.movieapp.ui.MovieApplication.Companion.imageLoader
+import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.movie_item.view.*
@@ -16,17 +16,18 @@ class MoviesAdapter(
     private val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
-    private val movies: MutableList<Movie> = mutableListOf()
+    private val movies: MutableList<MovieViewModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
+
         holder.updateValues(movies[position], movieClickListener)
     }
 
     override fun getItemCount() = movies.size
 
-    fun setData(movies: List<Movie>) {
+    fun setData(movies: List<MovieViewModel>) {
         this.movies.clear()
         this.movies.addAll(movies)
         notifyDataSetChanged()
@@ -34,7 +35,9 @@ class MoviesAdapter(
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
 
-        fun updateValues(movie: Movie, movieClickListener: MovieClickListener) {
+        private val imageLoader by lazy { dependencyInjector.provideImageLoader() }
+
+        fun updateValues(movie: MovieViewModel, movieClickListener: MovieClickListener) {
             with(view) {
                 movieTitle.text = movie.title
                 imageLoader.loadImage(movie.posterPath, movieListPoster)

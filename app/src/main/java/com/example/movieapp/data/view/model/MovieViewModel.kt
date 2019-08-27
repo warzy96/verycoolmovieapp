@@ -1,10 +1,12 @@
-package com.example.movieapp.domain
+package com.example.movieapp.data.view.model
 
-data class Movie(
+import java.io.Serializable
+
+class MovieViewModel(
     val id: Int,
     val title: String,
     val voteCount: Int,
     val voteAverage: Double,
     val posterPath: String,
     val releaseDate: String
-)
+) : Serializable

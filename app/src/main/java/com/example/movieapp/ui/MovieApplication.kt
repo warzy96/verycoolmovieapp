@@ -1,17 +1,17 @@
 package com.example.movieapp.ui
 
 import android.app.Application
-import com.bumptech.glide.Glide
-import com.example.movieapp.data.ImageLoaderImpl
+import com.example.movieapp.data.DependencyInjector
 
 class MovieApplication : Application() {
 
     companion object {
-        lateinit var imageLoader: ImageLoaderImpl
+        lateinit var dependencyInjector: DependencyInjector
     }
 
     override fun onCreate() {
         super.onCreate()
-        imageLoader = ImageLoaderImpl(Glide.with(this))
+        dependencyInjector = DependencyInjector(this)
     }
+
 }
