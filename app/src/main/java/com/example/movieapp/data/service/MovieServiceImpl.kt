@@ -32,6 +32,22 @@ class MovieServiceImpl : MovieService, KoinComponent {
             })
     }
 
+    override fun getMovies(page:Int, moviesObserver: DisposableSingleObserver<List<Movie>>) {
+        val call = MovieApiFactory.getApi().getMovies(page, MovieApiFactory.API_KEY)
+
+        call.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : DisposableSingleObserver<ApiMovieResults>() {
+                override fun onSuccess(t: ApiMovieResults) {
+                    moviesObserver.onSuccess(apiMapper.mapApiMoviesToMovies(t.results ?: listOf()))
+                }
+
+                override fun onError(e: Throwable) {
+                    moviesObserver.onError(e)
+                }
+            })
+    }
+
     override fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>) {
         val call = MovieApiFactory.getApi().getMovie(movieId, MovieApiFactory.API_KEY)
 

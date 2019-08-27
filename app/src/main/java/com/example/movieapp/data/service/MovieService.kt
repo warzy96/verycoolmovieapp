@@ -8,5 +8,7 @@ interface MovieService {
 
     fun getMovies(moviesObserver: DisposableSingleObserver<List<Movie>>)
 
+    fun getMovies(page: Int, moviesObserver: DisposableSingleObserver<List<Movie>>)
+
     fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>)
 }

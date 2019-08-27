@@ -9,11 +9,15 @@ interface MovieListContract {
     interface Presenter : BasePresenter<View> {
 
         fun getMovies()
+
+        fun getNextPage()
     }
 
     interface View : BaseView {
 
         fun showMovies(movies: List<MovieViewModel>)
+
+        fun showNextPage(movies: List<MovieViewModel>)
 
         fun showErrorMessage(t: Throwable)
     }

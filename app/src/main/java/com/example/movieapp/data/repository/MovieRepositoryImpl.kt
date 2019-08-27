@@ -9,5 +9,7 @@ class MovieRepositoryImpl(val movieSevice: MovieService) : MovieRepository {
 
     override fun getMovies(moviesObserver: DisposableSingleObserver<List<Movie>>) = movieSevice.getMovies(moviesObserver)
 
+    override fun getMovies(page: Int, moviesObserver: DisposableSingleObserver<List<Movie>>) = movieSevice.getMovies(page, moviesObserver)
+
     override fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>) = movieSevice.getMovie(movieId, movieObserver)
 }

@@ -13,4 +13,5 @@
     <string name="neutral_button_text">OK</string>
     <string name="network_error_title">Network Error</string>
     <string name="movies_error_message">Unable to fetch data. Please try again later&#8230;</string>
+    <string name="loading_text">Loading &#8230;</string>
 </resources>

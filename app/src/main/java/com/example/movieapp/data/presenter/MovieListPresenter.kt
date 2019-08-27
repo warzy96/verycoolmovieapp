@@ -13,6 +13,7 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
     private var view: MovieListContract.View? = null
     private val repository: MovieRepository by inject()
     private val viewModelMapper: ViewModelMapper by inject()
+    private var page = 1
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
@@ -25,6 +26,21 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
             }
 
             override fun onError(e: Throwable) {
+                view?.showErrorMessage(e)
+            }
+        })
+    }
+
+    override fun getNextPage() {
+        page++
+
+        repository.getMovies(page, object : DisposableSingleObserver<List<Movie>>() {
+            override fun onSuccess(t: List<Movie>) {
+                view?.showNextPage(viewModelMapper.mapMoviesToMovieViewModels(t))
+            }
+
+            override fun onError(e: Throwable) {
+                page = 0
                 view?.showErrorMessage(e)
             }
         })
