@@ -5,7 +5,6 @@ import com.example.movieapp.domain.ProductionCountry
 import java.io.Serializable
 
 class MovieDetailsViewModel(
-
     val id: Int,
     val title: String,
     val tagline: String?,
