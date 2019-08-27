@@ -53,8 +53,8 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     override fun onDestroy() {
-        super.onDestroy()
         session.close()
+        super.onDestroy()
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {
