@@ -1,14 +1,12 @@
 package com.example.movieapp.data.service
 
-import com.example.movieapp.data.service.callback.GenresCallback
-import com.example.movieapp.data.service.callback.MovieCallback
-import com.example.movieapp.data.service.callback.MovieDetailsCallback
+import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
+import io.reactivex.observers.DisposableSingleObserver
 
 interface MovieService {
 
-    fun getMovies(movieCallback: MovieCallback)
+    fun getMovies(moviesObserver: DisposableSingleObserver<List<Movie>>)
 
-    fun getMovie(movieId: Int, movieDetailsCallback: MovieDetailsCallback)
-
-    fun getGenres(genresCallback: GenresCallback)
+    fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>)
 }

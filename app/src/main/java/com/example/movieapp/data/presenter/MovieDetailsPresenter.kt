@@ -3,8 +3,8 @@ package com.example.movieapp.data.presenter
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.data.service.callback.MovieDetailsCallback
 import com.example.movieapp.domain.MovieDetails
+import io.reactivex.observers.DisposableSingleObserver
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -19,14 +19,14 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
     }
 
     override fun getMovieDetails(movieId: Int) {
-        repository.getMovie(movieId, object : MovieDetailsCallback {
+        repository.getMovie(movieId, object : DisposableSingleObserver<MovieDetails>() {
+            override fun onSuccess(t: MovieDetails) {
+                view?.showMovieDetails(viewModelMapper.mapMovieDetailsToMovieDetailsViewModel(t))
 
-            override fun onMovieDetailsFetched(movieDetails: MovieDetails) {
-                view?.showMovieDetails(viewModelMapper.mapMovieDetailsToMovieDetailsViewModel(movieDetails))
             }
 
-            override fun onError(t: Throwable) {
-                view?.showErrorMessage(t)
+            override fun onError(e: Throwable) {
+                view?.showErrorMessage(e)
             }
         })
     }

@@ -39,6 +39,9 @@ allprojects {
         moshiConverterVersion = "2.0.0-beta3"
         glideVersion = "4.9.0"
         koinVersion = "2.0.1"
+        rxJavaVersion = "2.1.9"
+        rxAndroidVersion = "2.0.1"
+        rxAdapterVersion = "1.0.0"
     }
 
     repositories {

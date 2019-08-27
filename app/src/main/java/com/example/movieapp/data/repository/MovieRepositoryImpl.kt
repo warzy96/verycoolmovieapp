@@ -1,15 +1,13 @@
 package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.service.MovieService
-import com.example.movieapp.data.service.callback.GenresCallback
-import com.example.movieapp.data.service.callback.MovieCallback
-import com.example.movieapp.data.service.callback.MovieDetailsCallback
+import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
+import io.reactivex.observers.DisposableSingleObserver
 
 class MovieRepositoryImpl(val movieSevice: MovieService) : MovieRepository {
 
-    override fun getMovies(movieCallback: MovieCallback) = movieSevice.getMovies(movieCallback)
+    override fun getMovies(moviesObserver: DisposableSingleObserver<List<Movie>>) = movieSevice.getMovies(moviesObserver)
 
-    override fun getMovie(movieId: Int, movieDetailsCallback: MovieDetailsCallback) = movieSevice.getMovie(movieId, movieDetailsCallback)
-
-    override fun getGenres(genresCallback: GenresCallback) = movieSevice.getGenres(genresCallback)
+    override fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>) = movieSevice.getMovie(movieId, movieObserver)
 }
