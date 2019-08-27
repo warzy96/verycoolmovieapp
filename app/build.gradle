@@ -42,4 +42,5 @@ dependencies {
 
     implementation "com.github.bumptech.glide:glide:$project.ext.glideVersion"
     annotationProcessor "com.github.bumptech.glide:compiler:$project.ext.glideVersion"
+    implementation "org.koin:koin-android:$project.ext.koinVersion"
 }

@@ -5,11 +5,13 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
+import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.view.model.MovieViewModel
-import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.movie_item.view.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 class MoviesAdapter(
     private val movieClickListener: MovieClickListener,
@@ -33,9 +35,9 @@ class MoviesAdapter(
         notifyDataSetChanged()
     }
 
-    class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view) {
+    class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view), KoinComponent {
 
-        private val imageLoader by lazy { dependencyInjector.provideImageLoader() }
+        private val imageLoader: ImageLoader by inject()
 
         fun updateValues(movie: MovieViewModel, movieClickListener: MovieClickListener) {
             with(view) {
