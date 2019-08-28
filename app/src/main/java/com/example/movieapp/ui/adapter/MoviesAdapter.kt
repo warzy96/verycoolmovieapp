@@ -21,6 +21,8 @@ class MoviesAdapter(
 
     companion object {
         private const val FADE_DURATION = 1000L
+        private const val ALPHA_ANIM_START_VALUE = 0.0f
+        private const val ALPHA_ANIM_END_VALUE = 1.0f
     }
 
     private val movies: MutableList<MovieViewModel> = mutableListOf()
@@ -41,7 +43,7 @@ class MoviesAdapter(
     }
 
     fun setFadeAnimation(view: View) {
-        val anim = AlphaAnimation(0.0f, 1.0f)
+        val anim = AlphaAnimation(ALPHA_ANIM_START_VALUE, ALPHA_ANIM_END_VALUE)
         anim.duration = FADE_DURATION
         view.startAnimation(anim)
     }

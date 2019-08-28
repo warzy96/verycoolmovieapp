@@ -4,6 +4,7 @@ import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
@@ -20,18 +21,20 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         this.view = view
     }
 
-    override fun getMovies() = repository.getMovies()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(object : DisposableSingleObserver<List<Movie>>() {
-            override fun onSuccess(t: List<Movie>) {
-                view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(t))
-            }
+    override fun getMovies() {
+        repository.getMovies()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onMoviesSuccess, this::onMovieDetailsError)
+    }
 
-            override fun onError(e: Throwable) {
-                view?.showErrorMessage(e)
-            }
-        })
+    fun onMoviesSuccess(movies: List<Movie>) {
+        view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(movies))
+    }
+
+    fun onMovieDetailsError(t: Throwable) {
+        view?.showErrorMessage(t)
+    }
 
     override fun onDestroy() {
         this.view = null

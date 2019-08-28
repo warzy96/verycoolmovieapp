@@ -10,8 +10,10 @@ class MovieServiceImpl : MovieService, KoinComponent {
     private val apiMapper: ApiMapper by inject()
 
     override fun getMovies() =
-        MovieApiFactory.getApi().getMovies(MovieApiFactory.API_KEY).map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
+        MovieApiFactory.getApi().getMovies(MovieApiFactory.API_KEY)
+            .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
     override fun getMovie(movieId: Int) =
-        MovieApiFactory.getApi().getMovie(movieId, MovieApiFactory.API_KEY).map { apiMapper.mapApiMovieDetailsToMovieDetails(it) }
+        MovieApiFactory.getApi().getMovie(movieId, MovieApiFactory.API_KEY)
+            .map(apiMapper::mapApiMovieDetailsToMovieDetails)
 }
