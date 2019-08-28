@@ -39,6 +39,35 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
             .subscribe(this::onMoviesSuccess, this::onMovieError)
     }
 
+    private fun getNextMovies(query: String) {
+        repository.getMoviesSearchResult(page, query)
+            .subscribeOn(Schedulers.io())
+            .map(viewModelMapper::mapMoviesToMovieViewModels)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onNextPageSuccess, this::onMovieError)
+    }
+
+    private fun getNextMovies() {
+        repository.getMovies(page)
+            .subscribeOn(Schedulers.io())
+            .map(viewModelMapper::mapMoviesToMovieViewModels)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onNextPageSuccess, this::onMovieError)
+    }
+
+    override fun getMoviesSearchResult(query: String) {
+        if(query.isNullOrBlank()) {
+            getMovies()
+            return
+        }
+
+        repository.getMoviesSearchResult(query)
+            .subscribeOn(Schedulers.io())
+            .map(viewModelMapper::mapMoviesToMovieViewModels)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onMoviesSuccess, this::onMovieError)
+    }
+
     fun onMoviesSuccess(movies: List<MovieViewModel>) {
         view?.showMovies(movies)
     }
@@ -63,58 +92,6 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         } else {
             getNextMovies(query)
         }
-    }
-
-    private fun getNextMovies(query: String) {
-        repository.getMoviesSearchResult(page, query)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<List<Movie>>() {
-                override fun onSuccess(t: List<Movie>) {
-                    view?.showNextPage(viewModelMapper.mapMoviesToMovieViewModels(t))
-                }
-
-                override fun onError(e: Throwable) {
-                    page = RESET_PAGE
-
-                    if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {
-                        view?.showErrorMessage(e)
-                    }
-                }
-            })
-    }
-
-    private fun getNextMovies() {
-        repository.getMovies(page)
-            .subscribeOn(Schedulers.io())
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::onNextPageSuccess, this::onMovieError)
-    }
-
-    override fun getMoviesSearchResult(query: String) {
-        if(query.isNullOrBlank()) {
-            getMovies()
-            return
-        }
-
-        repository.getMoviesSearchResult(query)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<List<Movie>>() {
-                override fun onSuccess(t: List<Movie>) {
-                    view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(t))
-                }
-
-                override fun onError(e: Throwable) {
-                    Log.e("autocomplete", e.localizedMessage)
-                    page = RESET_PAGE
-
-                    if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {
-                        view?.showErrorMessage(e)
-                    }
-                }
-            })
     }
 
     override fun onDestroy() {
