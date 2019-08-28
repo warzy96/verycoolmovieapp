@@ -9,6 +9,11 @@ import retrofit2.http.Query
 
 interface MovieApi {
 
+    companion object {
+        const val API_BASE_URL = "https://api.themoviedb.org/3/"
+        const val API_KEY = "9007d6f531eed726eb102e488cf9b29b"
+    }
+
     @GET("discover/movie")
     fun getMovies(@Query("api_key") api_key: String): Single<ApiMovieResults>
 

@@ -4,6 +4,8 @@ import android.app.Application
 import com.bumptech.glide.Glide
 import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.ImageLoaderImpl
+import com.example.movieapp.data.api.MovieApi
+import com.example.movieapp.data.api.RetrofitFactory
 import com.example.movieapp.data.mapper.ApiMapper
 import com.example.movieapp.data.mapper.ApiMapperImpl
 import com.example.movieapp.data.mapper.ViewModelMapper
@@ -37,6 +39,7 @@ class MovieApplication : Application() {
         single { ImageLoaderImpl(Glide.with(this@MovieApplication)) as ImageLoader }
         single { ApiMapperImpl() as ApiMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }
+        single { RetrofitFactory.getRetrofit(MovieApi.API_BASE_URL).create(MovieApi::class.java) as MovieApi }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
