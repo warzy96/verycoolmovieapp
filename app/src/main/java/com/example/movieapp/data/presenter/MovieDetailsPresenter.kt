@@ -3,6 +3,7 @@ package com.example.movieapp.data.presenter
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import com.example.movieapp.domain.MovieDetails
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -21,13 +22,14 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
 
     override fun getMovieDetails(movieId: Int) {
         repository.getMovie(movieId)
-            .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
+            .map(viewModelMapper::mapMovieDetailsToMovieDetailsViewModel)
+            .subscribeOn(Schedulers.io())
             .subscribe(this::onMovieDetailsSuccess, this::onMovieDetailsError)
     }
 
-    fun onMovieDetailsSuccess(movieDetails: MovieDetails) {
-        view?.showMovieDetails(viewModelMapper.mapMovieDetailsToMovieDetailsViewModel(movieDetails))
+    fun onMovieDetailsSuccess(movieDetails: MovieDetailsViewModel) {
+        view?.showMovieDetails(movieDetails)
     }
 
     fun onMovieDetailsError(t: Throwable) {
