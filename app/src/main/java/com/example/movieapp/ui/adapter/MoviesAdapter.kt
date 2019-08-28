@@ -61,7 +61,9 @@ class MoviesAdapter(
                 imageLoader.loadImage(movie.posterPath, movieListPoster)
                 movieRating.rating = movie.voteAverage.toFloat()
                 movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-                movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+                if (!movie.releaseDate.isNullOrBlank()) {
+                    movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+                }
                 setOnClickListener {
                     movieClickListener.onMovieClicked(movie)
                 }

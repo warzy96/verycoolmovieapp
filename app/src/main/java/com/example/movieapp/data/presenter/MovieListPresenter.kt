@@ -1,5 +1,6 @@
 package com.example.movieapp.data.presenter
 
+import android.util.Log
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
@@ -45,9 +46,36 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
             }
         })
 
-    override fun getNextPage() {
+    override fun getNextPage(query: String) {
         page++
 
+        if (query.isNullOrBlank()) {
+            getNextMovies()
+        } else {
+            getNextMovies(query)
+        }
+    }
+
+    private fun getNextMovies(query: String) {
+        repository.getMoviesSearchResult(page, query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : DisposableSingleObserver<List<Movie>>() {
+                override fun onSuccess(t: List<Movie>) {
+                    view?.showNextPage(viewModelMapper.mapMoviesToMovieViewModels(t))
+                }
+
+                override fun onError(e: Throwable) {
+                    page = RESET_PAGE
+
+                    if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {
+                        view?.showErrorMessage(e)
+                    }
+                }
+            })
+    }
+
+    private fun getNextMovies() {
         repository.getMovies(page)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
@@ -57,6 +85,31 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
                 }
 
                 override fun onError(e: Throwable) {
+                    page = RESET_PAGE
+
+                    if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {
+                        view?.showErrorMessage(e)
+                    }
+                }
+            })
+    }
+
+    override fun getMoviesSearchResult(query: String) {
+        if(query.isNullOrBlank()) {
+            getMovies()
+            return
+        }
+
+        repository.getMoviesSearchResult(query)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(object : DisposableSingleObserver<List<Movie>>() {
+                override fun onSuccess(t: List<Movie>) {
+                    view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(t))
+                }
+
+                override fun onError(e: Throwable) {
+                    Log.e("autocomplete", e.localizedMessage)
                     page = RESET_PAGE
 
                     if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {

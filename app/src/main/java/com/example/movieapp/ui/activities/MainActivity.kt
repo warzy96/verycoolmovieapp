@@ -1,6 +1,8 @@
 package com.example.movieapp.ui.activities
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -44,6 +46,18 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
             loadMovies()
         }
 
+        searchBar.addTextChangedListener(object: TextWatcher{
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                presenter.getMoviesSearchResult(searchBar.text.toString())
+            }
+
+            override fun afterTextChanged(p0: Editable?) {
+            }
+
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+            }
+        })
+
         loadMovies()
     }
 
@@ -61,7 +75,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
                             == adapter?.itemCount?.minus(LOADING_OFFSET)) {
                         loading = true
                         loadingText.visibility = View.VISIBLE
-                        presenter.getNextPage()
+                        presenter.getNextPage(searchBar.text.toString())
                     }
                 }
             })
@@ -100,6 +114,6 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     private fun loadMovies() {
-        presenter.getMovies()
+        presenter.getMoviesSearchResult(searchBar.text.toString())
     }
 }

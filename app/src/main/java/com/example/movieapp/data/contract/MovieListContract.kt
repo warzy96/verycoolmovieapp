@@ -10,7 +10,9 @@ interface MovieListContract {
 
         fun getMovies()
 
-        fun getNextPage()
+        fun getNextPage(query: String)
+
+        fun getMoviesSearchResult(query: String)
     }
 
     interface View : BaseView {

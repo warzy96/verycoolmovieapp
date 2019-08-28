@@ -72,7 +72,9 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         movieDetailsRating.rating = movie.voteAverage.toFloat()
         movieDetailsOverview.text = movie.overview
 
-        movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        if (!movie.releaseDate.isNullOrBlank()) {
+            movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        }
 
         if (movie.runtime != null) {
             movieDetailsRuntime.text = MovieUtils.formatRuntime(movie.runtime)
