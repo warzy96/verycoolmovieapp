@@ -33,7 +33,7 @@ class MovieApplication : Application() {
 
     private val applicationModule = module() {
         single { MovieServiceImpl() as MovieService }
-        single { MovieRepositoryImpl(get()) as MovieRepository }
+        single { MovieRepositoryImpl() as MovieRepository }
         single { ImageLoaderImpl(Glide.with(this@MovieApplication)) as ImageLoader }
         single { ApiMapperImpl() as ApiMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }

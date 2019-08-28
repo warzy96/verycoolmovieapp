@@ -4,7 +4,6 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
-import android.widget.AbsListView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -25,6 +24,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     companion object {
         private const val TAG = "MainActivity"
         private const val SESSION_ID = "MainSession"
+        private const val LOADING_OFFSET = 5
     }
 
     private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
@@ -57,7 +57,8 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
-                    if (!loading && (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition() == adapter?.itemCount?.minus(3)) {
+                    if (!loading && (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
+                            == adapter?.itemCount?.minus(LOADING_OFFSET)) {
                         loading = true
                         loadingText.visibility = View.VISIBLE
                         presenter.getNextPage()

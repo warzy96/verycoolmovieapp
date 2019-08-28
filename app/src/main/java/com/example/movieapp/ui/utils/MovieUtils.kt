@@ -15,7 +15,7 @@ class MovieUtils {
         private const val RUNTIME_FORMAT = "%d $RUNTIME_UNIT"
 
         private const val API_DATE_FORMAT = "yyyy-MM-dd"
-        private const val MOVIE_DATE_FORMAT = "dd/MM/yyyy"
+        private const val MOVIE_DATE_FORMAT = "dd MMM yyyy"
 
         @JvmStatic
         fun formatDate(date: String): String = SimpleDateFormat(MOVIE_DATE_FORMAT).format(SimpleDateFormat(API_DATE_FORMAT).parse(date))

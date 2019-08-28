@@ -29,7 +29,7 @@ class MoviesAdapter(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.updateValues(movies[position], movieClickListener)
-        //setFadeAnimation(holder.itemView)
+        setFadeAnimation(holder.itemView)
     }
 
     override fun getItemCount() = movies.size
@@ -42,7 +42,7 @@ class MoviesAdapter(
 
     fun addData(movies: List<MovieViewModel>) {
         this.movies.addAll(movies)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(itemCount - movies.size, itemCount)
     }
 
     fun setFadeAnimation(view: View) {

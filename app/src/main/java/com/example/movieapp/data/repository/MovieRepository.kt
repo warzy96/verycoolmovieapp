@@ -2,13 +2,13 @@ package com.example.movieapp.data.repository
 
 import com.example.movieapp.domain.Movie
 import com.example.movieapp.domain.MovieDetails
-import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.Single
 
 interface MovieRepository {
 
-    fun getMovies(moviesObserver: DisposableSingleObserver<List<Movie>>)
+    fun getMovies(): Single<List<Movie>>
 
-    fun getMovies(page: Int, moviesObserver: DisposableSingleObserver<List<Movie>>)
+    fun getMovies(page: Int): Single<List<Movie>>
 
-    fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>)
+    fun getMovie(movieId: Int): Single<MovieDetails>
 }
