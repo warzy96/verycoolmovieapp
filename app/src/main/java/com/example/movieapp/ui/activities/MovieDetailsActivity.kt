@@ -9,18 +9,23 @@ import android.view.View
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
+import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.contract.MovieDetailsContract
+import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
-import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.activity_movie_details.*
+import org.koin.core.KoinComponent
+import org.koin.core.inject
+import org.koin.core.qualifier.named
 
-class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
+class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, KoinComponent {
 
     companion object {
         private const val MOVIE_ID_EXTRA = "movie_id"
         private const val TAG = "MovieDetailsActivity"
         private const val GENRE_SEPARATOR = ", "
+        private const val SESSION_ID = "MovieDetailsSession"
 
         @JvmStatic
         fun createIntent(context: Context, movieId: Int) = Intent(context, MovieDetailsActivity::class.java).apply {
@@ -28,8 +33,9 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
         }
     }
 
-    private val presenter by lazy { dependencyInjector.provideMovieDetailsPresenter() }
-    private val imageLoader by lazy { dependencyInjector.provideImageLoader() }
+    private val session = getKoin().createScope(SESSION_ID, named<MovieDetailsActivity>())
+    private val presenter: MovieDetailsPresenter by session.inject()
+    private val imageLoader: ImageLoader by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -39,6 +45,11 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View {
 
         presenter.setView(this)
         presenter.getMovieDetails(movieId)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        session.close()
     }
 
     override fun showMovieDetails(movie: MovieDetailsViewModel) {

@@ -1,15 +1,18 @@
 package com.example.movieapp.data.presenter
 
 import com.example.movieapp.data.contract.MovieListContract
+import com.example.movieapp.data.mapper.ViewModelMapper
+import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.service.callback.MovieCallback
 import com.example.movieapp.domain.Movie
-import com.example.movieapp.ui.MovieApplication.Companion.dependencyInjector
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MovieListPresenter : MovieListContract.Presenter {
+class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
 
     private var view: MovieListContract.View? = null
-    private val repository by lazy { dependencyInjector.provideRepository() }
-    private val viewMapper by lazy { dependencyInjector.provideViewMapper() }
+    private val repository: MovieRepository by inject()
+    private val viewModelMapper: ViewModelMapper by inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
@@ -18,7 +21,7 @@ class MovieListPresenter : MovieListContract.Presenter {
     override fun getMovies() {
         repository.getMovies(object : MovieCallback {
             override fun onMoviesFetched(movies: List<Movie>) {
-                view?.showMovies(viewMapper.mapMoviesToMovieViewModels(movies))
+                view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(movies))
             }
 
             override fun onError(t: Throwable) {

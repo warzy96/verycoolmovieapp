@@ -4,16 +4,19 @@ import com.example.movieapp.data.api.MovieApiFactory
 import com.example.movieapp.data.api.model.ApiGenreResults
 import com.example.movieapp.data.api.model.ApiMovieDetails
 import com.example.movieapp.data.api.model.ApiMovieResults
+import com.example.movieapp.data.mapper.ApiMapper
 import com.example.movieapp.data.service.callback.GenresCallback
 import com.example.movieapp.data.service.callback.MovieCallback
 import com.example.movieapp.data.service.callback.MovieDetailsCallback
 import com.example.movieapp.ui.MovieApplication
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import retrofit2.Call
 import retrofit2.Response
 
-class MovieServiceImpl : MovieService {
+class MovieServiceImpl : MovieService, KoinComponent {
 
-    private val apiMapper by lazy { MovieApplication.dependencyInjector.provideApiMapper() }
+    private val apiMapper: ApiMapper by inject()
 
     override fun getMovies(movieCallback: MovieCallback) {
         val call = MovieApiFactory.getApi().getMovies(MovieApiFactory.API_KEY)
