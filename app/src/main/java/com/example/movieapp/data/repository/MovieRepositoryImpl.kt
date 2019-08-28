@@ -1,13 +1,14 @@
 package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.service.MovieService
-import com.example.movieapp.domain.Movie
-import com.example.movieapp.domain.MovieDetails
-import io.reactivex.observers.DisposableSingleObserver
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MovieRepositoryImpl(val movieSevice: MovieService) : MovieRepository {
+class MovieRepositoryImpl : MovieRepository, KoinComponent {
 
-    override fun getMovies(moviesObserver: DisposableSingleObserver<List<Movie>>) = movieSevice.getMovies(moviesObserver)
+    private val movieService: MovieService by inject()
 
-    override fun getMovie(movieId: Int, movieObserver: DisposableSingleObserver<MovieDetails>) = movieSevice.getMovie(movieId, movieObserver)
+    override fun getMovies() = movieService.getMovies()
+
+    override fun getMovie(movieId: Int) = movieService.getMovie(movieId)
 }

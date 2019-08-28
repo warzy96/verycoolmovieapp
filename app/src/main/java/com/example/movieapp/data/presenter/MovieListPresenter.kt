@@ -4,7 +4,9 @@ import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.domain.Movie
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
+import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -18,8 +20,10 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         this.view = view
     }
 
-    override fun getMovies() {
-        repository.getMovies(object : DisposableSingleObserver<List<Movie>>() {
+    override fun getMovies() = repository.getMovies()
+        .subscribeOn(Schedulers.io())
+        .observeOn(AndroidSchedulers.mainThread())
+        .subscribe(object : DisposableSingleObserver<List<Movie>>() {
             override fun onSuccess(t: List<Movie>) {
                 view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(t))
             }
@@ -28,7 +32,6 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
                 view?.showErrorMessage(e)
             }
         })
-    }
 
     override fun onDestroy() {
         this.view = null
