@@ -21,6 +21,8 @@ class MoviesAdapter(
 
     companion object {
         private const val FADE_DURATION = 1000L
+        private const val ALPHA_ANIM_START_VALUE = 0.0f
+        private const val ALPHA_ANIM_END_VALUE = 1.0f
     }
 
     private val movies: MutableList<MovieViewModel> = mutableListOf()
@@ -29,7 +31,7 @@ class MoviesAdapter(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.updateValues(movies[position], movieClickListener)
-        setFadeAnimation(holder.itemView)
+        holder.setFadeAnimation()
     }
 
     override fun getItemCount() = movies.size
@@ -43,12 +45,6 @@ class MoviesAdapter(
     fun addData(movies: List<MovieViewModel>) {
         this.movies.addAll(movies)
         notifyItemRangeInserted(itemCount - movies.size, itemCount)
-    }
-
-    fun setFadeAnimation(view: View) {
-        val anim = AlphaAnimation(0.0f, 1.0f)
-        anim.duration = FADE_DURATION
-        view.startAnimation(anim)
     }
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view), KoinComponent {
@@ -68,6 +64,12 @@ class MoviesAdapter(
                     movieClickListener.onMovieClicked(movie)
                 }
             }
+        }
+
+        fun setFadeAnimation() {
+            val anim = AlphaAnimation(ALPHA_ANIM_START_VALUE, ALPHA_ANIM_END_VALUE)
+            anim.duration = FADE_DURATION
+            view.startAnimation(anim)
         }
     }
 }

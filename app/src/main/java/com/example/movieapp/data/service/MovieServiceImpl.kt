@@ -13,19 +13,27 @@ class MovieServiceImpl : MovieService, KoinComponent {
     private val movieApi: MovieApi by inject()
 
     override fun getMovies() =
-        movieApi.getMovies(MovieApi.API_KEY).map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
-
-    override fun getMovies(page: Int) =
-        movieApi.getMovies(page, MovieApi.API_KEY).map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
+        movieApi
+            .getMovies(MovieApi.API_KEY)
+            .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
     override fun getMoviesSearchResult(query: String): Single<List<Movie>> =
-        movieApi.getMoviesSearchResult(query, MovieApi.API_KEY)
+        movieApi
+            .getMoviesSearchResult(query, MovieApi.API_KEY)
             .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
     override fun getMoviesSearchResult(page: Int, query: String): Single<List<Movie>> =
-        movieApi.getMoviesSearchResult(page, query, MovieApi.API_KEY)
+        movieApi
+            .getMoviesSearchResult(page, query, MovieApi.API_KEY)
+            .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
+
+    override fun getMovies(page: Int) =
+        movieApi
+            .getMovies(page, MovieApi.API_KEY)
             .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
     override fun getMovie(movieId: Int) =
-        movieApi.getMovie(movieId, MovieApi.API_KEY).map { apiMapper.mapApiMovieDetailsToMovieDetails(it) }
+        movieApi
+            .getMovie(movieId, MovieApi.API_KEY)
+            .map(apiMapper::mapApiMovieDetailsToMovieDetails)
 }

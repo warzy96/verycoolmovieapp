@@ -44,7 +44,6 @@ class MovieApplication : Application() {
         single { ViewModelMapperImpl() as ViewModelMapper }
         single { getRetrofit().create(MovieApi::class.java) as MovieApi }
 
-
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
         }

@@ -5,4 +5,6 @@
     <color name="colorAccent">#D81B60</color>
     <color name="searchBackground">#DFDFDF</color>
     <color name="searchBorder">#0C0C0C</color>
+    <color name="loadingColor">#9C9B9B</color>
+    <color name="loadingTextColor">#FFFFFF</color>
 </resources>

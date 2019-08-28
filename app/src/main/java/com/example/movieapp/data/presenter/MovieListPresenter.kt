@@ -4,7 +4,9 @@ import android.util.Log
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
@@ -29,22 +31,29 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         this.view = view
     }
 
-    override fun getMovies() = repository.getMovies()
-        .subscribeOn(Schedulers.io())
-        .observeOn(AndroidSchedulers.mainThread())
-        .subscribe(object : DisposableSingleObserver<List<Movie>>() {
-            override fun onSuccess(t: List<Movie>) {
-                view?.showMovies(viewModelMapper.mapMoviesToMovieViewModels(t))
-            }
+    override fun getMovies() {
+        repository.getMovies()
+            .subscribeOn(Schedulers.io())
+            .map(viewModelMapper::mapMoviesToMovieViewModels)
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe(this::onMoviesSuccess, this::onMovieError)
+    }
 
-            override fun onError(e: Throwable) {
-                page = RESET_PAGE
+    fun onMoviesSuccess(movies: List<MovieViewModel>) {
+        view?.showMovies(movies)
+    }
 
-                if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {
-                    view?.showErrorMessage(e)
-                }
-            }
-        })
+    fun onNextPageSuccess(movies: List<MovieViewModel>) {
+        view?.showNextPage(movies)
+    }
+
+    fun onMovieError(t: Throwable) {
+        page = RESET_PAGE
+
+        if (!(t is HttpException && t.code() == HTTP_RESET_PAGE_CODE)) {
+            view?.showErrorMessage(t)
+        }
+    }
 
     override fun getNextPage(query: String) {
         page++
@@ -78,20 +87,9 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
     private fun getNextMovies() {
         repository.getMovies(page)
             .subscribeOn(Schedulers.io())
+            .map(viewModelMapper::mapMoviesToMovieViewModels)
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(object : DisposableSingleObserver<List<Movie>>() {
-                override fun onSuccess(t: List<Movie>) {
-                    view?.showNextPage(viewModelMapper.mapMoviesToMovieViewModels(t))
-                }
-
-                override fun onError(e: Throwable) {
-                    page = RESET_PAGE
-
-                    if (!(e is HttpException && e.code() == HTTP_RESET_PAGE_CODE)) {
-                        view?.showErrorMessage(e)
-                    }
-                }
-            })
+            .subscribe(this::onNextPageSuccess, this::onMovieError)
     }
 
     override fun getMoviesSearchResult(query: String) {
