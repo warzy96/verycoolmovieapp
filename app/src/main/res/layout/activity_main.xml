@@ -39,7 +39,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:gravity="center"
+        android:background="@color/loadingColor"
         android:visibility="gone"
+        android:textSize="@dimen/movie_text_size_big"
+        android:textColor="@color/loadingTextColor"
         android:text="@string/loading_text"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

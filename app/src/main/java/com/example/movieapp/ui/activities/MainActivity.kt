@@ -57,6 +57,8 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
                 override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
                     super.onScrolled(recyclerView, dx, dy)
 
+                    // When movie, which is on position itemCount - LOADING_OFFSET, becomes completely visible
+                    // new page of movies will be fetched
                     if (!loading && (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
                             == adapter?.itemCount?.minus(LOADING_OFFSET)) {
                         loading = true
