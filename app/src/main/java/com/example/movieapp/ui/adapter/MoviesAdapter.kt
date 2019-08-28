@@ -31,7 +31,7 @@ class MoviesAdapter(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.updateValues(movies[position], movieClickListener)
-        setFadeAnimation(holder.itemView)
+        holder.setFadeAnimation()
     }
 
     override fun getItemCount() = movies.size
@@ -40,12 +40,6 @@ class MoviesAdapter(
         this.movies.clear()
         this.movies.addAll(movies)
         notifyDataSetChanged()
-    }
-
-    fun setFadeAnimation(view: View) {
-        val anim = AlphaAnimation(ALPHA_ANIM_START_VALUE, ALPHA_ANIM_END_VALUE)
-        anim.duration = FADE_DURATION
-        view.startAnimation(anim)
     }
 
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view), KoinComponent {
@@ -63,6 +57,12 @@ class MoviesAdapter(
                     movieClickListener.onMovieClicked(movie)
                 }
             }
+        }
+
+        fun setFadeAnimation() {
+            val anim = AlphaAnimation(ALPHA_ANIM_START_VALUE, ALPHA_ANIM_END_VALUE)
+            anim.duration = FADE_DURATION
+            view.startAnimation(anim)
         }
     }
 }
