@@ -37,9 +37,12 @@ class MoviesAdapter(
     override fun getItemCount() = movies.size
 
     fun setData(movies: List<MovieViewModel>) {
+        val size = itemCount
+
         this.movies.clear()
+        notifyItemRangeRemoved(0, size)
         this.movies.addAll(movies)
-        notifyDataSetChanged()
+        notifyItemRangeInserted(0, itemCount)
     }
 
     fun addData(movies: List<MovieViewModel>) {

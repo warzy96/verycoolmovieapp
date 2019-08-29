@@ -52,7 +52,7 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
     }
 
     override fun getMoviesSearchResult(query: String) {
-        if(query.isNullOrBlank()) {
+        if (query.isBlank()) {
             getMovies()
             return
         }
@@ -83,7 +83,7 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
     override fun getNextPage(query: String) {
         page++
 
-        if (query.isNullOrBlank()) {
+        if (query.isBlank()) {
             getNextMovies()
         } else {
             getNextMovies(query)
