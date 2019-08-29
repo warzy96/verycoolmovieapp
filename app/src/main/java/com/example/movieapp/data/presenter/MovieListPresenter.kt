@@ -1,14 +1,10 @@
 package com.example.movieapp.data.presenter
 
-import android.util.Log
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.view.model.MovieViewModel
-import com.example.movieapp.domain.Movie
-import com.example.movieapp.domain.MovieDetails
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -33,25 +29,25 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
 
     override fun getMovies() {
         repository.getMovies()
-            .subscribeOn(Schedulers.io())
             .map(viewModelMapper::mapMoviesToMovieViewModels)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
             .subscribe(this::onMoviesSuccess, this::onMovieError)
     }
 
     private fun getNextMovies(query: String) {
         repository.getMoviesSearchResult(page, query)
-            .subscribeOn(Schedulers.io())
             .map(viewModelMapper::mapMoviesToMovieViewModels)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
             .subscribe(this::onNextPageSuccess, this::onMovieError)
     }
 
     private fun getNextMovies() {
         repository.getMovies(page)
-            .subscribeOn(Schedulers.io())
             .map(viewModelMapper::mapMoviesToMovieViewModels)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
             .subscribe(this::onNextPageSuccess, this::onMovieError)
     }
 
@@ -62,9 +58,9 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         }
 
         repository.getMoviesSearchResult(query)
-            .subscribeOn(Schedulers.io())
             .map(viewModelMapper::mapMoviesToMovieViewModels)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
             .subscribe(this::onMoviesSuccess, this::onMovieError)
     }
 
