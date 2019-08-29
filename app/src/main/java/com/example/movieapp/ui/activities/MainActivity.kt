@@ -17,9 +17,13 @@ import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
+import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.getKoin
 import org.koin.core.qualifier.named
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickListener {
 
@@ -46,17 +50,25 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
             loadMovies()
         }
 
-        searchBar.addTextChangedListener(object: TextWatcher{
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                presenter.getMoviesSearchResult(searchBar.text.toString())
-            }
+        val searchObservable = Observable.create<String> { emitter ->
+            searchBar.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                }
 
-            override fun afterTextChanged(p0: Editable?) {
-            }
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    emitter.onNext(p0.toString())
+                }
 
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-        })
+                override fun afterTextChanged(p0: Editable?) {
+                }
+            })
+        }
+
+        searchObservable
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({ presenter.getMoviesSearchResult(it) })
 
         loadMovies()
     }
