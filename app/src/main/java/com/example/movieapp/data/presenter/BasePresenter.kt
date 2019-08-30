@@ -1,8 +1,14 @@
 package com.example.movieapp.data.presenter
 
-interface BasePresenter<T> {
+import io.reactivex.disposables.CompositeDisposable
 
-    fun onDestroy()
+abstract class BasePresenter<T> {
 
-    fun setView(view: T)
+    protected val composite = CompositeDisposable()
+
+    open fun onDestroy() {
+        composite.dispose()
+    }
+
+    abstract fun setView(view: T)
 }

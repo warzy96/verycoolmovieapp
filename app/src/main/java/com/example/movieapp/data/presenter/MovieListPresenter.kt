@@ -10,7 +10,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import retrofit2.HttpException
 
-class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
+class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
 
     companion object {
         private const val INITIAL_PAGE = 1
@@ -27,41 +27,30 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         this.view = view
     }
 
-    override fun getMovies() {
-        repository.getMovies()
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMoviesSuccess, this::onMovieError)
+    override fun getMovies(query: String) {
+        val request = if (query.isBlank()) repository.getMovies() else repository.getMoviesSearchResult(query)
+
+        composite.add(
+            request
+                .map(viewModelMapper::mapMoviesToMovieViewModels)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onMoviesSuccess, this::onMovieError)
+        )
     }
 
-    private fun getNextMovies(query: String) {
-        repository.getMoviesSearchResult(page, query)
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onNextPageSuccess, this::onMovieError)
-    }
+    override fun getNextPage(query: String) {
+        page++
 
-    private fun getNextMovies() {
-        repository.getMovies(page)
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onNextPageSuccess, this::onMovieError)
-    }
+        val request = if (query.isBlank()) repository.getMovies(page) else repository.getMoviesSearchResult(page, query)
 
-    override fun getMoviesSearchResult(query: String) {
-        if (query.isBlank()) {
-            getMovies()
-            return
-        }
-
-        repository.getMoviesSearchResult(query)
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMoviesSuccess, this::onMovieError)
+        composite.add(
+            request
+                .map(viewModelMapper::mapMoviesToMovieViewModels)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onNextPageSuccess, this::onMovieError)
+        )
     }
 
     fun onMoviesSuccess(movies: List<MovieViewModel>) {
@@ -80,17 +69,8 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         }
     }
 
-    override fun getNextPage(query: String) {
-        page++
-
-        if (query.isBlank()) {
-            getNextMovies()
-        } else {
-            getNextMovies(query)
-        }
-    }
-
     override fun onDestroy() {
+        super.onDestroy()
         this.view = null
     }
 }

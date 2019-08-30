@@ -6,13 +6,11 @@ import com.example.movieapp.data.view.model.MovieViewModel
 
 interface MovieListContract {
 
-    interface Presenter : BasePresenter<View> {
+    abstract class Presenter : BasePresenter<View>() {
 
-        fun getMovies()
+        abstract fun getMovies(query: String)
 
-        fun getNextPage(query: String)
-
-        fun getMoviesSearchResult(query: String)
+        abstract fun getNextPage(query: String)
     }
 
     interface View : BaseView {
