@@ -32,9 +32,9 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
 
     override fun getMovies() {
         repository.getMovies()
-            .subscribeOn(Schedulers.io())
             .map(viewModelMapper::mapMoviesToMovieViewModels)
             .observeOn(AndroidSchedulers.mainThread())
+            .subscribeOn(Schedulers.io())
             .subscribe(this::onMoviesSuccess, this::onMovieError)
     }
 
@@ -49,7 +49,7 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
     fun onMovieError(t: Throwable) {
         page = RESET_PAGE
 
-        if (!(t is HttpException && t.code() == HTTP_RESET_PAGE_CODE)) {
+        if ((t is HttpException && t.code() == HTTP_RESET_PAGE_CODE).not()) {
             view?.showErrorMessage(t)
         }
     }
