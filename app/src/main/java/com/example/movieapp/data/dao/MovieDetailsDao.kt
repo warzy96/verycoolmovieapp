@@ -7,12 +7,13 @@ import io.reactivex.Single
 
 @Dao
 interface MovieDetailsDao {
+
     @Query("SELECT * FROM movie_details_table")
     fun getAll(): List<DbMovieDetails>
 
-    @Query("SELECT * FROM movie_details_table WHERE movie_id = (:userId)")
-    fun loadById(userId: Int): Single<DbMovieDetails>
+    @Query("SELECT * FROM movie_details_table WHERE movie_id = (:movieId)")
+    fun loadById(movieId: Int): Single<DbMovieDetails>
 
     @Insert
-    fun insert(movieDetails: DbMovieDetails): Single<Long>
+    fun insert(movieDetails: DbMovieDetails): Long
 }

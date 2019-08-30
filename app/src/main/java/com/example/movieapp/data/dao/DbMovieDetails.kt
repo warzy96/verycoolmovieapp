@@ -3,13 +3,15 @@ package com.example.movieapp.data.dao
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.example.movieapp.domain.DbProductionCountry
 
 @Entity(tableName = "movie_details_table")
 data class DbMovieDetails(
+
     @PrimaryKey @ColumnInfo(name = "movie_id")
     val id: Int,
+
     val title: String,
+
     val tagline: String?,
 
     @ColumnInfo(name = "vote_count")
@@ -17,6 +19,7 @@ data class DbMovieDetails(
 
     @ColumnInfo(name = "vote_average")
     val voteAverage: Double,
+
     val popularity: Double,
 
     @ColumnInfo(name = "poster_path")
@@ -30,15 +33,16 @@ data class DbMovieDetails(
 
     @ColumnInfo(name = "poster_language")
     val originalLanguage: String,
-    val genres: List<DbGenre>,
-    val countries: List<DbProductionCountry>,
 
     @ColumnInfo(name = "is_adult")
     val isAdult: Boolean,
+
     val overview: String,
 
     @ColumnInfo(name = "release_date")
     val releaseDate: String,
+
     val runtime: Int?,
+
     val homepage: String?
 )

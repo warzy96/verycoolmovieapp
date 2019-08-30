@@ -13,15 +13,18 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieListContract
+import com.example.movieapp.data.dao.MovieDatabase
 import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
+import io.reactivex.Completable
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 import java.util.concurrent.TimeUnit
 
@@ -38,9 +41,20 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     private val presenter: MovieListPresenter by session.inject()
     private var loading = false
 
+    private val movieDb: MovieDatabase by inject()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        Completable.fromAction {
+            movieDb.clearAllTables()
+        }.observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe({
+            Log.d("clear", "cleared")
+        },
+            {
+                Log.d("clear", "fail " + it.localizedMessage)
+            })
 
         presenter.setView(this)
 

@@ -1,7 +1,7 @@
 package com.example.movieapp.data.view.model
 
-import com.example.movieapp.domain.DbGenre
-import com.example.movieapp.domain.DbProductionCountry
+import com.example.movieapp.domain.Genre
+import com.example.movieapp.domain.ProductionCountry
 import java.io.Serializable
 
 class MovieDetailsViewModel(
@@ -12,8 +12,8 @@ class MovieDetailsViewModel(
     val voteAverage: Double,
     val backdropPath: String,
     val originalTitle: String,
-    val genres: List<DbGenre>,
-    val countries: List<DbProductionCountry>,
+    val genres: List<Genre>,
+    val countries: List<ProductionCountry>,
     val isAdult: Boolean,
     val overview: String,
     val releaseDate: String,

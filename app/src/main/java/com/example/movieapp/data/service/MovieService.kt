@@ -6,6 +6,8 @@ import io.reactivex.Single
 
 interface MovieService {
 
+    fun save(movieDetails: MovieDetails)
+
     fun getMovies(): Single<List<Movie>>
 
     fun getMovies(page: Int): Single<List<Movie>>

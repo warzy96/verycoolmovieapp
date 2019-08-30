@@ -2,11 +2,14 @@ package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.domain.Movie
+import com.example.movieapp.domain.MovieDetails
 import io.reactivex.Single
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
 class MovieRepositoryImpl : MovieRepository, KoinComponent {
+
+    override fun save(movieDetails: MovieDetails) = movieService.save(movieDetails)
 
     private val movieService: MovieService by inject()
 
