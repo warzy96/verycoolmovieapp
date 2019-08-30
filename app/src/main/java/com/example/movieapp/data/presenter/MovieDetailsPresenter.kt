@@ -7,7 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 
-class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
+class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
 
     private var view: MovieDetailsContract.View? = null
 
@@ -16,11 +16,13 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
     }
 
     override fun getMovieDetails(movieId: Int) {
-        GetMovieDetailsUseCase()
-            .execute(movieId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMovieDetailsSuccess, this::onMovieDetailsError)
+        composite.add(
+            GetMovieDetailsUseCase()
+                .execute(movieId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onMovieDetailsSuccess, this::onMovieDetailsError)
+        )
     }
 
     fun onMovieDetailsSuccess(movieDetails: MovieDetailsViewModel) {
