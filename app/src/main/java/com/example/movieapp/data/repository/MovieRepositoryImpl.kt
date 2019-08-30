@@ -1,15 +1,14 @@
 package com.example.movieapp.data.repository
 
 import com.example.movieapp.data.service.MovieService
-import com.example.movieapp.data.service.callback.GenresCallback
-import com.example.movieapp.data.service.callback.MovieCallback
-import com.example.movieapp.data.service.callback.MovieDetailsCallback
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MovieRepositoryImpl(val movieSevice: MovieService) : MovieRepository {
+class MovieRepositoryImpl : MovieRepository, KoinComponent {
 
-    override fun getMovies(movieCallback: MovieCallback) = movieSevice.getMovies(movieCallback)
+    private val movieService: MovieService by inject()
 
-    override fun getMovie(movieId: Int, movieDetailsCallback: MovieDetailsCallback) = movieSevice.getMovie(movieId, movieDetailsCallback)
+    override fun getMovies() = movieService.getMovies()
 
-    override fun getGenres(genresCallback: GenresCallback) = movieSevice.getGenres(genresCallback)
+    override fun getMovie(movieId: Int) = movieService.getMovie(movieId)
 }

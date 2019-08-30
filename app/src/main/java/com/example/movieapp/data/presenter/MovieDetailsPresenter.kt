@@ -3,8 +3,10 @@ package com.example.movieapp.data.presenter
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.data.service.callback.MovieDetailsCallback
+import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import com.example.movieapp.domain.MovieDetails
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -19,16 +21,19 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
     }
 
     override fun getMovieDetails(movieId: Int) {
-        repository.getMovie(movieId, object : MovieDetailsCallback {
+        repository.getMovie(movieId)
+            .observeOn(AndroidSchedulers.mainThread())
+            .map(viewModelMapper::mapMovieDetailsToMovieDetailsViewModel)
+            .subscribeOn(Schedulers.io())
+            .subscribe(this::onMovieDetailsSuccess, this::onMovieDetailsError)
+    }
 
-            override fun onMovieDetailsFetched(movieDetails: MovieDetails) {
-                view?.showMovieDetails(viewModelMapper.mapMovieDetailsToMovieDetailsViewModel(movieDetails))
-            }
+    fun onMovieDetailsSuccess(movieDetails: MovieDetailsViewModel) {
+        view?.showMovieDetails(movieDetails)
+    }
 
-            override fun onError(t: Throwable) {
-                view?.showErrorMessage(t)
-            }
-        })
+    fun onMovieDetailsError(t: Throwable) {
+        view?.showErrorMessage(t)
     }
 
     override fun onDestroy() {

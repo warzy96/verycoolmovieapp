@@ -3,6 +3,7 @@ package com.example.movieapp.ui.adapter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AlphaAnimation
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.data.ImageLoader
@@ -18,13 +19,19 @@ class MoviesAdapter(
     private val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
+    companion object {
+        private const val FADE_DURATION = 1000L
+        private const val ALPHA_ANIM_START_VALUE = 0.0f
+        private const val ALPHA_ANIM_END_VALUE = 1.0f
+    }
+
     private val movies: MutableList<MovieViewModel> = mutableListOf()
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-
         holder.updateValues(movies[position], movieClickListener)
+        holder.setFadeAnimation()
     }
 
     override fun getItemCount() = movies.size
@@ -50,6 +57,12 @@ class MoviesAdapter(
                     movieClickListener.onMovieClicked(movie)
                 }
             }
+        }
+
+        fun setFadeAnimation() {
+            val anim = AlphaAnimation(ALPHA_ANIM_START_VALUE, ALPHA_ANIM_END_VALUE)
+            anim.duration = FADE_DURATION
+            view.startAnimation(anim)
         }
     }
 }

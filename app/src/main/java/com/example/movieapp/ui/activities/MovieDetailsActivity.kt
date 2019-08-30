@@ -33,7 +33,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         }
     }
 
-    private val session = getKoin().createScope(SESSION_ID, named<MovieDetailsActivity>())
+    private val session = getKoin().getOrCreateScope(SESSION_ID, named<MovieDetailsActivity>())
     private val presenter: MovieDetailsPresenter by session.inject()
     private val imageLoader: ImageLoader by inject()
 
