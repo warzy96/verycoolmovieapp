@@ -64,7 +64,7 @@ class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
     fun onMovieError(t: Throwable) {
         page = RESET_PAGE
 
-        if (!(t is HttpException && t.code() == HTTP_RESET_PAGE_CODE)) {
+        if ((t is HttpException && t.code() == HTTP_RESET_PAGE_CODE).not()) {
             view?.showErrorMessage(t)
         }
     }
