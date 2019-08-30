@@ -10,7 +10,7 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import retrofit2.HttpException
 
-class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
+class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
 
     companion object {
         private const val INITIAL_PAGE = 1
@@ -27,41 +27,32 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         this.view = view
     }
 
-    override fun getMovies() {
-        getMoviesUseCase
-            .execute(INITIAL_PAGE)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMoviesSuccess, this::onMovieError)
+    override fun getMovies(query: String) {
+        val request =
+            if (query.isBlank()) getMoviesUseCase.execute(INITIAL_PAGE)
+            else getMoviesSearchUseCase.execute(SearchMoviesRequest(INITIAL_PAGE, query))
+
+        composite.add(
+            request
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onMoviesSuccess, this::onMovieError)
+        )
     }
 
-    private fun getNextMovies(query: String) {
-        getMoviesSearchUseCase
-            .execute(SearchMoviesRequest(page, query))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onNextPageSuccess, this::onMovieError)
-    }
+    override fun getNextPage(query: String) {
+        page++
 
-    private fun getNextMovies() {
-        getMoviesUseCase
-            .execute(page)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onNextPageSuccess, this::onMovieError)
-    }
+        val request =
+            if (query.isBlank()) getMoviesUseCase.execute(page)
+            else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
 
-    override fun getMoviesSearchResult(query: String) {
-        if (query.isBlank()) {
-            getMovies()
-            return
-        }
-
-        getMoviesSearchUseCase
-            .execute(SearchMoviesRequest(INITIAL_PAGE, query))
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMoviesSuccess, this::onMovieError)
+        composite.add(
+            request
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onNextPageSuccess, this::onMovieError)
+        )
     }
 
     fun onMoviesSuccess(movies: List<MovieViewModel>) {
@@ -75,22 +66,13 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
     fun onMovieError(t: Throwable) {
         page = RESET_PAGE
 
-        if (!(t is HttpException && t.code() == HTTP_RESET_PAGE_CODE)) {
+        if ((t is HttpException && t.code() == HTTP_RESET_PAGE_CODE).not()) {
             view?.showErrorMessage(t)
         }
     }
 
-    override fun getNextPage(query: String) {
-        page++
-
-        if (query.isBlank()) {
-            getNextMovies()
-        } else {
-            getNextMovies(query)
-        }
-    }
-
     override fun onDestroy() {
+        super.onDestroy()
         this.view = null
     }
 }

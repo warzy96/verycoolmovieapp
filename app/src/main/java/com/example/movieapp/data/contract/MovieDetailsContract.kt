@@ -6,9 +6,9 @@ import com.example.movieapp.data.view.model.MovieDetailsViewModel
 
 interface MovieDetailsContract {
 
-    interface Presenter : BasePresenter<View> {
+    abstract class Presenter : BasePresenter<View>() {
 
-        fun getMovieDetails(movieId: Int)
+        abstract fun getMovieDetails(movieId: Int)
     }
 
     interface View : BaseView {

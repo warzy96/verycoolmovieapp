@@ -50,7 +50,7 @@ dependencies {
 
     implementation "androidx.room:room-runtime:$project.ext.roomVersion"
     implementation "androidx.room:room-ktx:$project.ext.roomVersion"
-    implementation "android.arch.persistence.room:rxjava2:1.1.1"
-    implementation "android.arch.persistence.room:runtime:1.1.1"
-    kapt "android.arch.persistence.room:compiler:1.1.1"
+    implementation "android.arch.persistence.room:rxjava2:$project.ext.roomVersion"
+    implementation "android.arch.persistence.room:runtime:$project.ext.roomVersion"
+    kapt "android.arch.persistence.room:compiler:$project.ext.roomVersion"
 }

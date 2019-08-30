@@ -18,8 +18,8 @@ import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
-import io.reactivex.Completable
-import io.reactivex.Observable
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
@@ -34,6 +34,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         private const val TAG = "MainActivity"
         private const val SESSION_ID = "MainSession"
         private const val LOADING_OFFSET = 5
+        private const val DEBOUNCE_TIME_MILLISECONDS = 500L
     }
 
     private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
@@ -47,15 +48,6 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        Completable.fromAction {
-            movieDb.clearAllTables()
-        }.observeOn(Schedulers.io()).subscribeOn(Schedulers.io()).subscribe({
-            Log.d("clear", "cleared")
-        },
-            {
-                Log.d("clear", "fail " + it.localizedMessage)
-            })
-
         presenter.setView(this)
 
         initMoviesRecyclerView()
@@ -64,25 +56,29 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
             loadMovies()
         }
 
-        val searchObservable = Observable.create<String> { emitter ->
-            searchBar.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                }
+        val searchObservable = Flowable.create<String>(
+            { emitter ->
+                searchBar.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
 
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    emitter.onNext(p0.toString())
-                }
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        emitter.onNext(p0.toString())
+                    }
 
-                override fun afterTextChanged(p0: Editable?) {
-                }
-            })
-        }
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+                })
+            },
+            BackpressureStrategy.BUFFER
+        ).switchMap { t -> Flowable.just(t) }
 
         searchObservable
-            .debounce(500, TimeUnit.MILLISECONDS)
+            .debounce(DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
+            .distinctUntilChanged()
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ presenter.getMoviesSearchResult(it) })
+            .subscribe({ presenter.getMovies(it) })
 
         loadMovies()
     }
@@ -100,7 +96,8 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
                     // When movie, which is on position itemCount - LOADING_OFFSET, becomes completely visible
                     // new page of movies will be fetched
                     if (!loading && (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                            == adapter?.itemCount?.minus(LOADING_OFFSET)) {
+                        == adapter?.itemCount?.minus(LOADING_OFFSET)
+                    ) {
                         loading = true
                         loadingText.visibility = View.VISIBLE
                         presenter.getNextPage(searchBar.text.toString())
@@ -142,6 +139,6 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     private fun loadMovies() {
-        presenter.getMoviesSearchResult(searchBar.text.toString())
+        presenter.getMovies(searchBar.text.toString())
     }
 }
