@@ -2,7 +2,7 @@ package com.example.movieapp.data.use_case.types
 
 import io.reactivex.Completable
 
-interface CompletableUseCase<U> {
+interface CompletableUseCase<P> {
 
-    fun execute(param: U): Completable
+    fun execute(param: P): Completable
 }
