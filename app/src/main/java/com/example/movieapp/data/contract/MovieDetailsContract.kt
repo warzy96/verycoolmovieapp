@@ -1,14 +1,14 @@
 package com.example.movieapp.data.contract
 
-import com.example.movieapp.data.presenter.BasePresenter
+import com.example.movieapp.data.presenter.LifecycleAwarePresenter
 import com.example.movieapp.data.view.BaseView
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
 
 interface MovieDetailsContract {
 
-    abstract class Presenter : BasePresenter<View>() {
+    interface Presenter : LifecycleAwarePresenter {
 
-        abstract fun getMovieDetails(movieId: Int)
+        fun getMovieDetails(movieId: Int)
     }
 
     interface View : BaseView {

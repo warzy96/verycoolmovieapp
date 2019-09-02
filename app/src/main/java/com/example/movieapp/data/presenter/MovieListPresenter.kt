@@ -10,7 +10,7 @@ import org.koin.core.KoinComponent
 import org.koin.core.inject
 import retrofit2.HttpException
 
-class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
+class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListContract.Presenter, KoinComponent {
 
     companion object {
         private const val INITIAL_PAGE = 1

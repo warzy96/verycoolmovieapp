@@ -9,7 +9,7 @@ import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
+class MovieDetailsPresenter : BasePresenter<MovieDetailsContract.View>(), MovieDetailsContract.Presenter, KoinComponent {
 
     private var view: MovieDetailsContract.View? = null
     private val repository: MovieRepository by inject()
@@ -35,10 +35,5 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
 
     fun onMovieDetailsError(t: Throwable) {
         view?.showErrorMessage(t)
-    }
-
-    override fun onStop() {
-        super.onStop()
-        this.view = null
     }
 }
