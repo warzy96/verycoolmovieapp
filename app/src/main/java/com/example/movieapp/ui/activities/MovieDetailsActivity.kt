@@ -47,9 +47,14 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         presenter.getMovieDetails(movieId)
     }
 
+    override fun onStop() {
+        presenter.onStop()
+        super.onStop()
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         session.close()
+        super.onDestroy()
     }
 
     override fun showMovieDetails(movie: MovieDetailsViewModel) {

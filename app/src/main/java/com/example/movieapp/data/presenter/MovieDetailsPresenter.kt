@@ -7,7 +7,7 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 
-class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
+class MovieDetailsPresenter : BasePresenter<MovieDetailsContract.View>(), MovieDetailsContract.Presenter, KoinComponent {
 
     private var view: MovieDetailsContract.View? = null
 
@@ -31,9 +31,5 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
 
     fun onMovieDetailsError(t: Throwable) {
         view?.showErrorMessage(t)
-    }
-
-    override fun onDestroy() {
-        this.view = null
     }
 }
