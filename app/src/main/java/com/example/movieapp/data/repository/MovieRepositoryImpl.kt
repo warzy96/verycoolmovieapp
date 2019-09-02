@@ -10,5 +10,7 @@ class MovieRepositoryImpl : MovieRepository, KoinComponent {
 
     override fun getMovies() = movieService.getMovies()
 
+    override fun getMovies(page: Int) = movieService.getMovies(page)
+
     override fun getMovie(movieId: Int) = movieService.getMovie(movieId)
 }

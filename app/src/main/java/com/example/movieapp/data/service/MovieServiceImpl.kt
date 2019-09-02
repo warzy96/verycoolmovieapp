@@ -15,6 +15,9 @@ class MovieServiceImpl : MovieService, KoinComponent {
             .getMovies(MovieApi.API_KEY)
             .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
+    override fun getMovies(page: Int) =
+        movieApi.getMovies(page, MovieApi.API_KEY).map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
+
     override fun getMovie(movieId: Int) =
         movieApi
             .getMovie(movieId, MovieApi.API_KEY)

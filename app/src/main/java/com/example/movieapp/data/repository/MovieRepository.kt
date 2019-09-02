@@ -8,5 +8,7 @@ interface MovieRepository {
 
     fun getMovies(): Single<List<Movie>>
 
+    fun getMovies(page: Int): Single<List<Movie>>
+
     fun getMovie(movieId: Int): Single<MovieDetails>
 }

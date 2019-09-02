@@ -42,6 +42,11 @@ class MoviesAdapter(
         notifyDataSetChanged()
     }
 
+    fun addData(movies: List<MovieViewModel>) {
+        this.movies.addAll(movies)
+        notifyItemRangeInserted(itemCount - movies.size, itemCount)
+    }
+
     class MovieViewHolder(val view: View) : RecyclerView.ViewHolder(view), KoinComponent {
 
         private val imageLoader: ImageLoader by inject()

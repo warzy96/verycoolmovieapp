@@ -25,4 +25,5 @@
     <dimen name="details_weight_sum">18</dimen>
     <dimen name="details_weight_third">6</dimen>
     <dimen name="details_weight_sixth">3</dimen>
+    <dimen name="loading_text_height">50dp</dimen>
 </resources>
