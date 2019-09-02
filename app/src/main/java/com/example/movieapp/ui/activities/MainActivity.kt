@@ -103,6 +103,11 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         }
     }
 
+    override fun onStop() {
+        presenter.onStop()
+        super.onStop()
+    }
+
     override fun onDestroy() {
         session.close()
         super.onDestroy()

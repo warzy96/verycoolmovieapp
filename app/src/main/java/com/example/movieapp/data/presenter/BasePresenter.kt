@@ -6,7 +6,7 @@ abstract class BasePresenter<T> {
 
     protected val composite = CompositeDisposable()
 
-    open fun onDestroy() {
+    open fun onStop() {
         composite.dispose()
     }
 

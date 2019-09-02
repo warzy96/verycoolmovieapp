@@ -69,8 +69,8 @@ class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         this.view = null
     }
 }

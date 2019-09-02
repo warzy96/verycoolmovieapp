@@ -37,7 +37,8 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
         view?.showErrorMessage(t)
     }
 
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         this.view = null
     }
 }
