@@ -1,8 +1,14 @@
 package com.example.movieapp.data.presenter
 
-interface BasePresenter<T> {
+import io.reactivex.disposables.CompositeDisposable
 
-    fun onDestroy()
+abstract class BasePresenter<T> : LifecycleAwarePresenter {
 
-    fun setView(view: T)
+    protected val composite = CompositeDisposable()
+
+    override fun onStop() {
+        composite.dispose()
+    }
+
+    abstract fun setView(view: T)
 }

@@ -1,16 +1,16 @@
 package com.example.movieapp.data.contract
 
-import com.example.movieapp.data.presenter.BasePresenter
+import com.example.movieapp.data.presenter.LifecycleAwarePresenter
 import com.example.movieapp.data.view.BaseView
 import com.example.movieapp.data.view.model.MovieViewModel
 
 interface MovieListContract {
 
-    interface Presenter : BasePresenter<View> {
+    interface Presenter : LifecycleAwarePresenter {
 
-        fun getMovies()
+        fun getMovies(query: String)
 
-        fun getNextPage()
+        fun getNextPage(query: String)
     }
 
     interface View : BaseView {

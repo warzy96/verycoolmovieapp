@@ -5,7 +5,6 @@ import com.bumptech.glide.Glide
 import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.ImageLoaderImpl
 import com.example.movieapp.data.api.MovieApi
-import com.example.movieapp.data.api.RetrofitFactory
 import com.example.movieapp.data.mapper.ApiMapper
 import com.example.movieapp.data.mapper.ApiMapperImpl
 import com.example.movieapp.data.mapper.ViewModelMapper
@@ -18,10 +17,14 @@ import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.activities.MovieDetailsActivity
+import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
+import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
 import org.koin.core.context.startKoin
 import org.koin.core.qualifier.named
 import org.koin.dsl.module
+import retrofit2.MoshiConverterFactory
+import retrofit2.Retrofit
 
 class MovieApplication : Application() {
 
@@ -39,7 +42,7 @@ class MovieApplication : Application() {
         single { ImageLoaderImpl(Glide.with(this@MovieApplication)) as ImageLoader }
         single { ApiMapperImpl() as ApiMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }
-        single { RetrofitFactory.getRetrofit(MovieApi.API_BASE_URL).create(MovieApi::class.java) as MovieApi }
+        single { getRetrofit().create(MovieApi::class.java) as MovieApi }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
@@ -48,4 +51,11 @@ class MovieApplication : Application() {
             scoped { MovieDetailsPresenter() }
         }
     }
+
+    fun getRetrofit() = Retrofit.Builder()
+        .baseUrl(MovieApi.API_BASE_URL)
+        .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+        .addConverterFactory(MoshiConverterFactory.create())
+        .client(OkHttpClient.Builder().build())
+        .build()
 }

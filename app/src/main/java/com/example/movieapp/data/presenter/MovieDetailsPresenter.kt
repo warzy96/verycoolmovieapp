@@ -4,13 +4,12 @@ import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
-import com.example.movieapp.domain.MovieDetails
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
+class MovieDetailsPresenter : BasePresenter<MovieDetailsContract.View>(), MovieDetailsContract.Presenter, KoinComponent {
 
     private var view: MovieDetailsContract.View? = null
     private val repository: MovieRepository by inject()
@@ -21,11 +20,13 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
     }
 
     override fun getMovieDetails(movieId: Int) {
-        repository.getMovie(movieId)
-            .observeOn(AndroidSchedulers.mainThread())
-            .map(viewModelMapper::mapMovieDetailsToMovieDetailsViewModel)
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMovieDetailsSuccess, this::onMovieDetailsError)
+        composite.add(
+            repository.getMovie(movieId)
+                .observeOn(AndroidSchedulers.mainThread())
+                .map(viewModelMapper::mapMovieDetailsToMovieDetailsViewModel)
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onMovieDetailsSuccess, this::onMovieDetailsError)
+        )
     }
 
     fun onMovieDetailsSuccess(movieDetails: MovieDetailsViewModel) {
@@ -34,9 +35,5 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter, KoinComponent {
 
     fun onMovieDetailsError(t: Throwable) {
         view?.showErrorMessage(t)
-    }
-
-    override fun onDestroy() {
-        this.view = null
     }
 }

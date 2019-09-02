@@ -1,6 +1,8 @@
 package com.example.movieapp.ui.activities
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -15,9 +17,15 @@ import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.MovieClickListener
+import io.reactivex.BackpressureStrategy
+import io.reactivex.Flowable
+import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
+import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.getKoin
 import org.koin.core.qualifier.named
+import java.util.concurrent.TimeUnit
 
 class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickListener {
 
@@ -25,8 +33,10 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         private const val TAG = "MainActivity"
         private const val SESSION_ID = "MainSession"
         private const val LOADING_OFFSET = 5
+        private const val DEBOUNCE_TIME_MILLISECONDS = 500L
     }
 
+    private val composite = CompositeDisposable()
     private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
     private val session = getKoin().createScope(SESSION_ID, named<MainActivity>())
     private val presenter: MovieListPresenter by session.inject()
@@ -44,6 +54,32 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
             loadMovies()
         }
 
+        val searchObservable = Flowable.create<String>(
+            { emitter ->
+                searchBar.addTextChangedListener(object : TextWatcher {
+                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    }
+
+                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                        emitter.onNext(p0.toString())
+                    }
+
+                    override fun afterTextChanged(p0: Editable?) {
+                    }
+                })
+            },
+            BackpressureStrategy.BUFFER
+        ).switchMap { t -> Flowable.just(t) }
+
+        composite.add(
+            searchObservable
+                .debounce(DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ presenter.getMovies(it) })
+        )
+
         loadMovies()
     }
 
@@ -60,14 +96,21 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
                     // When movie, which is on position itemCount - LOADING_OFFSET, becomes completely visible
                     // new page of movies will be fetched
                     if (!loading && (layoutManager as LinearLayoutManager).findLastCompletelyVisibleItemPosition()
-                            == adapter?.itemCount?.minus(LOADING_OFFSET)) {
+                        == adapter?.itemCount?.minus(LOADING_OFFSET)
+                    ) {
                         loading = true
                         loadingText.visibility = View.VISIBLE
-                        presenter.getNextPage()
+                        presenter.getNextPage(searchBar.text.toString())
                     }
                 }
             })
         }
+    }
+
+    override fun onStop() {
+        presenter.onStop()
+        composite.clear()
+        super.onStop()
     }
 
     override fun onDestroy() {
@@ -102,6 +145,6 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     private fun loadMovies() {
-        presenter.getMovies()
+        presenter.getMovies(searchBar.text.toString())
     }
 }

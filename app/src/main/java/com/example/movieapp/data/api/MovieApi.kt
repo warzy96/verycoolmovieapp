@@ -17,8 +17,14 @@ interface MovieApi {
     @GET("discover/movie")
     fun getMovies(@Query("api_key") api_key: String): Single<ApiMovieResults>
 
+    @GET("search/movie")
+    fun getMoviesSearchResult(@Query("query") query: String, @Query("api_key") api_key: String): Single<ApiMovieResults>
+
     @GET("discover/movie")
     fun getMovies(@Query("page") page: Int, @Query("api_key") api_key: String): Single<ApiMovieResults>
+
+    @GET("search/movie")
+    fun getMoviesSearchResult(@Query("page") page: Int, @Query("query") query: String, @Query("api_key") api_key: String): Single<ApiMovieResults>
 
     @GET("movie/{movie_id}")
     fun getMovie(@Path("movie_id") movie_id: Int, @Query("api_key") api_key: String): Single<ApiMovieDetails>

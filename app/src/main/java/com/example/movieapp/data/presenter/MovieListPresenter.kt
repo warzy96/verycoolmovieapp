@@ -4,16 +4,13 @@ import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.view.model.MovieViewModel
-import com.example.movieapp.domain.Movie
-import com.example.movieapp.domain.MovieDetails
 import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.observers.DisposableSingleObserver
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 import retrofit2.HttpException
 
-class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
+class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListContract.Presenter, KoinComponent {
 
     companion object {
         private const val INITIAL_PAGE = 1
@@ -30,12 +27,30 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         this.view = view
     }
 
-    override fun getMovies() {
-        repository.getMovies()
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribeOn(Schedulers.io())
-            .subscribe(this::onMoviesSuccess, this::onMovieError)
+    override fun getMovies(query: String) {
+        val request = if (query.isBlank()) repository.getMovies() else repository.getMoviesSearchResult(query)
+
+        composite.add(
+            request
+                .map(viewModelMapper::mapMoviesToMovieViewModels)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onMoviesSuccess, this::onMovieError)
+        )
+    }
+
+    override fun getNextPage(query: String) {
+        page++
+
+        val request = if (query.isBlank()) repository.getMovies(page) else repository.getMoviesSearchResult(page, query)
+
+        composite.add(
+            request
+                .map(viewModelMapper::mapMoviesToMovieViewModels)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onNextPageSuccess, this::onMovieError)
+        )
     }
 
     fun onMoviesSuccess(movies: List<MovieViewModel>) {
@@ -54,17 +69,8 @@ class MovieListPresenter : MovieListContract.Presenter, KoinComponent {
         }
     }
 
-    override fun getNextPage() {
-        page++
-
-        repository.getMovies(page)
-            .subscribeOn(Schedulers.io())
-            .map(viewModelMapper::mapMoviesToMovieViewModels)
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe(this::onNextPageSuccess, this::onMovieError)
-    }
-
-    override fun onDestroy() {
+    override fun onStop() {
+        super.onStop()
         this.view = null
     }
 }

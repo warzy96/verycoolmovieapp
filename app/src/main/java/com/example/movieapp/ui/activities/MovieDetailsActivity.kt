@@ -47,9 +47,14 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         presenter.getMovieDetails(movieId)
     }
 
+    override fun onStop() {
+        presenter.onStop()
+        super.onStop()
+    }
+
     override fun onDestroy() {
-        super.onDestroy()
         session.close()
+        super.onDestroy()
     }
 
     override fun showMovieDetails(movie: MovieDetailsViewModel) {
@@ -72,7 +77,9 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
         movieDetailsRating.rating = movie.voteAverage.toFloat()
         movieDetailsOverview.text = movie.overview
 
-        movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        if (!movie.releaseDate.isNullOrBlank()) {
+            movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+        }
 
         if (movie.runtime != null) {
             movieDetailsRuntime.text = MovieUtils.formatRuntime(movie.runtime)
