@@ -10,6 +10,8 @@ import com.example.movieapp.data.dao.MovieDatabase
 import com.example.movieapp.data.mapper.*
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.presenter.MovieListPresenter
+import com.example.movieapp.data.presenter.router.MovieListRouter
+import com.example.movieapp.data.presenter.router.MovieListRouterImpl
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
@@ -50,6 +52,7 @@ class MovieApplication : Application() {
         single { GetMovieDetailsUseCase() }
         single { GetMoviesUseCase() }
         single { GetMoviesSearchUseCase() }
+        single { MovieListRouterImpl() as MovieListRouter }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }

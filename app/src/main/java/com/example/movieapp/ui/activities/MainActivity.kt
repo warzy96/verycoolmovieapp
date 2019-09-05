@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {
-        startActivity(MovieDetailsActivity.createIntent(this@MainActivity, movie.id))
+        presenter.openMovieDetails(this, movie.id)
     }
 
     override fun showMovies(movies: List<MovieViewModel>) {

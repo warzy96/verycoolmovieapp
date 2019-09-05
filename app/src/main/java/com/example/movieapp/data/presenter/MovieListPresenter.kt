@@ -1,6 +1,8 @@
 package com.example.movieapp.data.presenter
 
+import android.content.Context
 import com.example.movieapp.data.contract.MovieListContract
+import com.example.movieapp.data.presenter.router.MovieListRouter
 import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
 import com.example.movieapp.data.use_case.GetMoviesUseCase
 import com.example.movieapp.data.use_case.SearchMoviesRequest
@@ -23,6 +25,7 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     private var page = INITIAL_PAGE
     private val getMoviesUseCase: GetMoviesUseCase by inject()
     private val getMoviesSearchUseCase: GetMoviesSearchUseCase by inject()
+    private val movieListRouter: MovieListRouter by inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
@@ -78,5 +81,9 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     override fun onStop() {
         super.onStop()
         this.view = null
+    }
+
+    override fun openMovieDetails(context: Context, movieId: Int) {
+        movieListRouter.openMovieDetails(context, movieId)
     }
 }
