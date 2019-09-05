@@ -6,10 +6,12 @@ import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 
-class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
+class MovieDetailsPresenter : BasePresenter<MovieDetailsContract.View>(), MovieDetailsContract.Presenter, KoinComponent {
 
     private var view: MovieDetailsContract.View? = null
+    private val getMovieDetailsUseCase: GetMovieDetailsUseCase by inject()
 
     override fun setView(view: MovieDetailsContract.View) {
         this.view = view
@@ -17,7 +19,7 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
 
     override fun getMovieDetails(movieId: Int) {
         composite.add(
-            GetMovieDetailsUseCase()
+            getMovieDetailsUseCase
                 .execute(movieId)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
@@ -31,9 +33,5 @@ class MovieDetailsPresenter : MovieDetailsContract.Presenter(), KoinComponent {
 
     fun onMovieDetailsError(t: Throwable) {
         view?.showErrorMessage(t)
-    }
-
-    override fun onDestroy() {
-        this.view = null
     }
 }

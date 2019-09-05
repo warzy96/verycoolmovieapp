@@ -21,6 +21,7 @@ import com.example.movieapp.ui.listener.MovieClickListener
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.android.schedulers.AndroidSchedulers
+import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.getKoin
@@ -37,6 +38,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         private const val DEBOUNCE_TIME_MILLISECONDS = 500L
     }
 
+    private val composite = CompositeDisposable()
     private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
     private val session = getKoin().createScope(SESSION_ID, named<MainActivity>())
     private val presenter: MovieListPresenter by session.inject()
@@ -59,26 +61,28 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         val searchObservable = Flowable.create<String>(
             { emitter ->
                 searchBar.addTextChangedListener(object : TextWatcher {
-                    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
                     }
 
-                    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                        emitter.onNext(p0.toString())
+                    override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                        emitter.onNext(s.toString())
                     }
 
-                    override fun afterTextChanged(p0: Editable?) {
+                    override fun afterTextChanged(s: Editable?) {
                     }
                 })
             },
             BackpressureStrategy.BUFFER
         ).switchMap { t -> Flowable.just(t) }
 
-        searchObservable
-            .debounce(DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
-            .distinctUntilChanged()
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
-            .subscribe({ presenter.getMovies(it) })
+        composite.add(
+            searchObservable
+                .debounce(DEBOUNCE_TIME_MILLISECONDS, TimeUnit.MILLISECONDS)
+                .distinctUntilChanged()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe({ presenter.getMovies(it) })
+        )
 
         loadMovies()
     }
@@ -105,6 +109,12 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
                 }
             })
         }
+    }
+
+    override fun onStop() {
+        presenter.onStop()
+        composite.clear()
+        super.onStop()
     }
 
     override fun onDestroy() {

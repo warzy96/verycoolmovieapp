@@ -3,14 +3,15 @@ package com.example.movieapp.data.presenter
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
 import com.example.movieapp.data.use_case.GetMoviesUseCase
-import com.example.movieapp.data.use_case.requests.SearchMoviesRequest
+import com.example.movieapp.data.use_case.SearchMoviesRequest
 import com.example.movieapp.data.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
+import org.koin.core.inject
 import retrofit2.HttpException
 
-class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
+class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListContract.Presenter, KoinComponent {
 
     companion object {
         private const val INITIAL_PAGE = 1
@@ -20,8 +21,8 @@ class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
 
     private var view: MovieListContract.View? = null
     private var page = INITIAL_PAGE
-    private val getMoviesUseCase = GetMoviesUseCase()
-    private val getMoviesSearchUseCase = GetMoviesSearchUseCase()
+    private val getMoviesUseCase: GetMoviesUseCase by inject()
+    private val getMoviesSearchUseCase: GetMoviesSearchUseCase by inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
@@ -29,8 +30,9 @@ class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
 
     override fun getMovies(query: String) {
         val request =
-            if (query.isBlank()) getMoviesUseCase.execute(INITIAL_PAGE)
-            else getMoviesSearchUseCase.execute(SearchMoviesRequest(INITIAL_PAGE, query))
+            if (query.isBlank()) {
+                getMoviesUseCase.execute(INITIAL_PAGE)
+            } else getMoviesSearchUseCase.execute(SearchMoviesRequest(INITIAL_PAGE, query))
 
         composite.add(
             request
@@ -44,7 +46,9 @@ class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
         page++
 
         val request =
-            if (query.isBlank()) getMoviesUseCase.execute(page)
+            if (query.isBlank()) {
+                getMoviesUseCase.execute(page)
+            }
             else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
 
         composite.add(
@@ -71,8 +75,8 @@ class MovieListPresenter : MovieListContract.Presenter(), KoinComponent {
         }
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onStop() {
+        super.onStop()
         this.view = null
     }
 }

@@ -14,6 +14,9 @@ import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
+import com.example.movieapp.data.use_case.GetMovieDetailsUseCase
+import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
+import com.example.movieapp.data.use_case.GetMoviesUseCase
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.activities.MovieDetailsActivity
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -44,6 +47,9 @@ class MovieApplication : Application() {
         single { ViewModelMapperImpl() as ViewModelMapper }
         single { getRetrofit().create(MovieApi::class.java) as MovieApi }
         single { getDB() }
+        single { GetMovieDetailsUseCase() }
+        single { GetMoviesUseCase() }
+        single { GetMoviesSearchUseCase() }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
