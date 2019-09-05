@@ -4,7 +4,13 @@ import io.reactivex.disposables.CompositeDisposable
 
 abstract class BasePresenter<T> : LifecycleAwarePresenter {
 
-    protected val composite = CompositeDisposable()
+    protected var composite = CompositeDisposable()
+
+    override fun onStart() {
+        if (composite.isDisposed) {
+            composite = CompositeDisposable()
+        }
+    }
 
     override fun onStop() {
         composite.dispose()

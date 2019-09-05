@@ -59,6 +59,7 @@ class MovieDetailsActivity : AppCompatActivity(), MovieDetailsContract.View, Koi
 
     override fun showMovieDetails(movie: MovieDetailsViewModel) {
         imageLoader.loadImage(movie.backdropPath, moviePoster)
+        imageLoader.loadImage(movie.posterPath, movieDetailsPoster)
 
         movieDetailsTitle.text = movie.title
 

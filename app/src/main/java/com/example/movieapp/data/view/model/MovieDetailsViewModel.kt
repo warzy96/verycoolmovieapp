@@ -11,6 +11,7 @@ class MovieDetailsViewModel(
     val voteCount: Int,
     val voteAverage: Double,
     val backdropPath: String,
+    val posterPath: String,
     val originalTitle: String,
     val genres: List<Genre>,
     val countries: List<ProductionCountry>,

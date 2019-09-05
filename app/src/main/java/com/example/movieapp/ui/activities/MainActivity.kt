@@ -111,6 +111,12 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         }
     }
 
+    override fun onStart() {
+        presenter.onStart()
+        presenter.setView(this)
+        super.onStart()
+    }
+
     override fun onStop() {
         presenter.onStop()
         composite.clear()
@@ -123,6 +129,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {
+        //supportFragmentManager.beginTransaction().setCustomAnimations(R.anim.abc_popup_enter, R.anim.abc_popup_exit).replace(R.id.frameLayout, MovieDetailsFragment()).commit()
         presenter.openMovieDetails(this, movie.id)
     }
 
@@ -132,6 +139,7 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     }
 
     override fun showNextPage(movies: List<MovieViewModel>) {
+        Log.d("next", "o")
         moviesAdapter.addData(movies)
         loadingText.visibility = View.GONE
         loading = false

@@ -16,6 +16,7 @@ class ViewModelMapperImpl : ViewModelMapper {
         voteCount = movieDetails.voteCount,
         voteAverage = movieDetails.voteAverage,
         backdropPath = movieDetails.backdropPath,
+        posterPath = movieDetails.posterPath,
         originalTitle = movieDetails.originalTitle,
         genres = movieDetails.genres,
         countries = movieDetails.countries,
