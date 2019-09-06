@@ -1,6 +1,7 @@
 package com.example.movieapp.data.presenter
 
-import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.presenter.router.MovieListRouter
 import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
@@ -83,7 +84,11 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
         this.view = null
     }
 
-    override fun openMovieDetails(context: Context, movieId: Int) {
-        movieListRouter.openMovieDetails(context, movieId)
+    override fun openMovieDetails(activity: AppCompatActivity, currentFragment: Fragment, movieId: Int) {
+        movieListRouter.openMovieDetails(activity, currentFragment, movieId)
+    }
+
+    override fun goBack(activity: AppCompatActivity) {
+        movieListRouter.goBack(activity)
     }
 }

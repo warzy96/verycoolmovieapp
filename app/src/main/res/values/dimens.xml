@@ -32,4 +32,5 @@
     <dimen name="search_bar_margin">20dp</dimen>
     <dimen name="search_bar_border_width">1dp</dimen>
     <dimen name="search_bar_border_radius">2dp</dimen>
+    <dimen name="text_margin">16dp</dimen>
 </resources>

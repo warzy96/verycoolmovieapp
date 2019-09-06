@@ -20,7 +20,7 @@ import com.example.movieapp.data.use_case.GetMovieDetailsUseCase
 import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
 import com.example.movieapp.data.use_case.GetMoviesUseCase
 import com.example.movieapp.ui.activities.MainActivity
-import com.example.movieapp.ui.activities.MovieDetailsActivity
+import com.example.movieapp.ui.fragments.MovieDetailsFragment
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -57,7 +57,7 @@ class MovieApplication : Application() {
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
         }
-        scope(named<MovieDetailsActivity>()) {
+        scope(named<MovieDetailsFragment>()) {
             scoped { MovieDetailsPresenter() }
         }
     }

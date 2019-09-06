@@ -1,6 +1,7 @@
 package com.example.movieapp.data.contract
 
-import android.content.Context
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.Fragment
 import com.example.movieapp.data.presenter.LifecycleAwarePresenter
 import com.example.movieapp.data.view.BaseView
 import com.example.movieapp.data.view.model.MovieViewModel
@@ -13,7 +14,9 @@ interface MovieListContract {
 
         fun getNextPage(query: String)
 
-        fun openMovieDetails(context: Context, movieId: Int)
+        fun openMovieDetails(activity: AppCompatActivity, currentFragment: Fragment, movieId: Int)
+
+        fun goBack(activity: AppCompatActivity)
     }
 
     interface View : BaseView {
