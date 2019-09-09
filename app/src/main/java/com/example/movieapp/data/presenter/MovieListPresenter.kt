@@ -27,6 +27,7 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     private val movieListRouter: MovieListRouter by inject()
     private val saveFavoriteUseCase: SaveFavoriteUseCase by inject()
     private val removeFavoriteUseCase: RemoveFavoriteUseCase by inject()
+    private val getFavoritesUseCase: GetFavoritesUseCase by inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
@@ -68,6 +69,15 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
 
     override fun removeFavorite(movie: MovieViewModel) {
         removeFavoriteUseCase.execute(movie)
+    }
+
+    override fun getFavorites() {
+        composite.add(
+            getFavoritesUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe(this::onMoviesSuccess, this::onMovieError)
+        )
     }
 
     fun onMoviesSuccess(movies: List<MovieViewModel>) {

@@ -53,6 +53,7 @@ class MovieApplication : Application() {
         single { MovieListRouterImpl() as MovieListRouter }
         single { SaveFavoriteUseCase() }
         single { RemoveFavoriteUseCase() }
+        single { GetFavoritesUseCase() }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }

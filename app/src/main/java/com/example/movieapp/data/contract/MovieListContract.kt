@@ -21,6 +21,8 @@ interface MovieListContract {
         fun saveFavorite(movie: MovieViewModel)
 
         fun removeFavorite(movie: MovieViewModel)
+
+        fun getFavorites()
     }
 
     interface View : BaseView {
