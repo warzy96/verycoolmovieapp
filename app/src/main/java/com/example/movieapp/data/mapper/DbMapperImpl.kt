@@ -1,10 +1,8 @@
 package com.example.movieapp.data.mapper
 
-import com.example.movieapp.data.dao.DbGenre
-import com.example.movieapp.data.dao.DbMovieDetails
-import com.example.movieapp.data.dao.DbProductionCountry
-import com.example.movieapp.data.dao.MovieDatabase
+import com.example.movieapp.data.dao.*
 import com.example.movieapp.domain.Genre
+import com.example.movieapp.domain.Movie
 import com.example.movieapp.domain.MovieDetails
 import com.example.movieapp.domain.ProductionCountry
 import org.koin.core.KoinComponent
@@ -13,6 +11,26 @@ import org.koin.core.inject
 class DbMapperImpl : DbMapper, KoinComponent {
 
     private val movieDb: MovieDatabase by inject()
+
+    override fun mapMovieToDbMovie(movie: Movie) = DbMovie(
+        id = movie.id,
+        title = movie.title,
+        voteAverage = movie.voteAverage,
+        voteCount = movie.voteCount,
+        posterPath = movie.posterPath,
+        releaseDate = movie.releaseDate
+    )
+
+    override fun mapDbMoviesToMovies(dbMovies: List<DbMovie>) = dbMovies.map { mapDbMovieToMovie(it) }
+
+    override fun mapDbMovieToMovie(dbMovie: DbMovie) = Movie(
+        id = dbMovie.id,
+        title = dbMovie.title,
+        voteAverage = dbMovie.voteAverage,
+        voteCount = dbMovie.voteCount,
+        posterPath = dbMovie.posterPath,
+        releaseDate = dbMovie.releaseDate
+    )
 
     override fun mapMovieDetailsToDbMovieDetails(movieDetails: MovieDetails) = DbMovieDetails(
         id = movieDetails.id,
@@ -32,7 +50,7 @@ class DbMapperImpl : DbMapper, KoinComponent {
         tagline = movieDetails.tagline
     )
 
-    override fun mapDbMovieDetailsToMovieDetails(movieDetails: DbMovieDetails) = MovieDetails(
+    override fun mapDbMovieDetailsToMovieDetails(movieDetails: DbMovieDetails, genres: List<Genre>, countries: List<ProductionCountry>) = MovieDetails(
         id = movieDetails.id,
         title = movieDetails.title,
         voteAverage = movieDetails.voteAverage,
@@ -42,8 +60,8 @@ class DbMapperImpl : DbMapper, KoinComponent {
         backdropPath = movieDetails.backdropPath,
         originalLanguage = movieDetails.originalLanguage,
         originalTitle = movieDetails.originalTitle,
-        genres = mapDbGenresToGenres(movieDb.movieGenreJoinDao().getGenresForMovie(movieDetails.id)),
-        countries = mapDbProductionCountriesToProductionCountries(movieDb.movieCountryJoinDao().getCountriesForMovie(movieDetails.id)),
+        genres = genres,
+        countries = countries,
         isAdult = movieDetails.isAdult,
         overview = movieDetails.overview,
         releaseDate = movieDetails.releaseDate,

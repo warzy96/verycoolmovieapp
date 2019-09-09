@@ -4,9 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.presenter.router.MovieListRouter
-import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
-import com.example.movieapp.data.use_case.GetMoviesUseCase
-import com.example.movieapp.data.use_case.SearchMoviesRequest
+import com.example.movieapp.data.use_case.*
 import com.example.movieapp.data.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -27,6 +25,8 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     private val getMoviesUseCase: GetMoviesUseCase by inject()
     private val getMoviesSearchUseCase: GetMoviesSearchUseCase by inject()
     private val movieListRouter: MovieListRouter by inject()
+    private val saveFavoriteUseCase: SaveFavoriteUseCase by inject()
+    private val removeFavoriteUseCase: RemoveFavoriteUseCase by inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
@@ -52,8 +52,7 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
         val request =
             if (query.isBlank()) {
                 getMoviesUseCase.execute(page)
-            }
-            else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
+            } else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
 
         composite.add(
             request
@@ -61,6 +60,14 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::onNextPageSuccess, this::onMovieError)
         )
+    }
+
+    override fun saveFavorite(movie: MovieViewModel) {
+        saveFavoriteUseCase.execute(movie)
+    }
+
+    override fun removeFavorite(movie: MovieViewModel) {
+        removeFavoriteUseCase.execute(movie)
     }
 
     fun onMoviesSuccess(movies: List<MovieViewModel>) {

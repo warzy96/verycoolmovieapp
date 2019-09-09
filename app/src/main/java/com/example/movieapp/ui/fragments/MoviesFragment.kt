@@ -19,6 +19,7 @@ import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.adapter.MoviesAdapter
+import com.example.movieapp.ui.listener.FavoriteClickListener
 import com.example.movieapp.ui.listener.MovieClickListener
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -50,7 +51,7 @@ class MoviesFragment : Fragment(), MovieListContract.View {
     }
 
     private val composite = CompositeDisposable()
-    private val moviesAdapter by lazy { MoviesAdapter((activity as MovieClickListener), LayoutInflater.from(activity)) }
+    private val moviesAdapter by lazy { MoviesAdapter((activity as MovieClickListener), (activity as FavoriteClickListener), LayoutInflater.from(activity)) }
     private val session = getKoin().getOrCreateScope(SESSION_ID, named<MainActivity>())
     private val presenter: MovieListPresenter by session.inject()
     private var loading = false

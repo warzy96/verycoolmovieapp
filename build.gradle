@@ -42,7 +42,8 @@ allprojects {
         rxJavaVersion = "2.1.9"
         rxAndroidVersion = "2.0.1"
         rxAdapterVersion = "1.0.0"
-        roomVersion = '2.1.0-alpha06'
+        roomVersion = "2.1.0-alpha06"
+        materialVersion = "1.0.0"
     }
 
     repositories {

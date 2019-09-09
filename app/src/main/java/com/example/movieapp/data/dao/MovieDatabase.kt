@@ -1,13 +1,33 @@
 package com.example.movieapp.data.dao
 
+import android.content.Context
 import androidx.room.Database
+import androidx.room.Room
 import androidx.room.RoomDatabase
 
 @Database(
-    entities = arrayOf(DbMovieDetails::class, DbGenre::class, DbProductionCountry::class, MovieGenreJoin::class, MovieCountryJoin::class),
+    entities = arrayOf(
+        DbMovieDetails::class,
+        DbGenre::class,
+        DbProductionCountry::class,
+        MovieGenreJoin::class,
+        MovieCountryJoin::class,
+        DbMovie::class
+    ),
     version = 1
 )
 abstract class MovieDatabase : RoomDatabase() {
+
+    companion object {
+
+        fun getDB(context: Context, databaseName: String) = Room.databaseBuilder(
+            context,
+            MovieDatabase::class.java,
+            databaseName
+        ).build()
+    }
+
+    abstract fun movieDao(): MovieDao
 
     abstract fun movieDetailsDao(): MovieDetailsDao
 

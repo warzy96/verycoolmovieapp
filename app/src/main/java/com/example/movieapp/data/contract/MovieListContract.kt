@@ -17,6 +17,10 @@ interface MovieListContract {
         fun openMovieDetails(activity: AppCompatActivity, currentFragment: Fragment, movieId: Int)
 
         fun goBack(activity: AppCompatActivity)
+
+        fun saveFavorite(movie: MovieViewModel)
+
+        fun removeFavorite(movie: MovieViewModel)
     }
 
     interface View : BaseView {

@@ -16,7 +16,7 @@ import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import com.example.movieapp.ui.utils.MovieUtils
-import kotlinx.android.synthetic.main.activity_movie_details.*
+import kotlinx.android.synthetic.main.fragment_movie_details.*
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
