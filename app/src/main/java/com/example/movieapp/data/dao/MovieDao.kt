@@ -1,19 +1,20 @@
 package com.example.movieapp.data.dao
 
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
+import io.reactivex.Single
 
 @Dao
 interface MovieDao {
 
-    @Query("SELECT * FROM genre_table")
-    fun getAll(): List<DbGenre>
+    @Query("SELECT * FROM favorite_movies")
+    fun getAll(): Single<List<DbMovie>>
 
-    @Query("SELECT * FROM genre_table WHERE genre_id = (:genreId)")
-    fun loadById(genreId: Int): DbGenre
+    @Query("SELECT * FROM favorite_movies WHERE movie_id = (:movieId)")
+    fun loadById(movieId: Int): Single<DbMovie>
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insert(genres: List<DbGenre>): List<Long>
+    fun insert(movies: List<DbMovie>): List<Long>
+
+    @Delete
+    fun delete(movie: DbMovie): Int
 }

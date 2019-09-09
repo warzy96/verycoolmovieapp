@@ -14,9 +14,7 @@ import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
-import com.example.movieapp.data.use_case.GetMovieDetailsUseCase
-import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
-import com.example.movieapp.data.use_case.GetMoviesUseCase
+import com.example.movieapp.data.use_case.*
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.activities.MovieDetailsActivity
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -46,10 +44,12 @@ class MovieApplication : Application() {
         single { DbMapperImpl() as DbMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }
         single { getRetrofit().create(MovieApi::class.java) as MovieApi }
-        single { getDB() }
+        single { MovieDatabase.getDB(applicationContext, "movie-database") }
         single { GetMovieDetailsUseCase() }
         single { GetMoviesUseCase() }
         single { GetMoviesSearchUseCase() }
+        single { SaveFavoriteUseCase() }
+        single { RemoveFavoriteUseCase() }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
@@ -58,11 +58,6 @@ class MovieApplication : Application() {
             scoped { MovieDetailsPresenter() }
         }
     }
-
-    fun getDB() = Room.databaseBuilder(
-        applicationContext,
-        MovieDatabase::class.java, "movie-database"
-    ).build()
 
     fun getRetrofit() = Retrofit.Builder()
         .baseUrl(MovieApi.API_BASE_URL)

@@ -11,6 +11,10 @@ interface MovieListContract {
         fun getMovies(query: String)
 
         fun getNextPage(query: String)
+
+        fun saveFavorite(movie: MovieViewModel)
+
+        fun removeFavorite(movie: MovieViewModel)
     }
 
     interface View : BaseView {

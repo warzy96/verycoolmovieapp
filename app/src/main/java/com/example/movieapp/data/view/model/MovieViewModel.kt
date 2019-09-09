@@ -8,5 +8,6 @@ class MovieViewModel(
     val voteCount: Int,
     val voteAverage: Double,
     val posterPath: String,
-    val releaseDate: String
+    val releaseDate: String,
+    var favorite: Boolean
 ) : Serializable

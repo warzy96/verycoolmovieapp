@@ -9,6 +9,7 @@ import com.example.movieapp.data.mapper.ApiMapper
 import com.example.movieapp.data.mapper.DbMapper
 import com.example.movieapp.domain.Movie
 import com.example.movieapp.domain.MovieDetails
+import io.reactivex.Completable
 import io.reactivex.Single
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
@@ -21,7 +22,29 @@ class MovieServiceImpl : MovieService, KoinComponent {
     private val movieApi: MovieApi by inject()
     private val movieDb: MovieDatabase by inject()
 
-    override fun save(movieDetails: MovieDetails) {
+    override fun saveFavorite(movie: Movie) = Completable.fromAction {
+        try {
+            movieDb.movieDao().insert(listOf(dbMapper.mapMovieToDbMovie(movie)))
+            getMovie(movie.id)
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess({ save(it) })
+                .subscribe()
+                .dispose()
+        } catch (e: Exception) {
+            Log.e("database", e.localizedMessage)
+        }
+    }
+
+    override fun removeFavorite(movie: Movie) = Completable.fromAction {
+        try {
+            movieDb.movieDao().delete(dbMapper.mapMovieToDbMovie(movie))
+            movieDb.movieDetailsDao().deleteById(movie.id)
+        } catch (e: Exception) {
+            Log.e("database", e.localizedMessage)
+        }
+    }
+
+    override fun save(movieDetails: MovieDetails) = Completable.fromAction {
         val movieGenreJoins = mutableListOf<MovieGenreJoin>()
         val movieCountryJoins = mutableListOf<MovieCountryJoin>()
 
@@ -37,11 +60,19 @@ class MovieServiceImpl : MovieService, KoinComponent {
             movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
             movieDb.productionCountryDao().insert(dbMapper.mapProductionCountriesToDbProductionCountries(movieDetails.countries))
             movieDb.genreDao().insert(dbMapper.mapGenresToDbGenres(movieDetails.genres))
-            movieDb.movieGenreJoinDao().insert(movieGenreJoins).size.toString()
-            movieDb.movieCountryJoinDao().insert(movieCountryJoins).size.toString()
+            movieDb.movieGenreJoinDao().insert(movieGenreJoins)
+            movieDb.movieCountryJoinDao().insert(movieCountryJoins)
         } catch (e: Exception) {
             Log.e("database", e.localizedMessage)
         }
+    }
+
+    override fun getFavorites(): Single<List<Movie>> {
+        return movieDb.movieDao().getAll().map(dbMapper::mapDbMoviesToMovies)
+    }
+
+    override fun getFavorite(movieId: Int): Single<Movie> {
+        return movieDb.movieDao().loadById(movieId).map(dbMapper::mapDbMovieToMovie)
     }
 
     override fun getMovies() =
@@ -71,7 +102,6 @@ class MovieServiceImpl : MovieService, KoinComponent {
                 movieApi
                     .getMovie(movieId, MovieApi.API_KEY)
                     .map(apiMapper::mapApiMovieDetailsToMovieDetails)
-                    .doOnSuccess({ save(it) })
                     .map(dbMapper::mapMovieDetailsToDbMovieDetails)
                     .blockingGet()
             }

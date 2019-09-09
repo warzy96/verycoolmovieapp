@@ -8,12 +8,12 @@ import io.reactivex.Completable
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class RemoveFavoriteUseCase: CompletableUseCase<MovieViewModel>, KoinComponent {
+class RemoveFavoriteUseCase : CompletableUseCase<MovieViewModel>, KoinComponent {
 
     private val repository: MovieRepository by inject()
     private val viewModelMapper: ViewModelMapper by inject()
 
     override fun execute(param: MovieViewModel): Completable {
-        return repository.saveFavorite(viewModelMapper.mapMovieViewModelToMovie(param))
+        return repository.removeFavorite(viewModelMapper.mapMovieViewModelToMovie(param))
     }
 }
