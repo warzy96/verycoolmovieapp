@@ -5,11 +5,6 @@ import com.bumptech.glide.Glide
 import com.example.movieapp.data.api.MovieApi
 import com.example.movieapp.data.dao.MovieDatabase
 import com.example.movieapp.data.mapper.*
-import com.example.movieapp.ui.favorites.presenter.FavoritesListPresenter
-import com.example.movieapp.ui.moviedetails.presenter.MovieDetailsPresenter
-import com.example.movieapp.ui.movies.presenter.MovieListPresenter
-import com.example.movieapp.ui.router.MovieListRouter
-import com.example.movieapp.ui.router.MovieListRouterImpl
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
@@ -19,7 +14,13 @@ import com.example.movieapp.data.util.ImageLoader
 import com.example.movieapp.data.util.ImageLoaderImpl
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.favorites.fragments.FavoritesFragment
+import com.example.movieapp.ui.favorites.presenter.FavoritesListPresenter
 import com.example.movieapp.ui.moviedetails.fragments.MovieDetailsFragment
+import com.example.movieapp.ui.moviedetails.presenter.MovieDetailsPresenter
+import com.example.movieapp.ui.movies.fragments.MoviesFragment
+import com.example.movieapp.ui.movies.presenter.MovieListPresenter
+import com.example.movieapp.ui.presenter.router.MovieListRouter
+import com.example.movieapp.ui.presenter.router.MovieListRouterImpl
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import okhttp3.OkHttpClient
 import org.koin.android.ext.koin.androidContext
@@ -51,14 +52,15 @@ class MovieApplication : Application() {
         single { GetMovieDetailsUseCase() }
         single { GetMoviesUseCase() }
         single { GetMoviesSearchUseCase() }
-        single { MovieListRouterImpl() as MovieListRouter }
         single { SaveFavoriteUseCase() }
         single { RemoveFavoriteUseCase() }
         single { GetFavoritesUseCase() }
 
         scope(named<MainActivity>()) {
+            scoped { MovieListRouterImpl() as MovieListRouter }
             scoped { MovieListPresenter() }
         }
+
         scope(named<MovieDetailsFragment>()) {
             scoped { MovieDetailsPresenter() }
         }

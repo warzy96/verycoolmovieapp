@@ -18,7 +18,7 @@ import com.example.movieapp.R
 import com.example.movieapp.data.api.MovieApi
 import com.example.movieapp.ui.movies.MovieListContract
 import com.example.movieapp.ui.movies.presenter.MovieListPresenter
-import com.example.movieapp.ui.router.MovieListRouter
+import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.view.model.MovieViewModel
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.adapter.MoviesAdapter
@@ -37,7 +37,7 @@ import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 import java.util.concurrent.TimeUnit
 
-class MoviesFragment(sortNum: Int) : Fragment(), MovieListContract.View, MovieClickListener {
+class MoviesFragment(sortNum: Int) : Fragment(), MovieListContract.View, MovieClickListener, FavoriteClickListener {
 
     companion object {
         const val TAG = "MoviesFragment"
@@ -49,22 +49,22 @@ class MoviesFragment(sortNum: Int) : Fragment(), MovieListContract.View, MovieCl
         fun newInstance(sortNum: Int) = MoviesFragment(sortNum)
     }
 
-    private val composite = CompositeDisposable()
+    private var composite = CompositeDisposable()
     private val moviesAdapter by lazy {
         MoviesAdapter(
             this,
-            (activity as FavoriteClickListener),
+            this,
             LayoutInflater.from(activity)
         )
     }
-    private val session = getKoin().getOrCreateScope(SESSION_ID, named<MainActivity>())
+    private val session = getKoin().getOrCreateScope(MainActivity.SESSION_ID, named<MainActivity>())
+    private val movieListRouter: MovieListRouter by session.inject()
     private val presenter: MovieListPresenter by session.inject()
     private var loading = false
     private lateinit var fragmentView: View
     private var sort: String = MovieApi.getSort(sortNum)
     private lateinit var searchDisposable: Disposable
     private lateinit var searchObservable: Flowable<String>
-    private val movieListRouter: MovieListRouter by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -94,20 +94,20 @@ class MoviesFragment(sortNum: Int) : Fragment(), MovieListContract.View, MovieCl
             BackpressureStrategy.BUFFER
         ).switchMap { t -> Flowable.just(t) }
 
-        if (moviesAdapter.itemCount == 0) {
-            loadMovies()
-        }
-
         return fragmentView
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {
-        movieListRouter.openMovieDetails(activity as AppCompatActivity, movie.id)
+        movieListRouter.openMovieDetails(movie.id)
     }
 
     override fun onStart() {
         super.onStart()
+        presenter.onStart()
         presenter.setView(this)
+        if (moviesAdapter.itemCount == 0) {
+            loadMovies()
+        }
     }
 
     override fun onResume() {
@@ -122,6 +122,7 @@ class MoviesFragment(sortNum: Int) : Fragment(), MovieListContract.View, MovieCl
     }
 
     override fun onStop() {
+        presenter.onStop()
         composite.remove(searchDisposable)
         searchDisposable.dispose()
         super.onStop()
@@ -179,6 +180,14 @@ class MoviesFragment(sortNum: Int) : Fragment(), MovieListContract.View, MovieCl
         searchBar.visibility = View.GONE
         searchIcon.visibility = View.GONE
         moviesErrorMessage.visibility = View.VISIBLE
+    }
+
+    override fun onToggleOn(movie: MovieViewModel) {
+        presenter.saveFavorite(movie)
+    }
+
+    override fun onToggleOff(movie: MovieViewModel) {
+        presenter.removeFavorite(movie)
     }
 
     private fun loadMovies() {

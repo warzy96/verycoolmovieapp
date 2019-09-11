@@ -1,15 +1,19 @@
 package com.example.movieapp.ui.favorites.presenter
 
+import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.ui.favorites.FavoritesListContract
 import com.example.movieapp.ui.presenter.BasePresenter
 import com.example.movieapp.data.usecases.GetFavoritesUseCase
 import com.example.movieapp.data.usecases.RemoveFavoriteUseCase
 import com.example.movieapp.data.usecases.SaveFavoriteUseCase
+import com.example.movieapp.ui.activities.MainActivity
+import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import org.koin.core.qualifier.named
 import retrofit2.HttpException
 
 class FavoritesListPresenter : BasePresenter<FavoritesListContract.View>(), FavoritesListContract.Presenter, KoinComponent {
@@ -24,6 +28,16 @@ class FavoritesListPresenter : BasePresenter<FavoritesListContract.View>(), Favo
     private val saveFavoriteUseCase: SaveFavoriteUseCase by inject()
     private val removeFavoriteUseCase: RemoveFavoriteUseCase by inject()
     private val getFavoritesUseCase: GetFavoritesUseCase by inject()
+    private val session = getKoin().getOrCreateScope(MainActivity.SESSION_ID, named<MainActivity>())
+    private val movieListRouter: MovieListRouter by session.inject()
+
+    override fun setActivity(activity: AppCompatActivity) {
+        movieListRouter.setActivity(activity)
+    }
+
+    override fun openMovieDetails(movieId: Int) {
+        movieListRouter.openMovieDetails(movieId)
+    }
 
     override fun setView(view: FavoritesListContract.View) {
         this.view = view

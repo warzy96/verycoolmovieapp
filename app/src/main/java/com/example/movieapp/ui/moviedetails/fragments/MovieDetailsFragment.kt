@@ -14,7 +14,9 @@ import com.example.movieapp.R
 import com.example.movieapp.ui.moviedetails.MovieDetailsContract
 import com.example.movieapp.ui.moviedetails.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.util.ImageLoader
+import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.moviedetails.view.MovieDetailsViewModel
+import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import org.koin.android.ext.android.getKoin

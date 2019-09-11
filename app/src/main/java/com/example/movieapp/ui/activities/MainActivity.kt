@@ -6,7 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.api.MovieApi
 import com.example.movieapp.ui.movies.presenter.MovieListPresenter
-import com.example.movieapp.ui.router.MovieListRouter
+import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.view.model.MovieViewModel
 import com.example.movieapp.ui.movies.fragments.MoviesFragment
 import com.example.movieapp.ui.listener.FavoriteClickListener
@@ -16,21 +16,22 @@ import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
-class MainActivity : AppCompatActivity(), FavoriteClickListener {
+class MainActivity : AppCompatActivity() {
 
     companion object {
         private const val TAG = "MainActivity"
-        private const val SESSION_ID = "MainSession"
+        const val SESSION_ID = "MainSession"
     }
 
     private val composite = CompositeDisposable()
     private val session = getKoin().createScope(SESSION_ID, named<MainActivity>())
     private val presenter: MovieListPresenter by session.inject()
-    private val movieListRouter: MovieListRouter by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
+
+        presenter.setActivity(this)
 
         supportFragmentManager.beginTransaction().replace(R.id.fragment, MoviesFragment.newInstance(MovieApi.POPULARITY_SORT_NUM))
             .addToBackStack(null).commit()
@@ -38,15 +39,15 @@ class MainActivity : AppCompatActivity(), FavoriteClickListener {
         bottomNavigation.setOnNavigationItemSelectedListener {
             when (it.itemId) {
                 R.id.favorites -> {
-                    movieListRouter.openFavorites(this)
+                    presenter.openFavorites()
                     true
                 }
                 R.id.popular -> {
-                    movieListRouter.openPopularMovies(this)
+                    presenter.openPopularMovies()
                     true
                 }
                 R.id.bestRating -> {
-                    movieListRouter.openBestRatedMovies(this)
+                    presenter.openBestRatedMovies()
                     true
                 }
             }
@@ -55,13 +56,7 @@ class MainActivity : AppCompatActivity(), FavoriteClickListener {
         }
     }
 
-    override fun onStart() {
-        presenter.onStart()
-        super.onStart()
-    }
-
     override fun onStop() {
-        presenter.onStop()
         composite.clear()
         super.onStop()
     }
@@ -73,18 +68,10 @@ class MainActivity : AppCompatActivity(), FavoriteClickListener {
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK && event?.repeatCount == 0) {
-            movieListRouter.goBack(this)
+            presenter.goBack()
             return true
         }
 
         return super.onKeyDown(keyCode, event)
-    }
-
-    override fun onToggleOn(movie: MovieViewModel) {
-        presenter.saveFavorite(movie)
-    }
-
-    override fun onToggleOff(movie: MovieViewModel) {
-        presenter.removeFavorite(movie)
     }
 }

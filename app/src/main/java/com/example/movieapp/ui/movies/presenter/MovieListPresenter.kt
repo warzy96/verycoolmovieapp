@@ -1,13 +1,18 @@
 package com.example.movieapp.ui.movies.presenter
 
+import android.util.Log
+import androidx.appcompat.app.AppCompatActivity
+import com.example.movieapp.data.usecases.*
+import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.movies.MovieListContract
 import com.example.movieapp.ui.presenter.BasePresenter
-import com.example.movieapp.data.usecases.*
+import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
+import org.koin.core.qualifier.named
 import retrofit2.HttpException
 
 class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListContract.Presenter, KoinComponent {
@@ -24,9 +29,35 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     private val saveFavoriteUseCase: SaveFavoriteUseCase by inject()
     private val removeFavoriteUseCase: RemoveFavoriteUseCase by inject()
     private val getFavoritesUseCase: GetFavoritesUseCase by inject()
+    private val session = getKoin().getOrCreateScope(MainActivity.SESSION_ID, named<MainActivity>())
+    private val movieListRouter: MovieListRouter by session.inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
+    }
+
+    override fun setActivity(activity: AppCompatActivity) {
+        movieListRouter.setActivity(activity)
+    }
+
+    override fun openBestRatedMovies() {
+        movieListRouter.openBestRatedMovies()
+    }
+
+    override fun goBack() {
+        movieListRouter.goBack()
+    }
+
+    override fun openFavorites() {
+        movieListRouter.openFavorites()
+    }
+
+    override fun openMovieDetails(movieId: Int) {
+        movieListRouter.openMovieDetails(movieId)
+    }
+
+    override fun openPopularMovies() {
+        movieListRouter.openPopularMovies()
     }
 
     override fun getMovies(query: String, sort: String) {
@@ -42,7 +73,11 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
             getFavoritesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
+                .doOnError {
+                    Log.d("tag", "error")
+                }
                 .doOnSuccess { favorites ->
+                    Log.d("tag", "succ")
                     request
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())

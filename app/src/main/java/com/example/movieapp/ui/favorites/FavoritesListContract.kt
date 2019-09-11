@@ -1,5 +1,6 @@
 package com.example.movieapp.ui.favorites
 
+import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.ui.presenter.LifecycleAwarePresenter
 import com.example.movieapp.ui.view.BaseView
 import com.example.movieapp.ui.view.model.MovieViewModel
@@ -7,6 +8,10 @@ import com.example.movieapp.ui.view.model.MovieViewModel
 interface FavoritesListContract {
 
     interface Presenter : LifecycleAwarePresenter {
+
+        fun setActivity(activity: AppCompatActivity)
+
+        fun openMovieDetails(movieId: Int)
 
         fun saveFavorite(movie: MovieViewModel)
 
