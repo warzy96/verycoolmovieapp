@@ -8,7 +8,7 @@ import io.reactivex.Single
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
-class GetMovieDetailsUseCase : SingleUseCaseWithParam<MovieDetailsViewModel, Int>, KoinComponent{
+class GetMovieDetailsUseCase : SingleUseCaseWithParam<MovieDetailsViewModel, Int>, KoinComponent {
 
     private val repository: MovieRepository by inject()
     private val viewModelMapper: ViewModelMapper by inject()

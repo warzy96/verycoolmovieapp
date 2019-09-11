@@ -27,9 +27,10 @@ class MovieServiceImpl : MovieService, KoinComponent {
             movieDb.movieDao().insert(listOf(dbMapper.mapMovieToDbMovie(movie)))
             getMovie(movie.id)
                 .subscribeOn(Schedulers.io())
-                .doOnSuccess({ save(it) })
+                .doOnSuccess {
+                    saveMovie(it).subscribe()
+                }
                 .subscribe()
-                .dispose()
         } catch (e: Exception) {
             Log.e("database", e.localizedMessage)
         }
@@ -44,7 +45,7 @@ class MovieServiceImpl : MovieService, KoinComponent {
         }
     }
 
-    override fun save(movieDetails: MovieDetails) = Completable.fromAction {
+    override fun saveMovie(movieDetails: MovieDetails) = Completable.fromAction {
         val movieGenreJoins = mutableListOf<MovieGenreJoin>()
         val movieCountryJoins = mutableListOf<MovieCountryJoin>()
 
@@ -57,7 +58,8 @@ class MovieServiceImpl : MovieService, KoinComponent {
         }
 
         try {
-            movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
+            val insert = movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
+            Log.d("insert", insert.toString())
             movieDb.productionCountryDao().insert(dbMapper.mapProductionCountriesToDbProductionCountries(movieDetails.countries))
             movieDb.genreDao().insert(dbMapper.mapGenresToDbGenres(movieDetails.genres))
             movieDb.movieGenreJoinDao().insert(movieGenreJoins)
@@ -75,9 +77,9 @@ class MovieServiceImpl : MovieService, KoinComponent {
         return movieDb.movieDao().loadById(movieId).map(dbMapper::mapDbMovieToMovie)
     }
 
-    override fun getMovies() =
+    override fun getMovies(sort: String) =
         movieApi
-            .getMovies(MovieApi.API_KEY)
+            .getMovies(MovieApi.API_KEY, sort)
             .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
     override fun getMoviesSearchResult(query: String): Single<List<Movie>> =
@@ -90,28 +92,31 @@ class MovieServiceImpl : MovieService, KoinComponent {
             .getMoviesSearchResult(page, query, MovieApi.API_KEY)
             .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
-    override fun getMovies(page: Int) =
+    override fun getMovies(sort: String, page: Int) =
         movieApi
-            .getMovies(page, MovieApi.API_KEY)
+            .getMovies(page, MovieApi.API_KEY, sort)
             .map { apiMapper.mapApiMoviesToMovies(it.results ?: listOf()) }
 
     override fun getMovie(movieId: Int): Single<MovieDetails> {
-        return movieDb.movieGenreJoinDao().getGenresForMovie(movieId).flatMap {
-                genres ->
+        return movieDb.movieGenreJoinDao().getGenresForMovie(movieId)
+            .flatMap { genres ->
                 run {
                     movieDb.movieCountryJoinDao().getCountriesForMovie(movieId)
-                        .flatMap{
-                            countries ->
+                        .flatMap { countries ->
                             run {
-                                Log.d("countries", countries.size.toString())
-
                                 movieDb.movieDetailsDao().loadById(movieId)
                                     .subscribeOn(Schedulers.io())
-                                    .map { dbMapper.mapDbMovieDetailsToMovieDetails(it, dbMapper.mapDbGenresToGenres(genres), dbMapper.mapDbProductionCountriesToProductionCountries(countries)) }
-                                    .onErrorReturn {
+                                    .map {
+                                        dbMapper.mapDbMovieDetailsToMovieDetails(
+                                            it,
+                                            dbMapper.mapDbGenresToGenres(genres),
+                                            dbMapper.mapDbProductionCountriesToProductionCountries(countries)
+                                        )
+                                    }.onErrorReturn {
                                         movieApi
                                             .getMovie(movieId, MovieApi.API_KEY)
                                             .map(apiMapper::mapApiMovieDetailsToMovieDetails)
+
                                             .blockingGet()
                                     }
                             }

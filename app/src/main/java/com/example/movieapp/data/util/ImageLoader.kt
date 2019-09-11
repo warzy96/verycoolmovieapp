@@ -1,4 +1,4 @@
-package com.example.movieapp.data
+package com.example.movieapp.data.util
 
 import android.widget.ImageView
 

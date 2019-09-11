@@ -19,11 +19,11 @@ class MovieRepositoryImpl : MovieRepository, KoinComponent {
 
     override fun getFavorite(movieId: Int) = movieService.getFavorite(movieId)
 
-    override fun save(movieDetails: MovieDetails) = movieService.save(movieDetails)
+    override fun save(movieDetails: MovieDetails) = movieService.saveMovie(movieDetails)
 
-    override fun getMovies() = movieService.getMovies()
+    override fun getMovies(sort: String) = movieService.getMovies(sort)
 
-    override fun getMovies(page: Int) = movieService.getMovies(page)
+    override fun getMovies(sort: String, page: Int) = movieService.getMovies(sort, page)
 
     override fun getMoviesSearchResult(query: String): Single<List<Movie>> = movieService.getMoviesSearchResult(query)
 

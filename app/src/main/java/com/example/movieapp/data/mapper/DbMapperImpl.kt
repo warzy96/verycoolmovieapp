@@ -18,7 +18,8 @@ class DbMapperImpl : DbMapper, KoinComponent {
         voteAverage = movie.voteAverage,
         voteCount = movie.voteCount,
         posterPath = movie.posterPath,
-        releaseDate = movie.releaseDate
+        releaseDate = movie.releaseDate,
+        popularity = movie.popularity
     )
 
     override fun mapDbMoviesToMovies(dbMovies: List<DbMovie>) = dbMovies.map { mapDbMovieToMovie(it) }
@@ -29,7 +30,8 @@ class DbMapperImpl : DbMapper, KoinComponent {
         voteAverage = dbMovie.voteAverage,
         voteCount = dbMovie.voteCount,
         posterPath = dbMovie.posterPath,
-        releaseDate = dbMovie.releaseDate
+        releaseDate = dbMovie.releaseDate,
+        popularity = dbMovie.popularity
     )
 
     override fun mapMovieDetailsToDbMovieDetails(movieDetails: MovieDetails) = DbMovieDetails(
@@ -50,25 +52,26 @@ class DbMapperImpl : DbMapper, KoinComponent {
         tagline = movieDetails.tagline
     )
 
-    override fun mapDbMovieDetailsToMovieDetails(movieDetails: DbMovieDetails, genres: List<Genre>, countries: List<ProductionCountry>) = MovieDetails(
-        id = movieDetails.id,
-        title = movieDetails.title,
-        voteAverage = movieDetails.voteAverage,
-        voteCount = movieDetails.voteCount,
-        popularity = movieDetails.popularity,
-        posterPath = movieDetails.posterPath,
-        backdropPath = movieDetails.backdropPath,
-        originalLanguage = movieDetails.originalLanguage,
-        originalTitle = movieDetails.originalTitle,
-        genres = genres,
-        countries = countries,
-        isAdult = movieDetails.isAdult,
-        overview = movieDetails.overview,
-        releaseDate = movieDetails.releaseDate,
-        runtime = movieDetails.runtime,
-        homepage = movieDetails.homepage,
-        tagline = movieDetails.tagline
-    )
+    override fun mapDbMovieDetailsToMovieDetails(movieDetails: DbMovieDetails, genres: List<Genre>, countries: List<ProductionCountry>) =
+        MovieDetails(
+            id = movieDetails.id,
+            title = movieDetails.title,
+            voteAverage = movieDetails.voteAverage,
+            voteCount = movieDetails.voteCount,
+            popularity = movieDetails.popularity,
+            posterPath = movieDetails.posterPath,
+            backdropPath = movieDetails.backdropPath,
+            originalLanguage = movieDetails.originalLanguage,
+            originalTitle = movieDetails.originalTitle,
+            genres = genres,
+            countries = countries,
+            isAdult = movieDetails.isAdult,
+            overview = movieDetails.overview,
+            releaseDate = movieDetails.releaseDate,
+            runtime = movieDetails.runtime,
+            homepage = movieDetails.homepage,
+            tagline = movieDetails.tagline
+        )
 
     private fun mapGenreToDbGenre(genre: Genre) = DbGenre(
         id = genre.id,

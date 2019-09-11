@@ -13,5 +13,7 @@ interface ViewModelMapper {
 
     fun mapMovieToMovieViewModel(movie: Movie): MovieViewModel
 
+    fun mapMovieToMovieViewModel(movie: Movie, isFavorite: Boolean): MovieViewModel
+
     fun mapMovieDetailsToMovieDetailsViewModel(movieDetails: MovieDetails): MovieDetailsViewModel
 }

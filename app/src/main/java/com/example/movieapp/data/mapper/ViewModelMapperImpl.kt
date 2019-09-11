@@ -13,7 +13,8 @@ class ViewModelMapperImpl : ViewModelMapper {
         voteCount = movieViewModel.voteCount,
         voteAverage = movieViewModel.voteAverage,
         posterPath = movieViewModel.posterPath,
-        releaseDate = movieViewModel.releaseDate
+        releaseDate = movieViewModel.releaseDate,
+        popularity = movieViewModel.popularity
     )
 
     override fun mapMoviesToMovieViewModels(movies: List<Movie>) = movies.map { mapMovieToMovieViewModel(it) }
@@ -36,13 +37,16 @@ class ViewModelMapperImpl : ViewModelMapper {
         homepage = movieDetails.homepage
     )
 
-    override fun mapMovieToMovieViewModel(movie: Movie) = MovieViewModel(
+    override fun mapMovieToMovieViewModel(movie: Movie) = mapMovieToMovieViewModel(movie, false)
+
+    override fun mapMovieToMovieViewModel(movie: Movie, isFavorite: Boolean) = MovieViewModel(
         id = movie.id,
         title = movie.title,
         voteAverage = movie.voteAverage,
         voteCount = movie.voteCount,
         posterPath = movie.posterPath,
         releaseDate = movie.releaseDate,
-        favorite = false
+        favorite = isFavorite,
+        popularity = movie.popularity
     )
 }

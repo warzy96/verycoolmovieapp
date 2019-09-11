@@ -4,10 +4,13 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
+import android.view.animation.Animation
+import android.view.animation.AnimationSet
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.data.ImageLoader
+import com.example.movieapp.data.util.ImageLoader
 import com.example.movieapp.data.view.model.MovieViewModel
 import com.example.movieapp.ui.listener.FavoriteClickListener
 import com.example.movieapp.ui.listener.MovieClickListener
@@ -34,7 +37,10 @@ class MoviesAdapter(
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
         holder.updateValues(movies[position], movieClickListener, favoriteClickListener)
-        holder.setFadeAnimation()
+        val animationSet = AnimationSet(false)
+        animationSet.addAnimation(AnimationUtils.loadAnimation(holder.view.context, R.anim.abc_slide_in_bottom))
+        animationSet.addAnimation(holder.getFadeAnimation())
+        holder.view.startAnimation(animationSet)
     }
 
     override fun getItemCount() = movies.size
@@ -63,7 +69,7 @@ class MoviesAdapter(
                 imageLoader.loadImage(movie.posterPath, movieListPoster)
                 movieRating.rating = movie.voteAverage.toFloat()
                 movieRatingCount.text = MovieUtils.formatVotes(movie.voteAverage, movie.voteCount)
-                if (!movie.releaseDate.isNullOrBlank()) {
+                if (!movie.releaseDate.isBlank()) {
                     movieReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
                 }
                 setOnClickListener {
@@ -87,10 +93,10 @@ class MoviesAdapter(
             }
         }
 
-        fun setFadeAnimation() {
+        fun getFadeAnimation(): Animation {
             val anim = AlphaAnimation(ALPHA_ANIM_START_VALUE, ALPHA_ANIM_END_VALUE)
             anim.duration = FADE_DURATION
-            view.startAnimation(anim)
+            return anim
         }
     }
 }

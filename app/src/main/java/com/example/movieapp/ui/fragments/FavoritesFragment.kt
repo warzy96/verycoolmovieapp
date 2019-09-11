@@ -2,59 +2,49 @@ package com.example.movieapp.ui.fragments
 
 import android.app.Activity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
+import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
-import com.example.movieapp.data.contract.MovieListContract
-import com.example.movieapp.data.presenter.MovieListPresenter
+import com.example.movieapp.data.contract.FavoritesListContract
+import com.example.movieapp.data.presenter.FavoritesListPresenter
+import com.example.movieapp.data.presenter.router.MovieListRouter
 import com.example.movieapp.data.view.model.MovieViewModel
-import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.FavoriteClickListener
 import com.example.movieapp.ui.listener.MovieClickListener
-import io.reactivex.BackpressureStrategy
-import io.reactivex.Flowable
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.disposables.CompositeDisposable
-import io.reactivex.schedulers.Schedulers
-import kotlinx.android.synthetic.main.fragment_movies.*
 import kotlinx.android.synthetic.main.fragment_movies.view.*
 import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
-import java.util.concurrent.TimeUnit
 
-class FavoritesFragment : Fragment(), MovieListContract.View {
+class FavoritesFragment : Fragment(), MovieClickListener, FavoritesListContract.View {
 
     companion object {
-        private const val TAG = "MoviesFragment"
-        private const val LOADING_OFFSET = 5
-        private const val DEBOUNCE_TIME_MILLISECONDS = 500L
-        private const val SESSION_ID = "MainSession"
+        const val TAG = "FavoritesFragment"
+        private const val SESSION_ID = "FavoritesSession"
 
         @JvmStatic
-        fun newInstance() =
-            FavoritesFragment().apply {
-                arguments = Bundle().apply {
-                    //putSerializable(ADAPTER_PARAM, adapter)
-                    // putSerializable(PRESENTER_PARAM, presenter)
-                }
-            }
+        fun newInstance() = FavoritesFragment()
     }
 
-    private val moviesAdapter by lazy { MoviesAdapter((activity as MovieClickListener), (activity as FavoriteClickListener), LayoutInflater.from(activity)) }
-    private val session = getKoin().getOrCreateScope(SESSION_ID, named<MainActivity>())
-    private val presenter: MovieListPresenter by session.inject()
-    private var loading = false
+    private val moviesAdapter by lazy {
+        MoviesAdapter(
+            this,
+            (activity as FavoriteClickListener),
+            LayoutInflater.from(activity)
+        )
+    }
+    private val session = getKoin().getOrCreateScope(SESSION_ID, named<FavoritesFragment>())
+    private val presenter: FavoritesListPresenter by session.inject()
     private lateinit var fragmentView: View
+    private val movieListRouter: MovieListRouter by inject()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -67,7 +57,11 @@ class FavoritesFragment : Fragment(), MovieListContract.View {
             loadMovies()
         }
 
-        loadMovies()
+        presenter.setView(this)
+
+        if (moviesAdapter.itemCount == 0) {
+            loadMovies()
+        }
 
         return fragmentView
     }
@@ -81,15 +75,18 @@ class FavoritesFragment : Fragment(), MovieListContract.View {
         }
     }
 
+    override fun onMovieClicked(movie: MovieViewModel) {
+        movieListRouter.openMovieDetails(activity as AppCompatActivity, movie.id)
+    }
+
+    override fun onStart() {
+        super.onStart()
+        presenter.setView(this)
+    }
+
     override fun showMovies(movies: List<MovieViewModel>) {
         moviesAdapter.setData(movies)
         fragmentView.swipeMovieContainer.isRefreshing = false
-    }
-
-    override fun showNextPage(movies: List<MovieViewModel>) {
-        moviesAdapter.addData(movies)
-        loadingText.visibility = View.GONE
-        loading = false
     }
 
     override fun showErrorMessage(t: Throwable) {

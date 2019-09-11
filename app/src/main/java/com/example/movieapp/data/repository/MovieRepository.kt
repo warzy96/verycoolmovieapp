@@ -17,9 +17,9 @@ interface MovieRepository {
 
     fun save(movieDetails: MovieDetails): Completable
 
-    fun getMovies(): Single<List<Movie>>
+    fun getMovies(sort: String): Single<List<Movie>>
 
-    fun getMovies(page: Int): Single<List<Movie>>
+    fun getMovies(sort: String, page: Int): Single<List<Movie>>
 
     fun getMoviesSearchResult(query: String): Single<List<Movie>>
 

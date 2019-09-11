@@ -11,21 +11,22 @@ import android.view.ViewGroup
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
 import com.example.movieapp.R
-import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.contract.MovieDetailsContract
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
+import com.example.movieapp.data.util.ImageLoader
 import com.example.movieapp.data.view.model.MovieDetailsViewModel
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.fragment_movie_details.*
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
+import kotlin.properties.Delegates
 
 class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
 
     companion object {
         private const val MOVIE_ID_PARAM = "movie_id"
-        private val TAG = MovieDetailsFragment::class.java.name
+        private val TAG = "MovieDetailsFragment"
         private const val GENRE_SEPARATOR = ", "
         private const val SESSION_ID = "MovieDetailsSession"
 
@@ -41,16 +42,15 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
     private val session = getKoin().getOrCreateScope(SESSION_ID, named<MovieDetailsFragment>())
     private val presenter: MovieDetailsPresenter by session.inject()
     private val imageLoader: ImageLoader by inject()
-    private var movieId: Int? = null
+    private var movieId: Int by Delegates.notNull()
     private lateinit var fragmentView: View
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
             movieId = it.getInt(MOVIE_ID_PARAM)
-
             presenter.setView(this)
-            presenter.getMovieDetails(movieId!!)
+            presenter.getMovieDetails(movieId)
         }
     }
 
@@ -84,8 +84,10 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
             movieDetailsRating.rating = movie.voteAverage.toFloat()
             movieDetailsOverview.text = movie.overview
 
-            if (!movie.releaseDate.isNullOrBlank()) {
+            if (!movie.releaseDate.isBlank()) {
                 movieDetailsReleaseDate.text = MovieUtils.formatDate(movie.releaseDate)
+            } else {
+                movieDetailsReleaseDate.visibility = View.GONE
             }
 
             if (movie.runtime != null) {
@@ -106,8 +108,17 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
                 movieDetailsAdult.visibility = View.VISIBLE
             }
 
-            movieDetailsGenre.text = movie.genres.map { it.name }.joinToString(GENRE_SEPARATOR)
-            movieDetailsCountries.text = movie.countries.map { it.name }.joinToString(GENRE_SEPARATOR)
+            if (!movie.genres.isEmpty()) {
+                movieDetailsGenre.text = movie.genres.map { it.name }.joinToString(GENRE_SEPARATOR)
+            } else {
+                movieDetailsGenre.visibility = View.GONE
+            }
+
+            if (!movie.countries.isEmpty()) {
+                movieDetailsCountries.text = movie.countries.map { it.name }.joinToString(GENRE_SEPARATOR)
+            } else {
+                movieDetailsCountries.visibility = View.GONE
+            }
         }
     }
 
@@ -123,7 +134,7 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         AlertDialog.Builder(activity as Activity)
             .setTitle(R.string.network_error_title)
             .setMessage(R.string.movies_error_message)
-            .setNeutralButton(R.string.neutral_button_text, { _, _ -> (activity as Activity).finish() })
+            .setNeutralButton(R.string.neutral_button_text, { _, _ -> Unit })
             .show()
     }
 }

@@ -1,7 +1,5 @@
 package com.example.movieapp.data.contract
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.example.movieapp.data.presenter.LifecycleAwarePresenter
 import com.example.movieapp.data.view.BaseView
 import com.example.movieapp.data.view.model.MovieViewModel
@@ -10,19 +8,13 @@ interface MovieListContract {
 
     interface Presenter : LifecycleAwarePresenter {
 
-        fun getMovies(query: String)
+        fun getMovies(query: String, sort: String)
 
-        fun getNextPage(query: String)
-
-        fun openMovieDetails(activity: AppCompatActivity, currentFragment: Fragment, movieId: Int)
-
-        fun goBack(activity: AppCompatActivity)
+        fun getNextPage(query: String, sort: String)
 
         fun saveFavorite(movie: MovieViewModel)
 
         fun removeFavorite(movie: MovieViewModel)
-
-        fun getFavorites()
     }
 
     interface View : BaseView {

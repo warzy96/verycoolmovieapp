@@ -10,6 +10,9 @@ class ApiMovie {
     @Json(name = "id")
     val id: Int? = null
 
+    @Json(name = "popularity")
+    val popularity: Double? = null
+
     @field:Json(name = "vote_average")
     val voteAverage: Double? = null
 

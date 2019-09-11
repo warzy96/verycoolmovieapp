@@ -3,17 +3,17 @@
 
     <item
         android:id="@+id/popular"
-        android:icon="@drawable/movie_icon"
+        android:icon="@drawable/movie_default_foreground"
         android:title="@string/popular"/>
 
     <item
         android:id="@+id/bestRating"
-        android:icon="@drawable/like_icon"
+        android:icon="@drawable/like_foreground"
         android:title="@string/best_rated"/>
 
     <item
-        android:id="@+id/navigation_albums"
-        android:icon="@drawable/favorite_icon"
+        android:id="@+id/favorites"
+        android:icon="@drawable/favorite_foreground"
         android:title="@string/favorites"/>
 
 </menu>

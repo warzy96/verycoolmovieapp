@@ -1,82 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="@dimen/movie_item_padding"
-    android:focusable="true"
     android:clickable="true"
-    android:foreground="?android:attr/selectableItemBackground">
+    android:focusable="true"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:padding="@dimen/movie_item_padding">
 
     <ImageView
         android:id="@+id/movieListPoster"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintLeft_toLeftOf="parent"
         android:layout_width="@dimen/poster_list_width"
         android:layout_height="@dimen/poster_list_height"
-        android:minHeight="@dimen/poster_list_width"
-        android:layout_marginTop="@dimen/list_item_top_margin"
         android:layout_marginBottom="@dimen/list_item_bottom_margin"
+        android:layout_marginEnd="@dimen/list_item_end_margin"
         android:layout_marginStart="@dimen/list_item_start_margin"
-        android:layout_marginEnd="@dimen/list_item_end_margin"/>
+        android:layout_marginTop="@dimen/list_item_top_margin"
+        android:minHeight="@dimen/poster_list_width"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-            android:id="@+id/movieTitle"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toEndOf="@id/movieListPoster"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="@id/movieListPoster"
-            android:layout_marginBottom="@dimen/list_item_bottom_margin"
-            android:layout_marginStart="@dimen/list_item_start_margin"
-            android:layout_marginEnd="@dimen/list_item_end_margin"
-            android:textStyle="bold"
-            android:textSize="@dimen/movie_text_size_big"/>
+        android:id="@+id/movieTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="@dimen/list_item_bottom_margin"
+        android:layout_marginEnd="@dimen/list_item_end_margin"
+        android:layout_marginStart="@dimen/list_item_start_margin"
+        android:textSize="@dimen/movie_text_size_big"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"
+        app:layout_constraintTop_toTopOf="@id/movieListPoster"/>
 
     <TextView
         android:id="@+id/movieReleaseDate"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/movieListPoster"
-        app:layout_constraintTop_toBottomOf="@id/movieTitle"
-        android:layout_marginTop="@dimen/list_item_top_margin"
         android:layout_marginStart="@dimen/list_item_start_margin"
-        android:textSize="@dimen/movie_text_size_small"/>
+        android:layout_marginTop="@dimen/list_item_top_margin"
+        android:textSize="@dimen/movie_text_size_small"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"
+        app:layout_constraintTop_toBottomOf="@id/movieTitle"/>
 
     <RatingBar
         android:id="@+id/movieRating"
+        style="?android:attr/ratingBarStyleSmall"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/movieListPoster"
-        app:layout_constraintBottom_toTopOf="@id/movieRatingCount"
         android:layout_marginStart="@dimen/list_item_start_margin"
-        style="?android:attr/ratingBarStyleSmall"
+        android:isIndicator="true"
         android:numStars="5"
         android:stepSize="0.1"
-        android:isIndicator="true" />
+        app:layout_constraintBottom_toTopOf="@id/movieRatingCount"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"/>
 
     <TextView
         android:id="@+id/movieRatingCount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/movieListPoster"
-        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
         android:layout_marginStart="@dimen/list_item_start_margin"
-        android:textSize="@dimen/movie_text_size_small"/>
+        android:textSize="@dimen/movie_text_size_small"
+        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"/>
 
     <ToggleButton
         android:id="@+id/favoriteIcon"
-        android:textOff=""
-        android:textOn=""
-        android:backgroundTint="@color/notFavoriteColor"
         android:layout_width="@dimen/favorite_icon_size"
         android:layout_height="@dimen/favorite_icon_size"
-        android:tint="@color/notFavoriteColor"
-        android:background="@drawable/favorite_icon"
         android:layout_marginEnd="@dimen/details_vertical_gap_big"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"/>
+        android:background="@drawable/favorite_foreground"
+        android:backgroundTint="@color/notFavoriteColor"
+        android:textOff=""
+        android:textOn=""
+        android:tint="@color/notFavoriteColor"
+        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

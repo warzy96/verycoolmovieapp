@@ -34,4 +34,7 @@
     <dimen name="search_bar_border_radius">2dp</dimen>
     <dimen name="text_margin">16dp</dimen>
     <dimen name="favorite_icon_size">50dp</dimen>
+    <dimen name="search_icon_size">50dp</dimen>
+    <dimen name="navigation_item_size">50dp</dimen>
+    <dimen name="details_padding">20dp</dimen>
 </resources>

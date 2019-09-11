@@ -1,9 +1,6 @@
 package com.example.movieapp.data.presenter
 
-import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.Fragment
 import com.example.movieapp.data.contract.MovieListContract
-import com.example.movieapp.data.presenter.router.MovieListRouter
 import com.example.movieapp.data.use_case.*
 import com.example.movieapp.data.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -16,7 +13,6 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
 
     companion object {
         private const val INITIAL_PAGE = 1
-        private const val RESET_PAGE = 0
         private const val HTTP_RESET_PAGE_CODE = 422
     }
 
@@ -24,7 +20,6 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     private var page = INITIAL_PAGE
     private val getMoviesUseCase: GetMoviesUseCase by inject()
     private val getMoviesSearchUseCase: GetMoviesSearchUseCase by inject()
-    private val movieListRouter: MovieListRouter by inject()
     private val saveFavoriteUseCase: SaveFavoriteUseCase by inject()
     private val removeFavoriteUseCase: RemoveFavoriteUseCase by inject()
     private val getFavoritesUseCase: GetFavoritesUseCase by inject()
@@ -33,50 +28,77 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
         this.view = view
     }
 
-    override fun getMovies(query: String) {
+    override fun getMovies(query: String, sort: String) {
         val request =
             if (query.isBlank()) {
-                getMoviesUseCase.execute(INITIAL_PAGE)
-            } else getMoviesSearchUseCase.execute(SearchMoviesRequest(INITIAL_PAGE, query))
+                page = INITIAL_PAGE
+                getMoviesUseCase.execute(INITIAL_PAGE, sort)
+            } else {
+                getMoviesSearchUseCase.execute(SearchMoviesRequest(INITIAL_PAGE, query))
+            }
 
-        composite.add(
-            request
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::onMoviesSuccess, this::onMovieError)
-        )
-    }
-
-    override fun getNextPage(query: String) {
-        page++
-
-        val request =
-            if (query.isBlank()) {
-                getMoviesUseCase.execute(page)
-            } else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
-
-        composite.add(
-            request
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeOn(Schedulers.io())
-                .subscribe(this::onNextPageSuccess, this::onMovieError)
-        )
-    }
-
-    override fun saveFavorite(movie: MovieViewModel) {
-        saveFavoriteUseCase.execute(movie)
-    }
-
-    override fun removeFavorite(movie: MovieViewModel) {
-        removeFavoriteUseCase.execute(movie)
-    }
-
-    override fun getFavorites() {
         composite.add(
             getFavoritesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .subscribe(this::onMoviesSuccess, this::onMovieError)
+                .doOnSuccess { favorites ->
+                    request
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({
+                            this.onMoviesSuccess(it.map {
+                                if (favorites.contains(it))
+                                    it.favorite = true
+                                it
+                            })
+                        }, this::onMovieError)
+                }.subscribe()
+        )
+    }
+
+    override fun getNextPage(query: String, sort: String) {
+        page++
+
+        val request =
+            if (query.isBlank()) {
+                getMoviesUseCase.execute(page, sort)
+            } else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
+
+        composite.add(
+            getFavoritesUseCase.execute()
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .doOnSuccess { favorites ->
+                    request
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .subscribeOn(Schedulers.io())
+                        .subscribe({
+                            this.onNextPageSuccess(it.map {
+                                if (favorites.contains(it))
+                                    it.favorite = true
+                                it
+                            })
+                        }, this::onMovieError)
+                }.subscribe()
+
+        )
+    }
+
+    override fun saveFavorite(movie: MovieViewModel) {
+        composite.add(
+            saveFavoriteUseCase.execute(movie)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({}, {})
+        )
+    }
+
+    override fun removeFavorite(movie: MovieViewModel) {
+        composite.add(
+            removeFavoriteUseCase.execute(movie)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribeOn(Schedulers.io())
+                .subscribe({}, {})
         )
     }
 
@@ -89,7 +111,7 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     }
 
     fun onMovieError(t: Throwable) {
-        page = RESET_PAGE
+        page = INITIAL_PAGE
 
         if ((t is HttpException && t.code() == HTTP_RESET_PAGE_CODE).not()) {
             view?.showErrorMessage(t)
@@ -99,13 +121,5 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     override fun onStop() {
         super.onStop()
         this.view = null
-    }
-
-    override fun openMovieDetails(activity: AppCompatActivity, currentFragment: Fragment, movieId: Int) {
-        movieListRouter.openMovieDetails(activity, currentFragment, movieId)
-    }
-
-    override fun goBack(activity: AppCompatActivity) {
-        movieListRouter.goBack(activity)
     }
 }

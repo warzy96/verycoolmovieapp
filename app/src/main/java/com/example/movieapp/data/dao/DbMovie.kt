@@ -14,6 +14,9 @@ data class DbMovie(
     @ColumnInfo(name = "title")
     val title: String,
 
+    @ColumnInfo(name = "popularity")
+    val popularity: Double,
+
     @ColumnInfo(name = "vote_count")
     val voteCount: Int,
 

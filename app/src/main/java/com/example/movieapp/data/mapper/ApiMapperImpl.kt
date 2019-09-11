@@ -29,7 +29,8 @@ class ApiMapperImpl : ApiMapper {
         voteCount = apiMovie.voteCount ?: DEFAULT_INT,
         posterPath = POSTER_API_URL + apiMovie.posterPath,
         id = apiMovie.id ?: DEFAULT_ID,
-        releaseDate = apiMovie.releaseDate ?: DEFAULT_STRING
+        releaseDate = apiMovie.releaseDate ?: DEFAULT_STRING,
+        popularity = apiMovie.popularity ?: DEFAULT_FLOAT
     )
 
     private fun mapApiGenreToGenre(apiGenre: ApiGenre) = Genre(
