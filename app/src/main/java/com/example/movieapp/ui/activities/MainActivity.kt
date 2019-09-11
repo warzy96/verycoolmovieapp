@@ -5,10 +5,10 @@ import android.view.KeyEvent
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.api.MovieApi
-import com.example.movieapp.data.presenter.MovieListPresenter
-import com.example.movieapp.data.presenter.router.MovieListRouter
-import com.example.movieapp.data.view.model.MovieViewModel
-import com.example.movieapp.ui.fragments.MoviesFragment
+import com.example.movieapp.ui.movies.presenter.MovieListPresenter
+import com.example.movieapp.ui.router.MovieListRouter
+import com.example.movieapp.ui.view.model.MovieViewModel
+import com.example.movieapp.ui.movies.fragments.MoviesFragment
 import com.example.movieapp.ui.listener.FavoriteClickListener
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
