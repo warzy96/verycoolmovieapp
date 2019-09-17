@@ -1,7 +1,6 @@
 package com.example.movieapp.ui
 
 import android.app.Application
-import androidx.room.Room
 import com.bumptech.glide.Glide
 import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.ImageLoaderImpl
@@ -14,7 +13,10 @@ import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
-import com.example.movieapp.data.use_case.*
+import com.example.movieapp.data.usecases.*
+import com.example.movieapp.ui.view.mapper.ViewModelMapper
+import com.example.movieapp.ui.view.mapper.ViewModelMapperImpl
+import com.example.movieapp.domain.usecases.*
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.activities.MovieDetailsActivity
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory

@@ -1,8 +1,8 @@
 package com.example.movieapp.data.contract
 
 import com.example.movieapp.data.presenter.LifecycleAwarePresenter
-import com.example.movieapp.data.view.BaseView
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.view.BaseView
+import com.example.movieapp.ui.view.model.MovieViewModel
 
 interface MovieListContract {
 

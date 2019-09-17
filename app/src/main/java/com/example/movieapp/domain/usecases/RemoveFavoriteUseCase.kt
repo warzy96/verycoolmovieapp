@@ -1,10 +1,11 @@
-package com.example.movieapp.data.use_case
+package com.example.movieapp.domain.usecases
 
-import com.example.movieapp.data.mapper.ViewModelMapper
+import com.example.movieapp.ui.view.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.data.use_case.types.CompletableUseCase
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.domain.usecases.types.CompletableUseCase
+import com.example.movieapp.ui.view.model.MovieViewModel
 import io.reactivex.Completable
+import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -14,6 +15,8 @@ class RemoveFavoriteUseCase : CompletableUseCase<MovieViewModel>, KoinComponent 
     private val viewModelMapper: ViewModelMapper by inject()
 
     override fun execute(param: MovieViewModel): Completable {
-        return repository.removeFavorite(viewModelMapper.mapMovieViewModelToMovie(param))
+        return repository
+            .removeFavorite(viewModelMapper.mapMovieViewModelToMovie(param))
+            .subscribeOn(Schedulers.io())
     }
 }

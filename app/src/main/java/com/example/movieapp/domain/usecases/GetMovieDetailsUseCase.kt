@@ -1,10 +1,11 @@
-package com.example.movieapp.data.use_case
+package com.example.movieapp.domain.usecases
 
-import com.example.movieapp.data.mapper.ViewModelMapper
+import com.example.movieapp.ui.view.mapper.ViewModelMapper
 import com.example.movieapp.data.repository.MovieRepository
-import com.example.movieapp.data.use_case.types.SingleUseCaseWithParam
-import com.example.movieapp.data.view.model.MovieDetailsViewModel
+import com.example.movieapp.domain.usecases.types.SingleUseCaseWithParam
+import com.example.movieapp.ui.view.model.MovieDetailsViewModel
 import io.reactivex.Single
+import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
@@ -16,5 +17,6 @@ class GetMovieDetailsUseCase : SingleUseCaseWithParam<MovieDetailsViewModel, Int
     override fun execute(movieId: Int): Single<MovieDetailsViewModel> =
         repository
             .getMovie(movieId)
+            .subscribeOn(Schedulers.io())
             .map(viewModelMapper::mapMovieDetailsToMovieDetailsViewModel)
 }

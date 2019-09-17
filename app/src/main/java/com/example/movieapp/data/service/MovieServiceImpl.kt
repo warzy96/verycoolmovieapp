@@ -1,6 +1,5 @@
 package com.example.movieapp.data.service
 
-import android.util.Log
 import com.example.movieapp.data.api.MovieApi
 import com.example.movieapp.data.dao.MovieCountryJoin
 import com.example.movieapp.data.dao.MovieDatabase
@@ -23,25 +22,17 @@ class MovieServiceImpl : MovieService, KoinComponent {
     private val movieDb: MovieDatabase by inject()
 
     override fun saveFavorite(movie: Movie) = Completable.fromAction {
-        try {
-            movieDb.movieDao().insert(listOf(dbMapper.mapMovieToDbMovie(movie)))
-            getMovie(movie.id)
-                .subscribeOn(Schedulers.io())
-                .doOnSuccess({ save(it) })
-                .subscribe()
-                .dispose()
-        } catch (e: Exception) {
-            Log.e("database", e.localizedMessage)
-        }
+        movieDb.movieDao().insert(listOf(dbMapper.mapMovieToDbMovie(movie)))
+        getMovie(movie.id)
+            .subscribeOn(Schedulers.io())
+            .doOnSuccess({ save(it) })
+            .subscribe()
+            .dispose()
     }
 
     override fun removeFavorite(movie: Movie) = Completable.fromAction {
-        try {
-            movieDb.movieDao().delete(dbMapper.mapMovieToDbMovie(movie))
-            movieDb.movieDetailsDao().deleteById(movie.id)
-        } catch (e: Exception) {
-            Log.e("database", e.localizedMessage)
-        }
+        movieDb.movieDao().delete(dbMapper.mapMovieToDbMovie(movie))
+        movieDb.movieDetailsDao().deleteById(movie.id)
     }
 
     override fun save(movieDetails: MovieDetails) = Completable.fromAction {
@@ -56,15 +47,11 @@ class MovieServiceImpl : MovieService, KoinComponent {
             movieCountryJoins.add(MovieCountryJoin(movieDetails.id, county.isoCode))
         }
 
-        try {
-            movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
-            movieDb.productionCountryDao().insert(dbMapper.mapProductionCountriesToDbProductionCountries(movieDetails.countries))
-            movieDb.genreDao().insert(dbMapper.mapGenresToDbGenres(movieDetails.genres))
-            movieDb.movieGenreJoinDao().insert(movieGenreJoins)
-            movieDb.movieCountryJoinDao().insert(movieCountryJoins)
-        } catch (e: Exception) {
-            Log.e("database", e.localizedMessage)
-        }
+        movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
+        movieDb.productionCountryDao().insert(dbMapper.mapProductionCountriesToDbProductionCountries(movieDetails.countries))
+        movieDb.genreDao().insert(dbMapper.mapGenresToDbGenres(movieDetails.genres))
+        movieDb.movieGenreJoinDao().insert(movieGenreJoins)
+        movieDb.movieCountryJoinDao().insert(movieCountryJoins)
     }
 
     override fun getFavorites(): Single<List<Movie>> {
@@ -97,7 +84,6 @@ class MovieServiceImpl : MovieService, KoinComponent {
 
     override fun getMovie(movieId: Int): Single<MovieDetails> {
         return movieDb.movieDetailsDao().loadById(movieId)
-            .subscribeOn(Schedulers.io())
             .onErrorReturn {
                 movieApi
                     .getMovie(movieId, MovieApi.API_KEY)

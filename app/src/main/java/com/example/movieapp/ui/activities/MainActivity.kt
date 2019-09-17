@@ -16,7 +16,7 @@ import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieListContract
 import com.example.movieapp.data.dao.MovieDatabase
 import com.example.movieapp.data.presenter.MovieListPresenter
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
 import com.example.movieapp.ui.listener.FavoriteClickListener
 import com.example.movieapp.ui.listener.MovieClickListener

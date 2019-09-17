@@ -1,4 +1,4 @@
-package com.example.movieapp.data.view.model
+package com.example.movieapp.ui.view.model
 
 import java.io.Serializable
 

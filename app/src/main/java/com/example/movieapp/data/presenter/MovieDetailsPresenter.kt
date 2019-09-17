@@ -1,8 +1,8 @@
 package com.example.movieapp.data.presenter
 
 import com.example.movieapp.data.contract.MovieDetailsContract
-import com.example.movieapp.data.use_case.GetMovieDetailsUseCase
-import com.example.movieapp.data.view.model.MovieDetailsViewModel
+import com.example.movieapp.domain.usecases.GetMovieDetailsUseCase
+import com.example.movieapp.ui.view.model.MovieDetailsViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import org.koin.core.KoinComponent

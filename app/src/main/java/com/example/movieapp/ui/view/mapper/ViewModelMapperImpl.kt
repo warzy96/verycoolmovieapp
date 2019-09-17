@@ -1,7 +1,7 @@
-package com.example.movieapp.data.mapper
+package com.example.movieapp.ui.view.mapper
 
-import com.example.movieapp.data.view.model.MovieDetailsViewModel
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.view.model.MovieDetailsViewModel
+import com.example.movieapp.ui.view.model.MovieViewModel
 import com.example.movieapp.domain.Movie
 import com.example.movieapp.domain.MovieDetails
 

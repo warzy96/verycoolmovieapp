@@ -1,4 +1,4 @@
-package com.example.movieapp.data.view.model
+package com.example.movieapp.ui.view.model
 
 import com.example.movieapp.domain.Genre
 import com.example.movieapp.domain.ProductionCountry
