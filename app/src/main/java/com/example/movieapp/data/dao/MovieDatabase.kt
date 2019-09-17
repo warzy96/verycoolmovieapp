@@ -14,11 +14,13 @@ import androidx.room.RoomDatabase
         MovieCountryJoin::class,
         DbMovie::class
     ),
-    version = 1
+    version = MovieDatabase.VERSION
 )
 abstract class MovieDatabase : RoomDatabase() {
 
     companion object {
+
+        const val VERSION = 1
 
         fun getDB(context: Context, databaseName: String) = Room.databaseBuilder(
             context,
