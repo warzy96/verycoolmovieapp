@@ -13,6 +13,8 @@ interface FavoritesListContract {
 
         fun openMovieDetails(movieId: Int)
 
+        fun openMovieDetails(movieId: Int, sharedElement: android.view.View, transitionName: String)
+
         fun saveFavorite(movie: MovieViewModel)
 
         fun removeFavorite(movie: MovieViewModel)

@@ -1,5 +1,10 @@
 package com.example.movieapp.ui.presenter.router
 
+import android.transition.ChangeBounds
+import android.transition.ChangeTransform
+import android.transition.Fade
+import android.transition.TransitionSet
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.api.MovieApi
@@ -23,10 +28,26 @@ class MovieListRouterImpl : MovieListRouter {
         }
     }
 
+    override fun openMovieDetails(movieId: Int, sharedElement: View, transitionName: String) {
+        val details = MovieDetailsFragment.newInstance(movieId)
+        details.sharedElementEnterTransition = DetailsTransition()
+        details.returnTransition = Fade()
+        details.enterTransition = Fade()
+        details.sharedElementReturnTransition = DetailsTransition()
+
+        activity.supportFragmentManager
+            .beginTransaction()
+            .setReorderingAllowed(true)
+            .addSharedElement(sharedElement, transitionName)
+            .setCustomAnimations(R.anim.design_bottom_sheet_slide_in, R.anim.design_bottom_sheet_slide_out)
+            .replace(R.id.fragment, details)
+            .addToBackStack(MoviesFragment.TAG).commit()
+    }
+
     override fun openMovieDetails(movieId: Int) {
         activity.supportFragmentManager
             .beginTransaction()
-            .setCustomAnimations(R.anim.abc_grow_fade_in_from_bottom, R.anim.abc_shrink_fade_out_from_bottom)
+            .setCustomAnimations(R.anim.design_bottom_sheet_slide_in, R.anim.design_bottom_sheet_slide_out)
             .replace(R.id.fragment, MovieDetailsFragment.newInstance(movieId))
             .addToBackStack(MoviesFragment.TAG).commit()
     }
@@ -61,5 +82,18 @@ class MovieListRouterImpl : MovieListRouter {
             .setCustomAnimations(R.anim.design_bottom_sheet_slide_in, R.anim.design_bottom_sheet_slide_out)
             .replace(R.id.fragment, favoritesFragment, FavoritesFragment.TAG)
             .commit()
+    }
+}
+
+class DetailsTransition : TransitionSet() {
+    companion object {
+        private const val TRANSITION_DURATION = 500L
+    }
+
+    init {
+        addTransition(ChangeBounds())
+        addTransition(ChangeTransform())
+        duration = TRANSITION_DURATION
+        ordering = ORDERING_TOGETHER
     }
 }

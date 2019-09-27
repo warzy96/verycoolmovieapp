@@ -2,18 +2,15 @@ package com.example.movieapp.ui.activities
 
 import android.os.Bundle
 import android.view.KeyEvent
+import android.view.MenuItem
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.R
 import com.example.movieapp.data.api.MovieApi
-import com.example.movieapp.ui.movies.presenter.MovieListPresenter
-import com.example.movieapp.ui.presenter.router.MovieListRouter
-import com.example.movieapp.ui.view.model.MovieViewModel
 import com.example.movieapp.ui.movies.fragments.MoviesFragment
-import com.example.movieapp.ui.listener.FavoriteClickListener
+import com.example.movieapp.ui.movies.presenter.MovieListPresenter
 import io.reactivex.disposables.CompositeDisposable
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.getKoin
-import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 
 class MainActivity : AppCompatActivity() {
@@ -54,6 +51,11 @@ class MainActivity : AppCompatActivity() {
 
             false
         }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        presenter.goBack()
+        return true
     }
 
     override fun onStop() {

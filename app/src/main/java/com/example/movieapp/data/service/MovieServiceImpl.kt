@@ -58,8 +58,7 @@ class MovieServiceImpl : MovieService, KoinComponent {
         }
 
         try {
-            val insert = movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
-            Log.d("insert", insert.toString())
+            movieDb.movieDetailsDao().insert(dbMapper.mapMovieDetailsToDbMovieDetails(movieDetails))
             movieDb.productionCountryDao().insert(dbMapper.mapProductionCountriesToDbProductionCountries(movieDetails.countries))
             movieDb.genreDao().insert(dbMapper.mapGenresToDbGenres(movieDetails.genres))
             movieDb.movieGenreJoinDao().insert(movieGenreJoins)

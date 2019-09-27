@@ -18,4 +18,5 @@
     <string name="popular">Popular</string>
     <string name="best_rated">Best Rated</string>
     <string name="favorites">Favorites</string>
+    <string name="poster">poster</string>
 </resources>

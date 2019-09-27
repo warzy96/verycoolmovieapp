@@ -1,12 +1,13 @@
 package com.example.movieapp.ui.favorites.presenter
 
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.example.movieapp.ui.favorites.FavoritesListContract
-import com.example.movieapp.ui.presenter.BasePresenter
 import com.example.movieapp.data.usecases.GetFavoritesUseCase
 import com.example.movieapp.data.usecases.RemoveFavoriteUseCase
 import com.example.movieapp.data.usecases.SaveFavoriteUseCase
 import com.example.movieapp.ui.activities.MainActivity
+import com.example.movieapp.ui.favorites.FavoritesListContract
+import com.example.movieapp.ui.presenter.BasePresenter
 import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
@@ -37,6 +38,10 @@ class FavoritesListPresenter : BasePresenter<FavoritesListContract.View>(), Favo
 
     override fun openMovieDetails(movieId: Int) {
         movieListRouter.openMovieDetails(movieId)
+    }
+
+    override fun openMovieDetails(movieId: Int, sharedElement: View, transitionName: String) {
+        movieListRouter.openMovieDetails(movieId, sharedElement, transitionName)
     }
 
     override fun setView(view: FavoritesListContract.View) {

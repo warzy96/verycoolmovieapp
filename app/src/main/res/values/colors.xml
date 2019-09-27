@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="colorPrimary">#008577</color>
+    <color name="colorPrimary">#f57c00</color>
     <color name="navigationTextColor">#FFFFFF</color>
     <color name="notFavoriteColor">#AFAFAF</color>
     <color name="favoriteColor">#D81B60</color>
@@ -10,4 +10,6 @@
     <color name="searchBorder">#0C0C0C</color>
     <color name="loadingColor">#9C9B9B</color>
     <color name="loadingTextColor">#FFFFFF</color>
+    <color name="movieTextColor">#FFFFFF</color>
+    <color name="movieBackgroundColor">#80000000</color>
 </resources>

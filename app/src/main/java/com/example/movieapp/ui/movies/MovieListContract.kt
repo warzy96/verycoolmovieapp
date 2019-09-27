@@ -15,6 +15,8 @@ interface MovieListContract {
 
         fun openMovieDetails(movieId: Int)
 
+        fun openMovieDetails(movieId: Int, sharedElement: android.view.View, transitionName: String)
+
         fun openPopularMovies()
 
         fun openBestRatedMovies()

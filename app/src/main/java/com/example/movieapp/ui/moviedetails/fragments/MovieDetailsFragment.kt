@@ -2,23 +2,28 @@ package com.example.movieapp.ui.moviedetails.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.drawable.Drawable
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AlertDialog
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.GlideException
+import com.bumptech.glide.request.RequestListener
+import com.bumptech.glide.request.target.Target
 import com.example.movieapp.R
+import com.example.movieapp.data.util.ImageLoader
 import com.example.movieapp.ui.moviedetails.MovieDetailsContract
 import com.example.movieapp.ui.moviedetails.presenter.MovieDetailsPresenter
-import com.example.movieapp.data.util.ImageLoader
-import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.moviedetails.view.MovieDetailsViewModel
-import com.example.movieapp.ui.presenter.router.MovieListRouter
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.fragment_movie_details.*
+import kotlinx.android.synthetic.main.fragment_movie_details.view.*
 import org.koin.android.ext.android.getKoin
 import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
@@ -56,18 +61,47 @@ class MovieDetailsFragment : Fragment(), MovieDetailsContract.View {
         }
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        postponeEnterTransition()
+        super.onViewCreated(view, savedInstanceState)
+    }
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
         fragmentView = inflater.inflate(R.layout.fragment_movie_details, container, false)
+        fragmentView.movieDetailsPoster.transitionName = fragmentView.movieDetailsPoster.transitionName + movieId
         return fragmentView
     }
 
     override fun showMovieDetails(movie: MovieDetailsViewModel) {
         fragmentView.apply {
             imageLoader.loadImage(movie.backdropPath, moviePoster)
-            imageLoader.loadImage(movie.posterPath, movieDetailsPoster)
+            imageLoader.loadImage(movie.posterPath, movieDetailsPoster, object : RequestListener<Drawable> {
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    startPostponedEnterTransition()
+
+                    return false
+                }
+
+                override fun onResourceReady(
+                    resource: Drawable?,
+                    model: Any?,
+                    target: Target<Drawable>?,
+                    dataSource: DataSource?,
+                    isFirstResource: Boolean
+                ): Boolean {
+                    startPostponedEnterTransition()
+
+                    return false
+                }
+            })
+
+            movieDetailsPoster.setOnClickListener {
+                val rotateAnimation = AnimationUtils.loadAnimation(activity, R.anim.rotate)
+                movieDetailsPoster.startAnimation(rotateAnimation)
+            }
 
             movieDetailsTitle.text = movie.title
 

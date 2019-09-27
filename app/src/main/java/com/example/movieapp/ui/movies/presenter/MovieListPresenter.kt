@@ -1,6 +1,6 @@
 package com.example.movieapp.ui.movies.presenter
 
-import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.example.movieapp.data.usecases.*
 import com.example.movieapp.ui.activities.MainActivity
@@ -56,6 +56,10 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
         movieListRouter.openMovieDetails(movieId)
     }
 
+    override fun openMovieDetails(movieId: Int, sharedElement: View, transitionName: String) {
+        movieListRouter.openMovieDetails(movieId, sharedElement, transitionName)
+    }
+
     override fun openPopularMovies() {
         movieListRouter.openPopularMovies()
     }
@@ -73,11 +77,7 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
             getFavoritesUseCase.execute()
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
-                .doOnError {
-                    Log.d("tag", "error")
-                }
                 .doOnSuccess { favorites ->
-                    Log.d("tag", "succ")
                     request
                         .observeOn(AndroidSchedulers.mainThread())
                         .subscribeOn(Schedulers.io())
