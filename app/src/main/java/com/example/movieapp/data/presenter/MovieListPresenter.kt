@@ -1,8 +1,9 @@
 package com.example.movieapp.data.presenter
 
 import com.example.movieapp.data.contract.MovieListContract
-import com.example.movieapp.data.mapper.ViewModelMapper
-import com.example.movieapp.data.repository.MovieRepository
+import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
+import com.example.movieapp.data.use_case.GetMoviesUseCase
+import com.example.movieapp.data.use_case.SearchMoviesRequest
 import com.example.movieapp.data.view.model.MovieViewModel
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -19,20 +20,22 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     }
 
     private var view: MovieListContract.View? = null
-    private val repository: MovieRepository by inject()
-    private val viewModelMapper: ViewModelMapper by inject()
     private var page = INITIAL_PAGE
+    private val getMoviesUseCase: GetMoviesUseCase by inject()
+    private val getMoviesSearchUseCase: GetMoviesSearchUseCase by inject()
 
     override fun setView(view: MovieListContract.View) {
         this.view = view
     }
 
     override fun getMovies(query: String) {
-        val request = if (query.isBlank()) repository.getMovies() else repository.getMoviesSearchResult(query)
+        val request =
+            if (query.isBlank()) {
+                getMoviesUseCase.execute(INITIAL_PAGE)
+            } else getMoviesSearchUseCase.execute(SearchMoviesRequest(INITIAL_PAGE, query))
 
         composite.add(
             request
-                .map(viewModelMapper::mapMoviesToMovieViewModels)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::onMoviesSuccess, this::onMovieError)
@@ -42,11 +45,14 @@ class MovieListPresenter : BasePresenter<MovieListContract.View>(), MovieListCon
     override fun getNextPage(query: String) {
         page++
 
-        val request = if (query.isBlank()) repository.getMovies(page) else repository.getMoviesSearchResult(page, query)
+        val request =
+            if (query.isBlank()) {
+                getMoviesUseCase.execute(page)
+            }
+            else getMoviesSearchUseCase.execute(SearchMoviesRequest(page, query))
 
         composite.add(
             request
-                .map(viewModelMapper::mapMoviesToMovieViewModels)
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeOn(Schedulers.io())
                 .subscribe(this::onNextPageSuccess, this::onMovieError)
