@@ -1,4 +1,4 @@
-package com.example.movieapp.data.use_case.types
+package com.example.movieapp.domain.usecases.types
 
 import io.reactivex.Completable
 

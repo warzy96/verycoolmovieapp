@@ -6,6 +6,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.DividerItemDecoration
@@ -13,9 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.data.contract.MovieListContract
+import com.example.movieapp.data.dao.MovieDatabase
 import com.example.movieapp.data.presenter.MovieListPresenter
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.view.model.MovieViewModel
 import com.example.movieapp.ui.adapter.MoviesAdapter
+import com.example.movieapp.ui.listener.FavoriteClickListener
 import com.example.movieapp.ui.listener.MovieClickListener
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
@@ -24,10 +27,11 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 import kotlinx.android.synthetic.main.activity_main.*
 import org.koin.android.ext.android.getKoin
+import org.koin.android.ext.android.inject
 import org.koin.core.qualifier.named
 import java.util.concurrent.TimeUnit
 
-class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickListener {
+class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickListener, FavoriteClickListener {
 
     companion object {
         private const val TAG = "MainActivity"
@@ -36,11 +40,13 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
         private const val DEBOUNCE_TIME_MILLISECONDS = 500L
     }
 
-    private val composite = CompositeDisposable()
-    private val moviesAdapter by lazy { MoviesAdapter(this, LayoutInflater.from(this)) }
+    private var composite = CompositeDisposable()
+    private val moviesAdapter by lazy { MoviesAdapter(this, this, LayoutInflater.from(this)) }
     private val session = getKoin().createScope(SESSION_ID, named<MainActivity>())
     private val presenter: MovieListPresenter by session.inject()
     private var loading = false
+
+    private val movieDb: MovieDatabase by inject()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,6 +122,14 @@ class MainActivity : AppCompatActivity(), MovieListContract.View, MovieClickList
     override fun onDestroy() {
         session.close()
         super.onDestroy()
+    }
+
+    override fun onToggleOn(movie: MovieViewModel) {
+        presenter.saveFavorite(movie)
+    }
+
+    override fun onToggleOff(movie: MovieViewModel) {
+        presenter.removeFavorite(movie)
     }
 
     override fun onMovieClicked(movie: MovieViewModel) {

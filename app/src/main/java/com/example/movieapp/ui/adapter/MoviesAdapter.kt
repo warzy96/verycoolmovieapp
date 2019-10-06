@@ -4,10 +4,12 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AlphaAnimation
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.example.movieapp.R
 import com.example.movieapp.data.ImageLoader
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.view.model.MovieViewModel
+import com.example.movieapp.ui.listener.FavoriteClickListener
 import com.example.movieapp.ui.listener.MovieClickListener
 import com.example.movieapp.ui.utils.MovieUtils
 import kotlinx.android.synthetic.main.movie_item.view.*
@@ -16,6 +18,7 @@ import org.koin.core.inject
 
 class MoviesAdapter(
     private val movieClickListener: MovieClickListener,
+    private val favoriteClickListener: FavoriteClickListener,
     private val layoutInflater: LayoutInflater
 ) : RecyclerView.Adapter<MoviesAdapter.MovieViewHolder>() {
 
@@ -30,7 +33,7 @@ class MoviesAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) = MovieViewHolder(layoutInflater.inflate(R.layout.movie_item, parent, false))
 
     override fun onBindViewHolder(holder: MovieViewHolder, position: Int) {
-        holder.updateValues(movies[position], movieClickListener)
+        holder.updateValues(movies[position], movieClickListener, favoriteClickListener)
         holder.setFadeAnimation()
     }
 
@@ -54,7 +57,7 @@ class MoviesAdapter(
 
         private val imageLoader: ImageLoader by inject()
 
-        fun updateValues(movie: MovieViewModel, movieClickListener: MovieClickListener) {
+        fun updateValues(movie: MovieViewModel, movieClickListener: MovieClickListener, favoriteClickListener: FavoriteClickListener) {
             with(view) {
                 movieTitle.text = movie.title
                 imageLoader.loadImage(movie.posterPath, movieListPoster)
@@ -65,6 +68,21 @@ class MoviesAdapter(
                 }
                 setOnClickListener {
                     movieClickListener.onMovieClicked(movie)
+                }
+                favoriteIcon.backgroundTintList =
+                    ContextCompat.getColorStateList(favoriteIcon.context, if (movie.favorite) R.color.favoriteColor else R.color.notFavoriteColor)
+                favoriteIcon.setOnClickListener {
+                    val on = favoriteIcon.isChecked
+
+                    if (on) {
+                        favoriteIcon.backgroundTintList = ContextCompat.getColorStateList(favoriteIcon.context, R.color.favoriteColor)
+                        movie.favorite = true
+                        favoriteClickListener.onToggleOn(movie)
+                    } else {
+                        favoriteIcon.backgroundTintList = ContextCompat.getColorStateList(favoriteIcon.context, R.color.notFavoriteColor)
+                        movie.favorite = false
+                        favoriteClickListener.onToggleOff(movie)
+                    }
                 }
             }
         }

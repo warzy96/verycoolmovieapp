@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/popular"
+        android:icon="@drawable/movie_icon"
+        android:title="@string/popular"/>
+
+    <item
+        android:id="@+id/bestRating"
+        android:icon="@drawable/like_icon"
+        android:title="@string/best_rated"/>
+
+    <item
+        android:id="@+id/navigation_albums"
+        android:icon="@drawable/favorite_icon"
+        android:title="@string/favorites"/>
+
+</menu>

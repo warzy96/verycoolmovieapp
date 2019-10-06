@@ -1,8 +1,8 @@
 package com.example.movieapp.data.contract
 
 import com.example.movieapp.data.presenter.LifecycleAwarePresenter
-import com.example.movieapp.data.view.BaseView
-import com.example.movieapp.data.view.model.MovieViewModel
+import com.example.movieapp.ui.view.BaseView
+import com.example.movieapp.ui.view.model.MovieViewModel
 
 interface MovieListContract {
 
@@ -11,6 +11,10 @@ interface MovieListContract {
         fun getMovies(query: String)
 
         fun getNextPage(query: String)
+
+        fun saveFavorite(movie: MovieViewModel)
+
+        fun removeFavorite(movie: MovieViewModel)
     }
 
     interface View : BaseView {

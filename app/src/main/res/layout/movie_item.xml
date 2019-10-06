@@ -50,7 +50,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@id/movieListPoster"
-        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
+        app:layout_constraintBottom_toTopOf="@id/movieRatingCount"
         android:layout_marginStart="@dimen/list_item_start_margin"
         style="?android:attr/ratingBarStyleSmall"
         android:numStars="5"
@@ -61,9 +61,22 @@
         android:id="@+id/movieRatingCount"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        app:layout_constraintStart_toEndOf="@id/movieRating"
+        app:layout_constraintStart_toEndOf="@id/movieListPoster"
         app:layout_constraintBottom_toBottomOf="@id/movieListPoster"
         android:layout_marginStart="@dimen/list_item_start_margin"
         android:textSize="@dimen/movie_text_size_small"/>
+
+    <ToggleButton
+        android:id="@+id/favoriteIcon"
+        android:textOff=""
+        android:textOn=""
+        android:backgroundTint="@color/notFavoriteColor"
+        android:layout_width="@dimen/favorite_icon_size"
+        android:layout_height="@dimen/favorite_icon_size"
+        android:tint="@color/notFavoriteColor"
+        android:background="@drawable/favorite_icon"
+        android:layout_marginEnd="@dimen/details_vertical_gap_big"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="@id/movieListPoster"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

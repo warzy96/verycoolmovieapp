@@ -5,19 +5,18 @@ import com.bumptech.glide.Glide
 import com.example.movieapp.data.ImageLoader
 import com.example.movieapp.data.ImageLoaderImpl
 import com.example.movieapp.data.api.MovieApi
-import com.example.movieapp.data.mapper.ApiMapper
-import com.example.movieapp.data.mapper.ApiMapperImpl
-import com.example.movieapp.data.mapper.ViewModelMapper
-import com.example.movieapp.data.mapper.ViewModelMapperImpl
+import com.example.movieapp.data.dao.MovieDatabase
+import com.example.movieapp.data.mapper.*
 import com.example.movieapp.data.presenter.MovieDetailsPresenter
 import com.example.movieapp.data.presenter.MovieListPresenter
 import com.example.movieapp.data.repository.MovieRepository
 import com.example.movieapp.data.repository.MovieRepositoryImpl
 import com.example.movieapp.data.service.MovieService
 import com.example.movieapp.data.service.MovieServiceImpl
-import com.example.movieapp.data.use_case.GetMovieDetailsUseCase
-import com.example.movieapp.data.use_case.GetMoviesSearchUseCase
-import com.example.movieapp.data.use_case.GetMoviesUseCase
+import com.example.movieapp.data.usecases.*
+import com.example.movieapp.ui.view.mapper.ViewModelMapper
+import com.example.movieapp.ui.view.mapper.ViewModelMapperImpl
+import com.example.movieapp.domain.usecases.*
 import com.example.movieapp.ui.activities.MainActivity
 import com.example.movieapp.ui.activities.MovieDetailsActivity
 import com.jakewharton.retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
@@ -44,11 +43,15 @@ class MovieApplication : Application() {
         single { MovieRepositoryImpl() as MovieRepository }
         single { ImageLoaderImpl(Glide.with(this@MovieApplication)) as ImageLoader }
         single { ApiMapperImpl() as ApiMapper }
+        single { DbMapperImpl() as DbMapper }
         single { ViewModelMapperImpl() as ViewModelMapper }
         single { getRetrofit().create(MovieApi::class.java) as MovieApi }
+        single { MovieDatabase.getDB(applicationContext, "movie-database") }
         single { GetMovieDetailsUseCase() }
         single { GetMoviesUseCase() }
         single { GetMoviesSearchUseCase() }
+        single { SaveFavoriteUseCase() }
+        single { RemoveFavoriteUseCase() }
 
         scope(named<MainActivity>()) {
             scoped { MovieListPresenter() }
